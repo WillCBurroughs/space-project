@@ -14,12 +14,12 @@ class GameViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Create the GameScene programmatically
-        let scene = GameScene(size: view.bounds.size)  // Initialize with view's size
+        // Create the SplashScene programmatically
+        let splashScene = SplashScene(size: view.bounds.size)
         
-        // Present the scene
+        // Present the splash scene
         let skView = self.view as! SKView
-        skView.presentScene(scene)
+        skView.presentScene(splashScene)
         
         skView.ignoresSiblingOrder = true
         skView.showsFPS = true

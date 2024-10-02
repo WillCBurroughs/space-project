@@ -15,6 +15,7 @@
 		5C879A1B2CAB66A20047AC9B /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5C879A062CAB66A10047AC9B /* GameScene.sks */; };
 		5C879A1C2CAB66A20047AC9B /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C879A072CAB66A10047AC9B /* GameScene.swift */; };
 		5C879A1D2CAB66A20047AC9B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C879A082CAB66A20047AC9B /* Assets.xcassets */; };
+		5C879A242CADF3110047AC9B /* SplashScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C879A232CADF3110047AC9B /* SplashScene.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		5C879A122CAB66A20047AC9B /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		5C879A152CAB66A20047AC9B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		5C879A182CAB66A20047AC9B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		5C879A232CADF3110047AC9B /* SplashScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScene.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 				5C879A062CAB66A10047AC9B /* GameScene.sks */,
 				5C879A072CAB66A10047AC9B /* GameScene.swift */,
 				5C879A082CAB66A20047AC9B /* Assets.xcassets */,
+				5C879A232CADF3110047AC9B /* SplashScene.swift */,
 			);
 			path = "Space_Project Shared";
 			sourceTree = "<group>";
@@ -153,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C879A1C2CAB66A20047AC9B /* GameScene.swift in Sources */,
+				5C879A242CADF3110047AC9B /* SplashScene.swift in Sources */,
 				5C879A132CAB66A20047AC9B /* GameViewController.swift in Sources */,
 				5C879A112CAB66A20047AC9B /* AppDelegate.swift in Sources */,
 			);
