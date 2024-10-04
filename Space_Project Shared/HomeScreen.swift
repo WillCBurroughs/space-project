@@ -16,26 +16,64 @@ class HomeScreen: SKScene {
     
     override func didMove(to view: SKView) {
         
+        // Add the menu display
         menuDisplay.position = CGPoint(x: size.width / 2, y: size.height / 2)
         menuDisplay.size = CGSize(width: self.size.width, height: self.size.height)
-
         self.addChild(menuDisplay)
         
+        // Add the background
         background.position = CGPoint(x: size.width / 2, y: size.height / 2)
         background.zPosition = -1
         background.size = CGSize(width: self.size.width, height: self.size.height)
-        
         self.addChild(background)
-//        // Create the "Levels" button
-//        createCapsuleButton(buttonNode: levelsButton, text: "Levels", position: CGPoint(x: size.width / 2, y: size.height / 2), width: 200, height: 60, parent: self) {
-//            let levelsScene = Levels(size: self.size)
-//            transitionToScene(view: self.view, scene: levelsScene)
-//        }
-//
-//        // Create the "Shop" button
-//        createCapsuleButton(buttonNode: shopButton, text: "Shop", position: CGPoint(x: size.width / 2, y: size.height / 2 - 100), width: 200, height: 60, parent: self) {
-//            let shopScene = Shop(size: self.size)
-//            transitionToScene(view: self.view, scene: shopScene)
-//        }
+    
+        // Create invisible buttons for "Levels" and "Shop"
+        createButtonNodes()
+    }
+    
+    func createButtonNodes() {
+        // Define button sizes relative to screen size for better scaling across devices
+        let buttonWidth = size.width * 0.3
+        let buttonHeight = size.height * 0.15
+        
+        // "Levels" button
+        let levelsButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight), cornerRadius: 10)
+        levelsButton.position = CGPoint(x: size.width / 2, y: size.height * 0.45)  // Position it over the "Levels" button area in the image
+        levelsButton.fillColor = .clear  // Make it invisible or semi-transparent for debugging
+        levelsButton.name = "levelsButton"
+        addChild(levelsButton)
+        
+        // "Shop" button
+        let shopButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight), cornerRadius: 10)
+        shopButton.position = CGPoint(x: size.width / 2, y: size.height * 0.35)  // Position it over the "Shop" button area in the image
+        shopButton.fillColor = .clear  // Make it invisible or semi-transparent for debugging
+        shopButton.name = "shopButton"
+        addChild(shopButton)
+    }
+
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        let nodesAtPoint = nodes(at: location)
+        
+        for node in nodesAtPoint {
+            if node.name == "levelsButton" {
+                transitionToLevelsScene()
+            } else if node.name == "shopButton" {
+                transitionToShopScene()
+            }
+        }
+    }
+    
+    func transitionToLevelsScene() {
+        let levelsScene = Levels(size: size)  // Assuming you have a Levels scene
+        let transition = SKTransition.fade(withDuration: 1.0)
+        view?.presentScene(levelsScene, transition: transition)
+    }
+
+    func transitionToShopScene() {
+        let shopScene = Shop(size: size)  // Assuming you have a Shop scene
+        let transition = SKTransition.fade(withDuration: 1.0)
+        view?.presentScene(shopScene, transition: transition)
     }
 }
