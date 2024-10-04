@@ -40,13 +40,15 @@ class HomeScreen: SKScene {
         let levelsButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight), cornerRadius: 10)
         levelsButton.position = CGPoint(x: size.width / 2, y: size.height * 0.45)  // Position it over the "Levels" button area in the image
         levelsButton.fillColor = .clear  // Make it invisible or semi-transparent for debugging
+        levelsButton.strokeColor = .clear
         levelsButton.name = "levelsButton"
         addChild(levelsButton)
         
         // "Shop" button
         let shopButton = SKShapeNode(rectOf: CGSize(width: buttonWidth, height: buttonHeight), cornerRadius: 10)
-        shopButton.position = CGPoint(x: size.width / 2, y: size.height * 0.35)  // Position it over the "Shop" button area in the image
+        shopButton.position = CGPoint(x: size.width / 2, y: size.height * 0.28)  // Position it over the "Shop" button area in the image
         shopButton.fillColor = .clear  // Make it invisible or semi-transparent for debugging
+        shopButton.strokeColor = .clear
         shopButton.name = "shopButton"
         addChild(shopButton)
     }
