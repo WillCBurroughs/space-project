@@ -199,8 +199,10 @@ class Levels: SKScene {
     func transitionToLevel(levelNumber: Int) {
         print("Transitioning to level \(levelNumber)")
         let highestCompletedLevel = UserDefaults.standard.integer(forKey: highestCompletedLevelKey)
-        if levelNumber > highestCompletedLevel {
-            UserDefaults.standard.set(levelNumber, forKey: highestCompletedLevelKey)
-        }
+        
+////        Current code that allows the levelNumber to shift
+//        if levelNumber > highestCompletedLevel {
+//            UserDefaults.standard.set(levelNumber, forKey: highestCompletedLevelKey)
+//        }
     }
 }
