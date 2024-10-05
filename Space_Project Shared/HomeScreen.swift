@@ -68,13 +68,13 @@ class HomeScreen: SKScene {
     }
     
     func transitionToLevelsScene() {
-        let levelsScene = Levels(size: size)  // Assuming you have a Levels scene
+        let levelsScene = Levels(size: size)
         let transition = SKTransition.fade(withDuration: 1.0)
         view?.presentScene(levelsScene, transition: transition)
     }
 
     func transitionToShopScene() {
-        let shopScene = Shop(size: size)  // Assuming you have a Shop scene
+        let shopScene = Shop(size: size)  
         let transition = SKTransition.fade(withDuration: 1.0)
         view?.presentScene(shopScene, transition: transition)
     }

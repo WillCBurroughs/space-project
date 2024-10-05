@@ -102,7 +102,21 @@ class Levels: SKScene {
                     }
                 }
             }
+            if node.name == "resetProgress" {
+                resetProgress()
+            }
         }
+    }
+    
+    // Function to reset game progress
+    func resetProgress(){
+        UserDefaults.standard.set(0, forKey: highestCompletedLevelKey)
+        
+        // Reload the scene to update the level buttons
+        let newScene = Levels(size: self.size)
+        newScene.scaleMode = self.scaleMode
+        let transition = SKTransition.fade(withDuration: 1)  
+        self.view?.presentScene(newScene, transition: transition)
     }
     
     // Function to transition to the selected level
