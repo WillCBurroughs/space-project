@@ -11,11 +11,21 @@ class Levels: SKScene {
     
     let highestCompletedLevelKey = "highestCompletedLevel"  // Key for saving progress
     
+//    Used to set all values back to zero
+    let resetProgressButton = SKShapeNode(circleOfRadius: 30)
+
+
     override func didMove(to view: SKView) {
         backgroundColor = .white
         
         // Retrieve the highest completed level from UserDefaults
         let highestCompletedLevel = UserDefaults.standard.integer(forKey: highestCompletedLevelKey)
+        
+        resetProgressButton.position = CGPoint(x: size.width - 70, y: size.height - 50)
+        resetProgressButton.fillColor = .black
+        resetProgressButton.strokeColor = .darkGray
+        resetProgressButton.name = "resetProgress"
+        addChild(resetProgressButton)
         
         // Create a grid of level buttons
         let numberOfLevels = 20  // Number of levels you want to display
@@ -92,7 +102,21 @@ class Levels: SKScene {
                     }
                 }
             }
+            if node.name == "resetProgress" {
+                resetProgress()
+            }
         }
+    }
+    
+    // Function to reset game progress
+    func resetProgress(){
+        UserDefaults.standard.set(0, forKey: highestCompletedLevelKey)
+        
+        // Reload the scene to update the level buttons
+        let newScene = Levels(size: self.size)
+        newScene.scaleMode = self.scaleMode
+        let transition = SKTransition.fade(withDuration: 1)  
+        self.view?.presentScene(newScene, transition: transition)
     }
     
     // Function to transition to the selected level
@@ -102,6 +126,8 @@ class Levels: SKScene {
         // Save the highest level completed if this is the new highest
         let highestCompletedLevel = UserDefaults.standard.integer(forKey: highestCompletedLevelKey)
         if levelNumber > highestCompletedLevel {
+            
+//            Below shows how to set default value
             UserDefaults.standard.set(levelNumber, forKey: highestCompletedLevelKey)
         }
     }
