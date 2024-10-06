@@ -17,6 +17,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let blueBallCategory: UInt32 = 0x1 << 0
     let redBallCategory: UInt32 = 0x1 << 1
     
+    var holderProgress: SKSpriteNode!
+    var shipProgress: SKSpriteNode!
+    var shipForProgress: SKSpriteNode!
+    var endLevelIcon: SKSpriteNode!
+    
+//    Used to determine width of shipProgress
+    var shipProgressWidth: CGFloat = 0
+    
+//    Used to keep track ship speed
+    var shipSpeed: CGFloat = 1
+    
+//    First add shipHolderProgress, shipProgress, then add shipForProgress, then finally add endLevelIcon
+//    Then move shipForProgress, on bar. Then have action that ends level when reaching this
+//    Iterate Level when beating the level and check if this is greater then set this
+//    Keep shipProgress and have it get longer as you continue level
+//
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
@@ -28,21 +45,87 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         spawnRedBall()  // Spawn the first red ball
         addJoystick()  // Add the joystick
         
+        setupProgress()
+        
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
         let fireAction = SKAction.repeatForever(SKAction.sequence([SKAction.run(fireYellowBall), SKAction.wait(forDuration: 0.5)]))
         run(fireAction)
     }
     
+    // Function used to add all progress nodes
+    func setupProgress() {
+        
+//      Progress bar holder 
+        holderProgress = SKSpriteNode(imageNamed: "holderProgress")
+        holderProgress.position = CGPoint(x: size.width / 2, y: size.height - 30)
+        holderProgress.size = CGSize(width: 400, height: 8)
+        addChild(holderProgress)
+        
+//      Ship that will move to demonstrate progress
+        shipForProgress = SKSpriteNode(imageNamed: "shipForProgress")
+        shipForProgress.position = CGPoint(x: size.width / 2 - 186, y: size.height - 30)
+        shipForProgress.size = CGSize(width: 32, height: 18)
+        addChild(shipForProgress)
+        
+//      Progress that has been made on level
+        shipProgress = SKSpriteNode(imageNamed: "shipProgress")
+        shipProgress.position = CGPoint(x: size.width / 2, y: size.height - 30)
+        shipProgress.size = CGSize(width: shipProgressWidth, height: 8)
+        addChild(shipProgress)
+        
+    }
+    
+    //  Function that moves the ship to the right
+    func moveShip() {
+        // Move the ship to the right by `shipSpeed`
+        shipForProgress.position.x += shipSpeed
+        
+        // Ensure the ship doesn't move beyond the progress bar's bounds
+        let maxXPosition = holderProgress.position.x + holderProgress.size.width / 2 - shipForProgress.size.width / 2
+        if shipForProgress.position.x > maxXPosition {
+            shipForProgress.position.x = maxXPosition
+            
+            // Called when level ends
+            levelComplete()
+        }
+    }
+    
+    //  Ends the level, and iterates the highest level beaten if greater than current saved
+    func levelComplete() {
+        // Retrieve the highest completed level from UserDefaults
+        let highestCompletedLevel = UserDefaults.standard.integer(forKey: "highestCompletedLevel")
+        
+        let currentLevel = UserDefaults.standard.integer(forKey: "selectedLevel")
+
+        // Check if the current level is higher than the saved `highestCompletedLevel`
+        if currentLevel > highestCompletedLevel {
+            // Update `highestCompletedLevel` in UserDefaults
+            UserDefaults.standard.set(currentLevel, forKey: "highestCompletedLevel")
+            transitionToLevelsScene()
+        }
+        else {
+            transitionToLevelsScene()
+        }
+        
+    }
+    
+    //  Sends player back to levels scene
+    func transitionToLevelsScene() {
+        let levelsScene = Levels(size: size)
+        let transition = SKTransition.fade(withDuration: 1.0)
+        view?.presentScene(levelsScene, transition: transition)
+    }
+    
     // MARK: - Scrolling Background Setup
     func setupScrollingBackground() {
         // Create the first background sprite
-        background1 = SKSpriteNode(imageNamed: "background")  // Replace with your image name
+        background1 = SKSpriteNode(imageNamed: "spacebackground-small")  // Replace with your image name
         background1.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
         background1.size = self.size
         background1.zPosition = -1  // Ensure it appears behind other nodes
         
         // Create the second background sprite, which starts to the right of the first one
-        background2 = SKSpriteNode(imageNamed: "background")  // Replace with your image name
+        background2 = SKSpriteNode(imageNamed: "spacebackground-small")  // Replace with your image name
         background2.position = CGPoint(x: self.size.width + self.size.width / 2, y: self.size.height / 2)
         background2.size = self.size
         background2.zPosition = -1
@@ -190,6 +273,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Move both backgrounds to the left
         background1.position.x -= 2  // Adjust this speed as needed
         background2.position.x -= 2
+        
+        moveShip()
         
         // Check if the first background has moved off-screen, then reposition it
         if background1.position.x < -self.size.width / 2 {

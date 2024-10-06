@@ -13,8 +13,8 @@ class SplashScene: SKScene {
         backgroundColor = .black  // Or any background color you want
         
         // Display your splash logo or animation
-        let logo = SKSpriteNode(imageNamed: "Ship-Level1")  // Add your splash logo image
-        logo.size = CGSize(width: 600, height: 200)
+        let logo = SKSpriteNode(imageNamed: "Frame")  // Add your splash logo image
+        logo.size = CGSize(width: size.width, height: size.height)
         logo.position = CGPoint(x: size.width / 2, y: size.height / 2)
         addChild(logo)
         

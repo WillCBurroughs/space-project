@@ -102,7 +102,7 @@ class Levels: SKScene {
                 if node.name == "playButton" {
                     // Handle the "Play" button tap
                     let selectedLevel = UserDefaults.standard.integer(forKey: selectedLevelKey)
-                    transitionToLevel(levelNumber: selectedLevel)
+                    startLevel(levelNumber: selectedLevel)  // Start the level
                 }
             }
 
@@ -169,7 +169,7 @@ class Levels: SKScene {
         playButton.strokeColor = .black
         playButton.lineWidth = 3
         playButton.position = CGPoint(x: 0, y: -30)  // Position it below the level label
-        playButton.name = "playButton"  // Name it for interaction handling
+        playButton.name = "playButton"  // Name for interaction handling
         popupBackground.addChild(playButton)
 
         // Add "Play" text on the play button
@@ -196,11 +196,15 @@ class Levels: SKScene {
     }
 
     // Function to transition to the selected level
-    func transitionToLevel(levelNumber: Int) {
-        print("Transitioning to level \(levelNumber)")
-        let highestCompletedLevel = UserDefaults.standard.integer(forKey: highestCompletedLevelKey)
-        if levelNumber > highestCompletedLevel {
-            UserDefaults.standard.set(levelNumber, forKey: highestCompletedLevelKey)
-        }
+    func startLevel(levelNumber: Int) {
+        print("Starting level \(levelNumber)")
+
+        // Create an instance of GameScene
+        let gameScene = GameScene(size: self.size)
+        gameScene.scaleMode = self.scaleMode
+
+        // Transition to the GameScene
+        let transition = SKTransition.fade(withDuration: 1.0)
+        self.view?.presentScene(gameScene, transition: transition)
     }
 }
