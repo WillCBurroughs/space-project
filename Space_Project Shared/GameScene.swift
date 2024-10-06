@@ -67,10 +67,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         shipForProgress.size = CGSize(width: 32, height: 18)
         addChild(shipForProgress)
         
-//      Progress that has been made on level
+        // Progress that has been made on level (start from 0 width)
         shipProgress = SKSpriteNode(imageNamed: "shipProgress")
-        shipProgress.position = CGPoint(x: size.width / 2, y: size.height - 30)
-        shipProgress.size = CGSize(width: shipProgressWidth, height: 8)
+        shipProgress.position = CGPoint(x: holderProgress.position.x - holderProgress.size.width / 2, y: size.height - 30)
+        // Start from the far left
+        shipProgress.anchorPoint = CGPoint(x: 0, y: 0.5)  // Anchor at the left edge
+        shipProgress.size = CGSize(width: 0, height: 8)  // Start with 0 width
         addChild(shipProgress)
         
     }
@@ -88,6 +90,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Called when level ends
             levelComplete()
         }
+        
+        // Calculate the width of the progress bar as the ship moves
+        let progress = shipForProgress.position.x - (holderProgress.position.x - holderProgress.size.width / 2)
+        
+        // Update the size of the progress bar as the ship moves to the right
+        shipProgress.size = CGSize(width: progress, height: 8)
     }
     
     //  Ends the level, and iterates the highest level beaten if greater than current saved
