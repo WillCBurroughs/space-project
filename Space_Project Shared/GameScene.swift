@@ -17,6 +17,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let blueBallCategory: UInt32 = 0x1 << 0
     let redBallCategory: UInt32 = 0x1 << 1
     
+    var shipHolderProgress: SKSpriteNode!
+    var shipProgress: SKSpriteNode!
+    var shipForProgress: SKSpriteNode!
+    var endLevelIcon: SKSpriteNode!
+    
+//    First add shipHolderProgress, shipProgress, then add shipForProgress, then finally add endLevelIcon
+//    Then move shipForProgress, on bar. Then have action that ends level when reaching this
+//    Iterate Level when beating the level and check if this is greater then set this
+//    Keep shipProgress and have it get longer as you continue level
+//
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
@@ -28,21 +39,28 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         spawnRedBall()  // Spawn the first red ball
         addJoystick()  // Add the joystick
         
+        setupProgress()
+        
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
         let fireAction = SKAction.repeatForever(SKAction.sequence([SKAction.run(fireYellowBall), SKAction.wait(forDuration: 0.5)]))
         run(fireAction)
     }
     
+    // Function used to add all progress nodes 
+    func setupProgress() {
+        
+    }
+    
     // MARK: - Scrolling Background Setup
     func setupScrollingBackground() {
         // Create the first background sprite
-        background1 = SKSpriteNode(imageNamed: "background")  // Replace with your image name
+        background1 = SKSpriteNode(imageNamed: "spacebackground-small")  // Replace with your image name
         background1.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
         background1.size = self.size
         background1.zPosition = -1  // Ensure it appears behind other nodes
         
         // Create the second background sprite, which starts to the right of the first one
-        background2 = SKSpriteNode(imageNamed: "background")  // Replace with your image name
+        background2 = SKSpriteNode(imageNamed: "spacebackground-small")  // Replace with your image name
         background2.position = CGPoint(x: self.size.width + self.size.width / 2, y: self.size.height / 2)
         background2.size = self.size
         background2.zPosition = -1
