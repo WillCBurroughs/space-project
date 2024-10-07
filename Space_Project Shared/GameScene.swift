@@ -1,3 +1,4 @@
+
 import SpriteKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
@@ -14,7 +15,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var knobRadius: CGFloat = 30.0 // Radius of the joystick holder (joystick base)
     
     let yellowBallCategory: UInt32 = 0x1 << 2  // Category for yellow bullets
-    let blueBallCategory: UInt32 = 0x1 << 0
+    let playerObjectCategory: UInt32 = 0x1 << 0
     let redBallCategory: UInt32 = 0x1 << 1
     
     var holderProgress: SKSpriteNode!
@@ -26,13 +27,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipProgressWidth: CGFloat = 0
     
 //    Used to keep track ship speed
-    var shipSpeed: CGFloat = 1
+    var shipSpeed: CGFloat = 0.1
     
-//    First add shipHolderProgress, shipProgress, then add shipForProgress, then finally add endLevelIcon
-//    Then move shipForProgress, on bar. Then have action that ends level when reaching this
-//    Iterate Level when beating the level and check if this is greater then set this
-//    Keep shipProgress and have it get longer as you continue level
-//
+//  add endLevelIcon
+    
+    var lastUpdateTime: TimeInterval = 0
+    var timeSinceLastEnemy: TimeInterval = 0
+    
+//  Detecting collisions with enemy
+    let enemyObjectCategory: UInt32 = 0x1 << 3
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
@@ -46,6 +49,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addJoystick()  // Add the joystick
         
         setupProgress()
+        
+        // Schedule the enemy creation every x seconds
+        let spawnAsteroidsAction = SKAction.repeatForever(SKAction.sequence([SKAction.run {
+            createAsteroid(scene: self, screenSize: self.size, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBullet: self.yellowBallCategory)
+        }, SKAction.wait(forDuration: 1.0)]))
+
+        self.run(spawnAsteroidsAction)
         
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
         let fireAction = SKAction.repeatForever(SKAction.sequence([SKAction.run(fireYellowBall), SKAction.wait(forDuration: 0.5)]))
@@ -154,8 +164,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Add physics body to blue ball
         circularSprite.physicsBody = SKPhysicsBody(circleOfRadius: 20)
         circularSprite.physicsBody?.isDynamic = true
-        circularSprite.physicsBody?.categoryBitMask = blueBallCategory
-        circularSprite.physicsBody?.contactTestBitMask = redBallCategory
+        circularSprite.physicsBody?.categoryBitMask = playerObjectCategory
+        circularSprite.physicsBody?.contactTestBitMask = enemyObjectCategory
         circularSprite.physicsBody?.collisionBitMask = 0
         circularSprite.physicsBody?.affectedByGravity = false
         
@@ -177,9 +187,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Add physics body to red ball
         redBall.physicsBody = SKPhysicsBody(circleOfRadius: 20)
         redBall.physicsBody?.isDynamic = true
-        redBall.physicsBody?.categoryBitMask = redBallCategory
-        redBall.physicsBody?.contactTestBitMask = blueBallCategory | yellowBallCategory
-        redBall.physicsBody?.collisionBitMask = blueBallCategory
+        redBall.physicsBody?.categoryBitMask = enemyObjectCategory
+        redBall.physicsBody?.contactTestBitMask = playerObjectCategory | yellowBallCategory
+        redBall.physicsBody?.collisionBitMask = playerObjectCategory
         redBall.physicsBody?.restitution = 1.0  // Make the ball bouncy
         redBall.physicsBody?.linearDamping = 0  // No friction on the ball
         redBall.physicsBody?.angularDamping = 0
@@ -198,26 +208,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Function to fire yellow balls from the blue ball
     func fireYellowBall() {
-        let yellowBall = SKShapeNode(circleOfRadius: 10)
-        yellowBall.fillColor = .yellow
-        yellowBall.strokeColor = .black
-        yellowBall.lineWidth = 2
+        let yellowBall = SKSpriteNode(imageNamed: "playerLaser")
         
         // Position yellow ball at the blue ball's position
-        yellowBall.position = CGPoint(x: circularSprite.position.x + 30, y: circularSprite.position.y)
+        yellowBall.position = CGPoint(x: circularSprite.position.x + 90, y: circularSprite.position.y)
         
-        // Add physics body to yellow ball
-        yellowBall.physicsBody = SKPhysicsBody(circleOfRadius: 10)
+        yellowBall.size = CGSize(width: 30, height: 7)  // Set the laser size
+        
+        // Add physics body to yellow ball with the same size as the laser
+        yellowBall.physicsBody = SKPhysicsBody(rectangleOf: yellowBall.size)  // Use the size of the yellow ball
         yellowBall.physicsBody?.isDynamic = true
         yellowBall.physicsBody?.categoryBitMask = yellowBallCategory
-        yellowBall.physicsBody?.contactTestBitMask = redBallCategory
+        yellowBall.physicsBody?.contactTestBitMask = enemyObjectCategory
         yellowBall.physicsBody?.collisionBitMask = 0
         yellowBall.physicsBody?.affectedByGravity = false
         
         // Set initial velocity to move right
         yellowBall.physicsBody?.velocity = CGVector(dx: 300, dy: 0)
         
-        // Add yellow ball to the scene
+        // Add yellow ball (laser) to the scene
         addChild(yellowBall)
         
         // Action to remove yellow ball when it goes off-screen
@@ -308,16 +317,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func didBegin(_ contact: SKPhysicsContact) {
         let bodyA = contact.bodyA.node
         let bodyB = contact.bodyB.node
-        
-        if (bodyA == circularSprite && bodyB == redBall) || (bodyA == redBall && bodyB == circularSprite) {
-            displayCollisionMessage("Collision Detected")
-        } else if (bodyA == redBall && bodyB?.physicsBody?.categoryBitMask == yellowBallCategory) || (bodyB == redBall && bodyA?.physicsBody?.categoryBitMask == yellowBallCategory) {
-            bodyA?.removeFromParent()  // Remove the yellow ball or red ball
+
+        // Detect collisions between player (blueBall) and enemy objects (e.g., asteroids)
+        if (bodyA?.physicsBody?.categoryBitMask == playerObjectCategory && bodyB?.physicsBody?.categoryBitMask == enemyObjectCategory) ||
+           (bodyA?.physicsBody?.categoryBitMask == enemyObjectCategory && bodyB?.physicsBody?.categoryBitMask == playerObjectCategory) {
+
+            print("Player collided with an enemy!")
+        }
+
+        // Detect collisions between yellowBall and enemy objects (e.g., asteroids)
+        if (bodyA?.physicsBody?.categoryBitMask == yellowBallCategory && bodyB?.physicsBody?.categoryBitMask == enemyObjectCategory) ||
+           (bodyA?.physicsBody?.categoryBitMask == enemyObjectCategory && bodyB?.physicsBody?.categoryBitMask == yellowBallCategory) {
+            bodyA?.removeFromParent()
             bodyB?.removeFromParent()
-            displayCollisionMessage("Target Hit")
-            
-            // Spawn a new red ball after the red ball is defeated
-            spawnRedBall()
+            print("Yellow ball collided with an asteroid!")
         }
     }
     
