@@ -26,13 +26,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipProgressWidth: CGFloat = 0
     
 //    Used to keep track ship speed
-    var shipSpeed: CGFloat = 1
+    var shipSpeed: CGFloat = 0.1
     
 //    First add shipHolderProgress, shipProgress, then add shipForProgress, then finally add endLevelIcon
 //    Then move shipForProgress, on bar. Then have action that ends level when reaching this
 //    Iterate Level when beating the level and check if this is greater then set this
 //    Keep shipProgress and have it get longer as you continue level
 //
+    
+    var lastUpdateTime: TimeInterval = 0
+    var timeSinceLastEnemy: TimeInterval = 0
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
@@ -46,6 +49,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addJoystick()  // Add the joystick
         
         setupProgress()
+        
+        // Schedule the enemy creation every x seconds
+        let spawnAsteroidsAction = SKAction.repeatForever(SKAction.sequence([SKAction.run {
+            createAsteroid(scene: self, screenSize: self.size)
+        }, SKAction.wait(forDuration: 1.0)]))
+        
+        self.run(spawnAsteroidsAction)
         
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
         let fireAction = SKAction.repeatForever(SKAction.sequence([SKAction.run(fireYellowBall), SKAction.wait(forDuration: 0.5)]))
