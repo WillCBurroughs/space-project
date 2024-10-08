@@ -15,7 +15,9 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         
         // Create the SplashScene programmatically
-        let splashScene = SplashScene(size: view.bounds.size)
+//        let splashScene = SplashScene(size: view.bounds.size)
+        
+        let splashScene = NewLevelsScreen(size: view.bounds.size)
         
         // Present the splash scene
         let skView = self.view as! SKView
