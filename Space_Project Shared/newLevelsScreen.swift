@@ -23,6 +23,8 @@ class NewLevelsScreen: SKScene {
     // Array to hold all the touchable planets (levels)
     var levelNodes: [SKShapeNode] = []
     
+    let resetProgressButton = SKShapeNode(circleOfRadius: 30)  // Used to set all values back to zero
+    
     override func didMove(to view: SKView) {
         
         // Retrieve the highest completed level by the user
@@ -34,6 +36,12 @@ class NewLevelsScreen: SKScene {
         background.size = self.size  // Adjust to fill the screen
         background.zPosition = -1  // Ensure background is behind other nodes
         addChild(background)
+        
+        resetProgressButton.position = CGPoint(x: size.width - 70, y: size.height - 50)
+        resetProgressButton.fillColor = .black
+        resetProgressButton.strokeColor = .darkGray
+        resetProgressButton.name = "resetProgress"
+        addChild(resetProgressButton)
         
         let rowOneY = 0.55
         let rowTwoY = 0.25
@@ -128,7 +136,11 @@ class NewLevelsScreen: SKScene {
                 let selectedLevel = UserDefaults.standard.integer(forKey: selectedLevelKey)
                 startLevel(levelNumber: selectedLevel)  // Start the selected level
             }
+            if node.name == "resetProgress" {
+                resetProgress()
+            }
         }
+        
     }
     
     // Function to remove the popup from the scene
@@ -206,4 +218,16 @@ class NewLevelsScreen: SKScene {
         let transition = SKTransition.fade(withDuration: 1.0)
         self.view?.presentScene(gameScene, transition: transition)
     }
+    
+    // Function to reset game progress
+    func resetProgress(){
+        UserDefaults.standard.set(0, forKey: highestCompletedLevelKey)
+
+        // Reload the scene to update the level buttons
+        let newScene = NewLevelsScreen(size: self.size)
+        newScene.scaleMode = self.scaleMode
+        let transition = SKTransition.fade(withDuration: 1)
+        self.view?.presentScene(newScene, transition: transition)
+    }
+    
 }
