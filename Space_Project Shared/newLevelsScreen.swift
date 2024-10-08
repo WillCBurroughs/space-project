@@ -7,9 +7,9 @@
 
 // Add background (Done)
 // Add nodes on the top of every planet (Done)
-// Add logic to pass in levels unlocked with popup
-// Add level logic to cover planets that are not unlocked
-// Add reset button for resetting progress
+// Add logic to pass in levels unlocked with popup (Done)
+// Add level logic to cover planets that are not unlocked (Done)
+// Add reset button for resetting progress 
 
 import SpriteKit
 
@@ -23,7 +23,6 @@ class NewLevelsScreen: SKScene {
     // Array to hold all the touchable planets (levels)
     var levelNodes: [SKShapeNode] = []
     
-    // This method will dynamically add SKShapeNodes on top of the planets
     override func didMove(to view: SKView) {
         
         // Retrieve the highest completed level by the user
@@ -63,7 +62,6 @@ class NewLevelsScreen: SKScene {
             let planetY = self.size.height * relativePos.1
             
             if index <= highestCompletedLevel {  // Level is unlocked or the next one to be unlocked
-                
                 // Create an SKShapeNode (interactive)
                 let planetNode = SKShapeNode(circleOfRadius: self.size.width * 0.050)  // Adjust circle size dynamically
                 planetNode.position = CGPoint(x: planetX, y: planetY)
@@ -76,7 +74,6 @@ class NewLevelsScreen: SKScene {
                 levelNodes.append(planetNode)  // Store in the array for later use
                 
             } else {  // Level is locked
-                
                 // Create an SKSpriteNode with the "locked" image
                 let lockedNode = SKSpriteNode(imageNamed: "locked\(index + 1)")  // Use locked image based on index
                 lockedNode.position = CGPoint(x: planetX, y: planetY)
@@ -97,7 +94,7 @@ class NewLevelsScreen: SKScene {
             // Check if the popup is already displayed
             if isPopupDisplayed {
                 // Dismiss the popup if the tap was **outside** the popup
-                if touchedNode.name != "popupBackground" && touchedNode.name != "playButton" {
+                if touchedNode.name != "popupBackground" && touchedNode.name != "playButton" && touchedNode.name != "playLabel" && touchedNode.name != "levelLabel" {
                     removePopup()
                 }
                 return
@@ -120,17 +117,16 @@ class NewLevelsScreen: SKScene {
     }
     
     // Handles touch interactions on the popup
-    func handlePopupTouches(touch: UITouch) {
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         let nodesAtPoint = nodes(at: location)
         
+        // Handle touch on the play button
         for node in nodesAtPoint {
             if node.name == "playButton" {
                 let selectedLevel = UserDefaults.standard.integer(forKey: selectedLevelKey)
-                loadLevel(levelNumber: selectedLevel)  // Start the level
-            } else if node.name == "popupBackground" {
-                // Dismiss the popup
-                removePopup()
+                startLevel(levelNumber: selectedLevel)  // Start the selected level
             }
         }
     }
@@ -148,7 +144,7 @@ class NewLevelsScreen: SKScene {
     // Function to load the selected level
     func loadLevel(levelNumber: Int) {
         print("Loading level: \(levelNumber)")
-        // Implement the transition to the appropriate game scene here
+        startLevel(levelNumber: levelNumber)  // Start the selected level
     }
     
     // Function to display the popup for level selection
@@ -171,6 +167,7 @@ class NewLevelsScreen: SKScene {
         levelLabel.fontName = "Arial-BoldMT"
         levelLabel.fontSize = 30
         levelLabel.fontColor = .black
+        levelLabel.name = "levelLabel"
         levelLabel.position = CGPoint(x: 0, y: 40)  // Position it near the top of the popup
         popupBackground.addChild(levelLabel)
         
@@ -181,6 +178,7 @@ class NewLevelsScreen: SKScene {
         playButton.lineWidth = 3
         playButton.position = CGPoint(x: 0, y: -30)  // Position it below the level label
         playButton.name = "playButton"
+        playButton.zPosition = 2
         popupBackground.addChild(playButton)
         
         // Add "Play" text on the play button
@@ -189,10 +187,23 @@ class NewLevelsScreen: SKScene {
         playLabel.fontSize = 20
         playLabel.fontColor = .black
         playLabel.verticalAlignmentMode = .center
+        playLabel.name = "playLabel"
         playButton.addChild(playLabel)
         
         // Add the popup background (and its children) to the scene
         addChild(popupBackground)
     }
+    
+    // Function to transition to the selected level
+    func startLevel(levelNumber: Int) {
+        print("Starting level \(levelNumber)")
+        
+        // Create an instance of the GameScene
+        let gameScene = GameScene(size: self.size)
+        gameScene.scaleMode = self.scaleMode
+        
+        // Transition to the GameScene
+        let transition = SKTransition.fade(withDuration: 1.0)
+        self.view?.presentScene(gameScene, transition: transition)
+    }
 }
-

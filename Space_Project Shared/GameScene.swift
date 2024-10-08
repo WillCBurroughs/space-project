@@ -27,7 +27,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipProgressWidth: CGFloat = 0
     
 //    Used to keep track ship speed
-    var shipSpeed: CGFloat = 0.1
+    var shipSpeed: CGFloat = 1
     
 //  add endLevelIcon
     
@@ -129,7 +129,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //  Sends player back to levels scene
     func transitionToLevelsScene() {
-        let levelsScene = Levels(size: size)
+        let levelsScene = NewLevelsScreen(size: size)
         let transition = SKTransition.fade(withDuration: 1.0)
         view?.presentScene(levelsScene, transition: transition)
     }
