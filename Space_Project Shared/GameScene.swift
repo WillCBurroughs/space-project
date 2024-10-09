@@ -48,6 +48,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //  Detecting collisions with enemy
     let enemyObjectCategory: UInt32 = 0x1 << 3
     
+//  Holding Coin area and life area below
+    
+    
     let currentLevel = UserDefaults.standard.integer(forKey: "selectedLevel")
     
     override func didMove(to view: SKView) {
