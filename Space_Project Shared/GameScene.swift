@@ -1,6 +1,14 @@
 
 import SpriteKit
 
+// First going to add text that gives the current level you are on (Done)
+// Next going to add the planet you are traveling to on progress bar 
+
+// Then correcting movement
+// Then adding speed
+
+// Then more cosmetics to make it look like given design
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
     var joystickHolder: SKShapeNode!
@@ -23,6 +31,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipForProgress: SKSpriteNode!
     var endLevelIcon: SKSpriteNode!
     
+//  Used to put level number on the screen
+    var levelDisplay = SKLabelNode(text: "Level ")
+    
 //    Used to determine width of shipProgress
     var shipProgressWidth: CGFloat = 0
     
@@ -37,9 +48,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //  Detecting collisions with enemy
     let enemyObjectCategory: UInt32 = 0x1 << 3
     
+    let currentLevel = UserDefaults.standard.integer(forKey: "selectedLevel")
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
+        
+        levelDisplay.fontName = "Futura-Bold"
+        levelDisplay.fontSize = 20
+        
+//      Sets our custom font color
+        
+        levelDisplay.fontColor = SKColor(red: 84/255, green: 93/255, blue: 175/255, alpha: 1.0)
+        levelDisplay.position = CGPoint(x: size.width / 2 + 300, y: size.height - 40)
+        levelDisplay.name = "levelDisplay"
+        
+//      Sets the current level for display
+        
+        
+        levelDisplay.text = "Level \(currentLevel)"
+        addChild(levelDisplay)
         
         // Add scrolling background
         setupScrollingBackground()
@@ -113,8 +141,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Retrieve the highest completed level from UserDefaults
         let highestCompletedLevel = UserDefaults.standard.integer(forKey: "highestCompletedLevel")
         
-        let currentLevel = UserDefaults.standard.integer(forKey: "selectedLevel")
-
         // Check if the current level is higher than the saved `highestCompletedLevel`
         if currentLevel > highestCompletedLevel {
             // Update `highestCompletedLevel` in UserDefaults
