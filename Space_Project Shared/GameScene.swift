@@ -2,7 +2,7 @@
 import SpriteKit
 
 // First going to add text that gives the current level you are on (Done)
-// Next going to add the planet you are traveling to on progress bar 
+// Next going to add the planet you are traveling to on progress bar -- Need planets as assets
 
 // Then correcting movement
 // Then adding speed
@@ -112,6 +112,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         shipProgress.anchorPoint = CGPoint(x: 0, y: 0.5)  // Anchor at the left edge
         shipProgress.size = CGSize(width: 0, height: 8)  // Start with 0 width
         addChild(shipProgress)
+        
+//      Determines next planet user will go to
+//      endLevelIcon = SKSpriteNode(imageNamed: currentLevel <= 13 ? ")
         
     }
     
