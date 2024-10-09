@@ -54,14 +54,14 @@ class NewLevelsScreen: SKScene {
             (0.49, rowOneY), // Planet 4
             (0.615, rowOneY), // Planet 5
             (0.735, rowOneY), // Planet 6
-            (0.865, rowOneY), // Planet 7
+            (0.870, rowOneY), // Planet 7
             (0.125, rowTwoY), // Planet 8
             (0.245, rowTwoY), // Planet 9
             (0.37, rowTwoY), // Planet 10
             (0.49, rowTwoY), // Planet 11
             (0.615, rowTwoY), // Planet 12
             (0.735, rowTwoY), // Planet 13
-            (0.865, rowTwoY)  // Planet 14
+            (0.870, rowTwoY)  // Planet 14
         ]
         
         // Loop through each position and create either an SKShapeNode or SKSpriteNode

@@ -117,7 +117,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(shipProgress)
         
 //      Determines next planet user will go to
-//      endLevelIcon = SKSpriteNode(imageNamed: currentLevel <= 13 ? ")
+        endLevelIcon = SKSpriteNode(imageNamed: currentLevel <= 13 ? "planet\(currentLevel + 1)" : "planet1")
+        endLevelIcon.position = CGPoint(x: size.width / 2 + 200, y: size.height - 30)
+        endLevelIcon.zPosition = 3
+        endLevelIcon.size = CGSize(width: 30, height: 30)
+        addChild(endLevelIcon)
         
     }
     
