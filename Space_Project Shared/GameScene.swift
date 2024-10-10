@@ -38,7 +38,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipProgressWidth: CGFloat = 0
     
 //    Used to keep track ship speed
-    var shipSpeed: CGFloat = 1
+    var shipSpeed: CGFloat = 0.1
     
 //  add endLevelIcon
     
@@ -49,9 +49,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let enemyObjectCategory: UInt32 = 0x1 << 3
     
 //  Holding Coin area and life area below
+    var coinHolder: SKSpriteNode!
+    var lifeHolder: SKSpriteNode!
     
-    
+//  Need to set coins and lifes currently saved
     let currentLevel = UserDefaults.standard.integer(forKey: "selectedLevel")
+    
+    let adjustmentFactor = CGFloat(8)
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
@@ -63,14 +67,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //      Sets our custom font color
         
         levelDisplay.fontColor = SKColor(red: 84/255, green: 93/255, blue: 175/255, alpha: 1.0)
-        levelDisplay.position = CGPoint(x: size.width / 2 + 300, y: size.height - 40)
+        levelDisplay.position = CGPoint(x: size.width / 2 + 300, y: size.height - 40 - adjustmentFactor)
         levelDisplay.name = "levelDisplay"
         
 //      Sets the current level for display
-        
-        
         levelDisplay.text = "Level \(currentLevel)"
         addChild(levelDisplay)
+        
+//      Creating coinHolder
+        coinHolder = SKSpriteNode(imageNamed: "coinSlot")
+        coinHolder.position = CGPoint(x: 70, y: size.height - 40)
+        coinHolder.size = CGSize(width: 331 / 4, height: 143 / 4)
+        addChild(coinHolder)
+        
+//      Creating lifeHolder
+        lifeHolder = SKSpriteNode(imageNamed: "heartSlot")
+        lifeHolder.position = CGPoint(x: 160, y: size.height - 40)
+        lifeHolder.size = CGSize(width: 331/4, height: 143/4)
+        addChild(lifeHolder)
         
         // Add scrolling background
         setupScrollingBackground()
@@ -98,26 +112,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
 //      Progress bar holder 
         holderProgress = SKSpriteNode(imageNamed: "holderProgress")
-        holderProgress.position = CGPoint(x: size.width / 2, y: size.height - 30)
+        holderProgress.position = CGPoint(x: size.width / 2, y: size.height - 30 - adjustmentFactor)
         holderProgress.size = CGSize(width: 400, height: 8)
         addChild(holderProgress)
         
 //      Ship that will move to demonstrate progress
         shipForProgress = SKSpriteNode(imageNamed: "shipForProgress")
-        shipForProgress.position = CGPoint(x: size.width / 2 - 186, y: size.height - 30)
+        shipForProgress.position = CGPoint(x: size.width / 2 - 186, y: size.height - 30 - adjustmentFactor)
         shipForProgress.size = CGSize(width: 32, height: 18)
         addChild(shipForProgress)
         
         // Progress that has been made on level (start from 0 width)
         shipProgress = SKSpriteNode(imageNamed: "shipProgress")
-        shipProgress.position = CGPoint(x: holderProgress.position.x - holderProgress.size.width / 2, y: size.height - 30)
+        shipProgress.position = CGPoint(x: holderProgress.position.x - holderProgress.size.width / 2, y: size.height - 30 - adjustmentFactor)
         // Start from the far left
         shipProgress.anchorPoint = CGPoint(x: 0, y: 0.5)  // Anchor at the left edge
         shipProgress.size = CGSize(width: 0, height: 8)  // Start with 0 width
         addChild(shipProgress)
         
 //      Determines next planet user will go to
-//      endLevelIcon = SKSpriteNode(imageNamed: currentLevel <= 13 ? ")
+        endLevelIcon = SKSpriteNode(imageNamed: currentLevel <= 13 ? "planet\(currentLevel + 1)" : "planet1")
+        endLevelIcon.position = CGPoint(x: size.width / 2 + 200, y: size.height - 30 - adjustmentFactor)
+        endLevelIcon.zPosition = 3
+        endLevelIcon.size = CGSize(width: 30, height: 30)
+        addChild(endLevelIcon)
         
     }
     
