@@ -100,7 +100,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addCircularSprite()  // Add the blue circular sprite
         spawnRedBall()  // Spawn the first red ball
-        addJoystick()  // Add the joystick
         
         setupProgress()
         
@@ -194,7 +193,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Add movement bar at the bottom of the screen
         movementBar = SKSpriteNode(imageNamed: "MovementController")
         movementBar.size = CGSize(width: 313 / 5, height: 1190 / 5)
-        movementBar.position = CGPoint(x: 70, y: size.height / 2)
+        movementBar.position = CGPoint(x: 70, y: size.height / 2 - 30)
         addChild(movementBar)
 
         // Add movement knob on top of the movement bar
@@ -309,19 +308,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Action to remove yellow ball when it goes off-screen
         let removeAction = SKAction.sequence([SKAction.wait(forDuration: 5.0), SKAction.removeFromParent()])
         yellowBall.run(removeAction)
-    }
-
-    // Function for adding joystick initially
-    func addJoystick() {
-        joystickHolder = SKShapeNode(circleOfRadius: 30)
-        joystickHolder.fillColor = .lightGray
-        joystickHolder.position = CGPoint(x: 70, y: 50)
-        addChild(joystickHolder)
-        
-        movementBall = SKShapeNode(circleOfRadius: 15)
-        movementBall.fillColor = .gray
-        movementBall.position = joystickHolder.position // Start at center of holder
-        addChild(movementBall)
     }
     
     // MARK: - Touch Handling
