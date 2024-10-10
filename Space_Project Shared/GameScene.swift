@@ -235,7 +235,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         circularSprite = SKSpriteNode(imageNamed: "Ship-Level1")
         
         circularSprite.size = CGSize(width: 180, height: 80)
-        circularSprite.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        circularSprite.position = CGPoint(x: 180, y: self.size.height / 2)
         
         // Add physics body to blue ball
         circularSprite.physicsBody = SKPhysicsBody(circleOfRadius: 20)
