@@ -194,7 +194,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Add movement bar at the bottom of the screen
         movementBar = SKSpriteNode(imageNamed: "MovementController")
         movementBar.size = CGSize(width: 313 / 5, height: 1190 / 5)
-        movementBar.position = CGPoint(x: 150, y: size.height / 2)
+        movementBar.position = CGPoint(x: 70, y: size.height / 2)
         addChild(movementBar)
 
         // Add movement knob on top of the movement bar
