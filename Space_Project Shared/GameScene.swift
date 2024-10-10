@@ -20,7 +20,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var background2: SKSpriteNode!
     
     var isJoystickActive = false
-    var knobRadius: CGFloat = 30.0 // Radius of the joystick holder (joystick base)
     
     let yellowBallCategory: UInt32 = 0x1 << 2  // Category for yellow bullets
     let playerObjectCategory: UInt32 = 0x1 << 0
@@ -57,6 +56,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let adjustmentFactor = CGFloat(8)
     
+//  Used for new movement controls
+    var movementBar: SKSpriteNode!
+    var movementKnob: SKSpriteNode!
+    var isMovementKnobActive = false
+    var knobRadius: CGFloat = 50.0
+    
+    var shipVelocity: CGFloat = 0.0
+    var shipAcceleration: CGFloat = 0.05
+    var maxShipSpeed: CGFloat = 10.0
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
@@ -67,7 +76,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //      Sets our custom font color
         
         levelDisplay.fontColor = SKColor(red: 84/255, green: 93/255, blue: 175/255, alpha: 1.0)
-        levelDisplay.position = CGPoint(x: size.width / 2 + 300, y: size.height - 40 - adjustmentFactor)
+        levelDisplay.position = CGPoint(x: size.width / 2 + 300, y: size.height - 38 - adjustmentFactor)
         levelDisplay.name = "levelDisplay"
         
 //      Sets the current level for display
@@ -91,9 +100,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         addCircularSprite()  // Add the blue circular sprite
         spawnRedBall()  // Spawn the first red ball
-        addJoystick()  // Add the joystick
         
         setupProgress()
+        
+//      Creates movement bar
+        addMovementBar()
         
         // Schedule the enemy creation every x seconds
         let spawnAsteroidsAction = SKAction.repeatForever(SKAction.sequence([SKAction.run {
@@ -177,6 +188,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
     }
     
+    // Function to add the movement bar and movement knob
+    func addMovementBar() {
+        // Add movement bar at the bottom of the screen
+        movementBar = SKSpriteNode(imageNamed: "MovementController")
+        movementBar.size = CGSize(width: 313 / 5, height: 1190 / 5)
+        movementBar.position = CGPoint(x: 70, y: size.height / 2 - 30)
+        addChild(movementBar)
+
+        // Add movement knob on top of the movement bar
+        movementKnob = SKSpriteNode(imageNamed: "MovementKnob")
+        movementKnob.size = CGSize(width: 405 / 5 , height: 405 / 5)
+        movementKnob.position = movementBar.position
+        addChild(movementKnob)
+    }
+    
     //  Sends player back to levels scene
     func transitionToLevelsScene() {
         let levelsScene = NewLevelsScreen(size: size)
@@ -209,7 +235,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         circularSprite = SKSpriteNode(imageNamed: "Ship-Level1")
         
         circularSprite.size = CGSize(width: 180, height: 80)
-        circularSprite.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        circularSprite.position = CGPoint(x: 180, y: self.size.height / 2)
         
         // Add physics body to blue ball
         circularSprite.physicsBody = SKPhysicsBody(circleOfRadius: 20)
@@ -283,55 +309,63 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let removeAction = SKAction.sequence([SKAction.wait(forDuration: 5.0), SKAction.removeFromParent()])
         yellowBall.run(removeAction)
     }
-
-    // Function for adding joystick initially
-    func addJoystick() {
-        joystickHolder = SKShapeNode(circleOfRadius: 30)
-        joystickHolder.fillColor = .lightGray
-        joystickHolder.position = CGPoint(x: 70, y: 50)
-        addChild(joystickHolder)
-        
-        movementBall = SKShapeNode(circleOfRadius: 15)
-        movementBall.fillColor = .gray
-        movementBall.position = joystickHolder.position // Start at center of holder
-        addChild(movementBall)
-    }
     
     // MARK: - Touch Handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
             let location = touch.location(in: self)
-            if movementBall.contains(location) {
-                isJoystickActive = true
+            if movementKnob.contains(location) {
+                isMovementKnobActive = true
             }
         }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard isJoystickActive else { return }
+        guard isMovementKnobActive else { return }
+
         for touch in touches {
             let location = touch.location(in: self)
-            let joystickVector = CGVector(dx: location.x - joystickHolder.position.x, dy: location.y - joystickHolder.position.y)
-            let distance = sqrt(joystickVector.dx * joystickVector.dx + joystickVector.dy * joystickVector.dy)
-            
+            let knobVectorY = location.y - movementBar.position.y // Only consider vertical movement
+            let distance = abs(knobVectorY)  // Only the Y-distance matters
+
+            // If within knob radius, allow free movement
             if distance <= knobRadius {
-                movementBall.position = location
+                movementKnob.position.y = location.y  // Move only in the Y direction
             } else {
-                let angle = atan2(joystickVector.dy, joystickVector.dx)
-                let xPosition = cos(angle) * knobRadius
-                let yPosition = sin(angle) * knobRadius
-                movementBall.position = CGPoint(x: joystickHolder.position.x + xPosition, y: joystickHolder.position.y + yPosition)
+                // Constrain movement to the knob's Y axis boundary
+                let yPosition = movementBar.position.y + (knobRadius * (knobVectorY / abs(knobVectorY)))  // Move to the top/bottom of the range
+                movementKnob.position.y = yPosition
             }
+
+            // Scale movement based on how far the knob is moved vertically
+            let moveAmount = (movementKnob.position.y - movementBar.position.y) / knobRadius
+            shipVelocity = moveAmount * maxShipSpeed  // Scale by max speed
         }
     }
-    
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        movementBall.position = joystickHolder.position
-        isJoystickActive = false
+
+
+    // Function to reset the movement knob's position (animated) back to the center
+    func resetMovementKnobPosition() {
+        // Ensure the knob is returned to its original position on the bar
+        isMovementKnobActive = false
+        movementKnob.removeAllActions()  // Stop any ongoing actions
+        
+        // Reset knob's position to the center of the movement bar
+        let moveBackAction = SKAction.move(to: movementBar.position, duration: 0.2)
+        moveBackAction.timingMode = .easeOut
+        movementKnob.run(moveBackAction)
     }
-    
+
+    // MARK: - Touch Handling
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // Reset the knob when touches end
+        resetMovementKnobPosition()
+        isJoystickActive = false  // Ensure joystick is no longer active
+    }
+
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        movementBall.position = joystickHolder.position
+        // Also reset the knob if the touch is canceled
+        resetMovementKnobPosition()
         isJoystickActive = false
     }
     
@@ -353,14 +387,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             background2.position.x = background1.position.x + self.size.width
         }
         
-        // Move the player and handle joystick control
-        guard isJoystickActive else { return }
-        let joystickVector = CGVector(dx: movementBall.position.x - joystickHolder.position.x, dy: movementBall.position.y - joystickHolder.position.y)
-        let moveSpeed: CGFloat = 0.1
-        let newPosition = CGPoint(x: circularSprite.position.x + joystickVector.dx * moveSpeed, y: circularSprite.position.y + joystickVector.dy * moveSpeed)
-        let clampedX = max(min(newPosition.x, self.size.width - circularSprite.frame.width / 2), circularSprite.frame.width / 2)
-        let clampedY = max(min(newPosition.y, self.size.height - circularSprite.frame.height / 2), circularSprite.frame.height / 2)
-        circularSprite.position = CGPoint(x: clampedX, y: clampedY)
+        // Apply ship movement based on velocity for smoother effect
+        circularSprite.position.y += shipVelocity  // Apply the velocity to the Y position
+        
+        // Apply friction to slowly stop the ship when not actively moving the knob
+        shipVelocity *= 1  // Dampen the velocity over time (friction effect)
+        
+        // Clamp the ship's position to stay within the screen bounds
+        let topBound = self.size.height - circularSprite.frame.height / 2 - 50
+        let bottomBound = circularSprite.frame.height / 2
+
+        let clampedY = max(min(circularSprite.position.y, topBound), bottomBound)
+        circularSprite.position.y = clampedY
     }
     
     // MARK: - Collision Detection
