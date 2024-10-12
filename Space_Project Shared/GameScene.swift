@@ -63,8 +63,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var knobRadius: CGFloat = 50.0
     
     var shipVelocity: CGFloat = 0.0
-    var shipAcceleration: CGFloat = 0.05
-    var maxShipSpeed: CGFloat = 10.0
+    var shipAcceleration: CGFloat = 0.1
+    var maxShipSpeed: CGFloat = 2.0
+    
+//  Used to add ship Speed bar and knob
+    var speedBar = SKSpriteNode(imageNamed: "speedBar")
+    var speedKnob = SKShapeNode(ellipseOf: CGSize(width: 40, height: 40))
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
@@ -72,6 +76,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         levelDisplay.fontName = "Futura-Bold"
         levelDisplay.fontSize = 20
+        
+        speedBar.size = CGSize(width: 922 / 5, height: 243 / 5)
+        speedBar.position = CGPoint(x: size.width - 150, y: 60)
+        addChild(speedBar)
         
 //      Sets our custom font color
         
