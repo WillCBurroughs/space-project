@@ -77,6 +77,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var hot = SKSpriteNode(imageNamed: "hot")
     var cold = SKSpriteNode(imageNamed: "cold")
     
+//  Used to determine if speedbar being moved
+    var isSpeedBarMoving = false
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
@@ -90,7 +93,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
 //      Adding cold icon to speedBar
         cold.size = CGSize(width: 42, height: 42)
-        cold.position = CGPoint(x: size.width - 218, y: 60)
+        cold.position = CGPoint(x: size.width - 218.4, y: 60)
         cold.zPosition = 5
         addChild(cold)
 
@@ -355,29 +358,53 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if movementKnob.contains(location) {
                 isMovementKnobActive = true
             }
+            
+            if speedKnob.contains(location) {
+                isSpeedBarMoving = true
+            }
+            
         }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard isMovementKnobActive else { return }
-
         for touch in touches {
             let location = touch.location(in: self)
-            let knobVectorY = location.y - movementBar.position.y // Only consider vertical movement
-            let distance = abs(knobVectorY)  // Only the Y-distance matters
+            
+            // Handle movementKnob functionality
+            if isMovementKnobActive {
+                let knobVectorY = location.y - movementBar.position.y // Only consider vertical movement
+                let distance = abs(knobVectorY)  // Only the Y-distance matters
 
-            // If within knob radius, allow free movement
-            if distance <= knobRadius {
-                movementKnob.position.y = location.y  // Move only in the Y direction
-            } else {
-                // Constrain movement to the knob's Y axis boundary
-                let yPosition = movementBar.position.y + (knobRadius * (knobVectorY / abs(knobVectorY)))  // Move to the top/bottom of the range
-                movementKnob.position.y = yPosition
+                // If within knob radius, allow free movement
+                if distance <= knobRadius {
+                    movementKnob.position.y = location.y  // Move only in the Y direction
+                } else {
+                    // Constrain movement to the knob's Y axis boundary
+                    let yPosition = movementBar.position.y + (knobRadius * (knobVectorY / abs(knobVectorY)))  // Move to the top/bottom of the range
+                    movementKnob.position.y = yPosition
+                }
+                
+                // Scale movement based on how far the knob is moved vertically
+                let moveAmount = (movementKnob.position.y - movementBar.position.y) / knobRadius
+                shipVelocity = moveAmount * maxShipSpeed  // Scale by max speed
             }
 
-            // Scale movement based on how far the knob is moved vertically
-            let moveAmount = (movementKnob.position.y - movementBar.position.y) / knobRadius
-            shipVelocity = moveAmount * maxShipSpeed  // Scale by max speed
+            // Handle speedKnob functionality
+            if isSpeedBarMoving {
+                let knobVectorX = location.x - speedBar.position.x  // Only consider horizontal movement
+
+                // Get the leftmost and rightmost X positions of the speedBar
+                let minX = speedBar.position.x - speedBar.size.width / 2 + 24
+                let maxX = speedBar.position.x + speedBar.size.width / 2 - 25
+
+                // Clamp the knob's X position within the bounds of the speedBar
+                let newXPosition = max(min(location.x, maxX), minX)
+                speedKnob.position.x = newXPosition
+                
+//                // Optionally, update the speed based on the knob's position
+//                let knobPositionRatio = (newXPosition - minX) / (maxX - minX)  // Ratio of knob position within speedBar
+//                shipVelocity = knobPositionRatio * maxShipSpeed  // Scale ship speed based on knob position
+            }
         }
     }
 
@@ -399,12 +426,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Reset the knob when touches end
         resetMovementKnobPosition()
         isJoystickActive = false  // Ensure joystick is no longer active
+        isSpeedBarMoving = false
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Also reset the knob if the touch is canceled
         resetMovementKnobPosition()
         isJoystickActive = false
+        isSpeedBarMoving = false
     }
     
     // MARK: - Update Cycle
