@@ -105,13 +105,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Setup speedShipBar
         speedShipBar = SKSpriteNode(color: .clear, size: CGSize(width: 922 / 5, height: 243 / 5))
-        speedShipBar.position = CGPoint(x: size.width - 150, y: 60)
+        speedShipBar.position = CGPoint(x: size.width - 240, y: 60)
         speedShipBar.anchorPoint = CGPoint(x: 0, y: 0.5)  // Anchor on the left
+        applyRoundedGradientToSpeedShipBar(speedShipBar: speedShipBar, width: 922 / 10, height: 243 / 5, cornerRadius: 25)
         addChild(speedShipBar)
         
         // Add the speedKnob on top of the bar
         speedKnob.position = CGPoint(x: size.width - 150, y: 60)
         speedKnob.fillColor = UIColor(red: 255, green: 0, blue: 0, alpha: 1)
+        speedKnob.zPosition = 4
         addChild(speedKnob)
         
 //      Sets our custom font color
@@ -424,6 +426,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // Adjust the position to keep it anchored to the left, but offset by 20 units to the left
                 speedShipBar.position.x = minX - 23  // Shift left by 20 units
                 speedShipBar.position.y = speedBar.position.y  // Keep it aligned vertically
+                speedShipBar.zPosition = 3
             }
         }
     }
