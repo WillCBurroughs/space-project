@@ -66,9 +66,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipAcceleration: CGFloat = 0.1
     var maxShipSpeed: CGFloat = 2.0
     
-//  Used to add ship Speed bar and knob
+//  Used to add ship Speed bar and knob and speedShipBar
     var speedBar = SKSpriteNode(imageNamed: "speedBar")
-    var speedKnob = SKShapeNode(ellipseOf: CGSize(width: 40, height: 40))
+    var speedKnob = SKShapeNode(ellipseOf: CGSize(width: 50, height: 50))
+    
+//  Used to show current speed will lead from left of speedBar all the way to speedKnob
+    var speedShipBar = SKShapeNode(rectOf: CGSize(width: 922 / 5, height: 243 / 5), cornerRadius: 30)
+
+//  Used to add hot and cold section
+    var hot = SKSpriteNode(imageNamed: "hot")
+    var cold = SKSpriteNode(imageNamed: "cold")
+    
+//  Used to determine if speedbar being moved
+    var isSpeedBarMoving = false
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
@@ -80,6 +90,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         speedBar.size = CGSize(width: 922 / 5, height: 243 / 5)
         speedBar.position = CGPoint(x: size.width - 150, y: 60)
         addChild(speedBar)
+        
+//      Adding cold icon to speedBar
+        cold.size = CGSize(width: 42, height: 42)
+        cold.position = CGPoint(x: size.width - 218.4, y: 60)
+        cold.zPosition = 5
+        addChild(cold)
+
+//      Adding hot icon to speedBar
+        hot.size = CGSize(width: 42, height: 42)
+        hot.position = CGPoint(x: size.width - 82, y: 60)
+        hot.zPosition = 5
+        addChild(hot)
+
+        
+        speedKnob.position = CGPoint(x: size.width - 150, y: 60)
+        speedKnob.fillColor = UIColor(red: 255, green: 0, blue: 0, alpha: 1)
+        addChild(speedKnob)
+        
+        speedShipBar.position = CGPoint(x: size.width - 150, y: 60)
+        speedShipBar.strokeColor = .clear
+//        speedShipBar.fillColor = .red
+        
+        addChild(speedShipBar)
         
 //      Sets our custom font color
         
@@ -325,29 +358,53 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if movementKnob.contains(location) {
                 isMovementKnobActive = true
             }
+            
+            if speedKnob.contains(location) {
+                isSpeedBarMoving = true
+            }
+            
         }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard isMovementKnobActive else { return }
-
         for touch in touches {
             let location = touch.location(in: self)
-            let knobVectorY = location.y - movementBar.position.y // Only consider vertical movement
-            let distance = abs(knobVectorY)  // Only the Y-distance matters
+            
+            // Handle movementKnob functionality
+            if isMovementKnobActive {
+                let knobVectorY = location.y - movementBar.position.y // Only consider vertical movement
+                let distance = abs(knobVectorY)  // Only the Y-distance matters
 
-            // If within knob radius, allow free movement
-            if distance <= knobRadius {
-                movementKnob.position.y = location.y  // Move only in the Y direction
-            } else {
-                // Constrain movement to the knob's Y axis boundary
-                let yPosition = movementBar.position.y + (knobRadius * (knobVectorY / abs(knobVectorY)))  // Move to the top/bottom of the range
-                movementKnob.position.y = yPosition
+                // If within knob radius, allow free movement
+                if distance <= knobRadius {
+                    movementKnob.position.y = location.y  // Move only in the Y direction
+                } else {
+                    // Constrain movement to the knob's Y axis boundary
+                    let yPosition = movementBar.position.y + (knobRadius * (knobVectorY / abs(knobVectorY)))  // Move to the top/bottom of the range
+                    movementKnob.position.y = yPosition
+                }
+                
+                // Scale movement based on how far the knob is moved vertically
+                let moveAmount = (movementKnob.position.y - movementBar.position.y) / knobRadius
+                shipVelocity = moveAmount * maxShipSpeed  // Scale by max speed
             }
 
-            // Scale movement based on how far the knob is moved vertically
-            let moveAmount = (movementKnob.position.y - movementBar.position.y) / knobRadius
-            shipVelocity = moveAmount * maxShipSpeed  // Scale by max speed
+            // Handle speedKnob functionality
+            if isSpeedBarMoving {
+                let knobVectorX = location.x - speedBar.position.x  // Only consider horizontal movement
+
+                // Get the leftmost and rightmost X positions of the speedBar
+                let minX = speedBar.position.x - speedBar.size.width / 2 + 24
+                let maxX = speedBar.position.x + speedBar.size.width / 2 - 25
+
+                // Clamp the knob's X position within the bounds of the speedBar
+                let newXPosition = max(min(location.x, maxX), minX)
+                speedKnob.position.x = newXPosition
+                
+//                // Optionally, update the speed based on the knob's position
+//                let knobPositionRatio = (newXPosition - minX) / (maxX - minX)  // Ratio of knob position within speedBar
+//                shipVelocity = knobPositionRatio * maxShipSpeed  // Scale ship speed based on knob position
+            }
         }
     }
 
@@ -369,12 +426,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Reset the knob when touches end
         resetMovementKnobPosition()
         isJoystickActive = false  // Ensure joystick is no longer active
+        isSpeedBarMoving = false
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         // Also reset the knob if the touch is canceled
         resetMovementKnobPosition()
         isJoystickActive = false
+        isSpeedBarMoving = false
     }
     
     // MARK: - Update Cycle
