@@ -66,9 +66,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipAcceleration: CGFloat = 0.1
     var maxShipSpeed: CGFloat = 2.0
     
-//  Used to add ship Speed bar and knob
+//  Used to add ship Speed bar and knob and speedShipBar
     var speedBar = SKSpriteNode(imageNamed: "speedBar")
-    var speedKnob = SKShapeNode(ellipseOf: CGSize(width: 40, height: 40))
+    var speedKnob = SKShapeNode(ellipseOf: CGSize(width: 50, height: 50))
+    
+//  Used to show current speed will lead from left of speedBar all the way to speedKnob
+    var speedShipBar = SKShapeNode(rectOf: CGSize(width: 922 / 5, height: 243 / 5), cornerRadius: 30)
+
+//  Used to add hot and cold section
+    var hot = SKSpriteNode(imageNamed: "hot")
+    var cold = SKSpriteNode(imageNamed: "cold")
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
@@ -80,6 +87,29 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         speedBar.size = CGSize(width: 922 / 5, height: 243 / 5)
         speedBar.position = CGPoint(x: size.width - 150, y: 60)
         addChild(speedBar)
+        
+//      Adding cold icon to speedBar
+        cold.size = CGSize(width: 42, height: 42)
+        cold.position = CGPoint(x: size.width - 218, y: 60)
+        cold.zPosition = 5
+        addChild(cold)
+
+//      Adding hot icon to speedBar
+        hot.size = CGSize(width: 42, height: 42)
+        hot.position = CGPoint(x: size.width - 82, y: 60)
+        hot.zPosition = 5
+        addChild(hot)
+
+        
+        speedKnob.position = CGPoint(x: size.width - 150, y: 60)
+        speedKnob.fillColor = UIColor(red: 255, green: 0, blue: 0, alpha: 1)
+        addChild(speedKnob)
+        
+        speedShipBar.position = CGPoint(x: size.width - 150, y: 60)
+        speedShipBar.strokeColor = .clear
+//        speedShipBar.fillColor = .red
+        
+        addChild(speedShipBar)
         
 //      Sets our custom font color
         
