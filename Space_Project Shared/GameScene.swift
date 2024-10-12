@@ -71,7 +71,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var speedKnob = SKShapeNode(ellipseOf: CGSize(width: 50, height: 50))
     
 //  Used to show current speed will lead from left of speedBar all the way to speedKnob
-    var speedShipBar = SKShapeNode(rectOf: CGSize(width: 922 / 5, height: 243 / 5), cornerRadius: 30)
+    var speedShipBar: SKSpriteNode!
 
 //  Used to add hot and cold section
     var hot = SKSpriteNode(imageNamed: "hot")
@@ -103,16 +103,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         hot.zPosition = 5
         addChild(hot)
 
-        
-        speedKnob.position = CGPoint(x: size.width - 150, y: 60)
-        speedKnob.fillColor = UIColor(red: 255, green: 0, blue: 0, alpha: 1)
-        addChild(speedKnob)
-        
-        speedShipBar.position = CGPoint(x: size.width - 150, y: 60)
-        speedShipBar.strokeColor = .clear
-//        speedShipBar.fillColor = .red
-        
+        // Setup speedShipBar
+        speedShipBar = SKSpriteNode(color: .clear, size: CGSize(width: 922 / 5, height: 243 / 5))
+        speedShipBar.position = CGPoint(x: size.width - 240, y: 60)
+        speedShipBar.anchorPoint = CGPoint(x: 0, y: 0.5)  // Anchor on the left
+        applyRoundedGradientToSpeedShipBar(speedShipBar: speedShipBar, width: 922 / 10 + 25, height: 243 / 5, cornerRadius: 25)
         addChild(speedShipBar)
+        
+        // Add the speedKnob on top of the bar
+        speedKnob.position = CGPoint(x: size.width - 150, y: 60)
+        speedKnob.fillColor = UIColor(red: 128 / 255, green: 116 / 255, blue: 128 / 255, alpha: 0.56)
+        speedKnob.zPosition = 4
+        addChild(speedKnob)
         
 //      Sets our custom font color
         
@@ -157,6 +159,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
         let fireAction = SKAction.repeatForever(SKAction.sequence([SKAction.run(fireYellowBall), SKAction.wait(forDuration: 0.5)]))
         run(fireAction)
+    }
+    
+    func interpolate(from: CGFloat, to: CGFloat, progress: CGFloat) -> CGFloat {
+        return from + (to - from) * progress
     }
     
     // Function used to add all progress nodes
@@ -389,7 +395,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 shipVelocity = moveAmount * maxShipSpeed  // Scale by max speed
             }
 
-            // Handle speedKnob functionality
+            // Handle speedKnob functionality (controls horizontal speed)
             if isSpeedBarMoving {
                 let knobVectorX = location.x - speedBar.position.x  // Only consider horizontal movement
 
@@ -400,10 +406,48 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // Clamp the knob's X position within the bounds of the speedBar
                 let newXPosition = max(min(location.x, maxX), minX)
                 speedKnob.position.x = newXPosition
+
+                // Calculate the width of the speedShipBar based on the knob's position
+                var barWidth = newXPosition - minX  // Calculate width relative to the leftmost part
+
+                // Prevent width from being less than a small value (to avoid unwrapping nil or zero-sized width)
+                if barWidth < 1 {
+                    barWidth = 1
+                }
+
+                // Add 40 units to the width
+                barWidth += 51
+
+                // Define the height of the speed bar
+                let barHeight = speedBar.size.height
+
+                // Adjust the size and apply gradient to speedShipBar
+                speedShipBar.size = CGSize(width: barWidth, height: barHeight)
+
+                // Apply the gradient texture
+                applyRoundedGradientToSpeedShipBar(speedShipBar: speedShipBar, width: barWidth, height: barHeight, cornerRadius: 25)
+
+                // Adjust the position to keep it anchored to the left, but offset by 20 units to the left
+                speedShipBar.position.x = minX - 23  // Shift left by 20 units
+                speedShipBar.position.y = speedBar.position.y  // Keep it aligned vertically
+                speedShipBar.zPosition = 3
                 
-//                // Optionally, update the speed based on the knob's position
-//                let knobPositionRatio = (newXPosition - minX) / (maxX - minX)  // Ratio of knob position within speedBar
-//                shipVelocity = knobPositionRatio * maxShipSpeed  // Scale ship speed based on knob position
+                // Calculate the position ratio (0.0 on the left, 1.0 on the right)
+                let positionRatio = (newXPosition - minX) / (maxX - minX)
+
+                // Define the two RGBA colors
+                let startColor = (r: CGFloat(0), g: CGFloat(171), b: CGFloat(255), a: CGFloat(0.56))
+                let endColor = (r: CGFloat(255), g: CGFloat(61), b: CGFloat(0), a: CGFloat(0.56))
+
+                // Interpolate between the start and end colors based on the knob's position
+                let r = interpolate(from: startColor.r, to: endColor.r, progress: positionRatio)
+                let g = interpolate(from: startColor.g, to: endColor.g, progress: positionRatio)
+                let b = interpolate(from: startColor.b, to: endColor.b, progress: positionRatio)
+                let a = interpolate(from: startColor.a, to: endColor.a, progress: positionRatio)
+
+                // Update the knob's color with the interpolated values
+                speedKnob.fillColor = UIColor(red: r / 255, green: g / 255, blue: b / 255, alpha: a)
+                
             }
         }
     }
