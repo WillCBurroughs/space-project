@@ -7,7 +7,7 @@
 
 import SpriteKit
 
-func createAsteroid(scene: SKScene, screenSize: CGSize, enemyCategory: UInt32, playerCategory: UInt32, playerBullet: UInt32) {
+func createAsteroid(scene: SKScene, screenSize: CGSize, speedMultiplier:CGFloat, enemyCategory: UInt32, playerCategory: UInt32, playerBullet: UInt32) {
     // Create the asteroid node (you can replace this with any image or shape)
     let asteroid = SKSpriteNode(imageNamed: "asteroid")
     asteroid.size = CGSize(width: 90, height: 70) // Set asteroid size
@@ -33,7 +33,8 @@ func createAsteroid(scene: SKScene, screenSize: CGSize, enemyCategory: UInt32, p
     scene.addChild(asteroid)
 
     // Move the asteroid from the right to the left across the screen
-    let moveDuration = TimeInterval(CGFloat.random(in: 5...10))  // Random speed between 5 to 10 seconds
+    let baseMoveDuration = TimeInterval(CGFloat.random(in: 5...10))  // Random speed between 5 to 10 seconds
+    let moveDuration = baseMoveDuration / Double(speedMultiplier)  // Adjust speed based on the speedMultiplier
     let moveAction = SKAction.moveBy(x: -screenSize.width - asteroid.size.width, y: 0, duration: moveDuration)
     
     // Remove the asteroid once it moves past the left side of the screen
