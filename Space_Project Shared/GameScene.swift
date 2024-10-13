@@ -89,7 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
         
 //      Determines multiplier
-        speedMultiplier = savedSpeedMultiplier != 0 ? CGFloat(savedSpeedMultiplier) : 1.0
+        speedMultiplier = CGFloat(1.0)
         
         levelDisplay.fontName = "Futura-Bold"
         levelDisplay.fontSize = 20
@@ -164,12 +164,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.run(spawnAsteroidsAction)
         
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
-        let fireAction = SKAction.repeatForever(SKAction.sequence([SKAction.run(fireYellowBall), SKAction.wait(forDuration: 0.5)]))
-        run(fireAction)
+        startFiringBullets()
     }
     
     func interpolate(from: CGFloat, to: CGFloat, progress: CGFloat) -> CGFloat {
         return from + (to - from) * progress
+    }
+    
+    // will fire bullets
+    func startFiringBullets() {
+        // Remove any existing fire actions
+        removeAction(forKey: "firing")
+
+        let fireAction = SKAction.repeatForever(SKAction.sequence([
+            SKAction.wait(forDuration: 0.5 / Double(speedMultiplier)),  // Wait before firing
+            SKAction.run(fireYellowBall)
+        ]))
+
+        // Run the new fire action
+        run(fireAction, withKey: "firing")
     }
     
     // Function used to add all progress nodes
@@ -354,7 +367,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         yellowBall.physicsBody?.affectedByGravity = false
         
         // Set initial velocity to move right
-        yellowBall.physicsBody?.velocity = CGVector(dx: 300, dy: 0)
+        yellowBall.physicsBody?.velocity = CGVector(dx: 300 * speedMultiplier, dy: 0)
         
         // Add yellow ball (laser) to the scene
         addChild(yellowBall)
@@ -450,6 +463,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 speedMultiplier = CGFloat(speedValue)
 
+                startFiringBullets()
+                
                 // Define the two RGBA colors
                 let startColor = (r: CGFloat(0), g: CGFloat(171), b: CGFloat(255), a: CGFloat(0.56))
                 let endColor = (r: CGFloat(255), g: CGFloat(61), b: CGFloat(0), a: CGFloat(0.56))
@@ -486,6 +501,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         resetMovementKnobPosition()
         isJoystickActive = false  // Ensure joystick is no longer active
         isSpeedBarMoving = false
+        
+        startFiringBullets()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -493,13 +510,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         resetMovementKnobPosition()
         isJoystickActive = false
         isSpeedBarMoving = false
+        
+        startFiringBullets()
     }
     
     // MARK: - Update Cycle
     override func update(_ currentTime: TimeInterval) {
         // Move both backgrounds to the left
-        background1.position.x -= 2  // Adjust this speed as needed
-        background2.position.x -= 2
+        background1.position.x -= 2 * speedMultiplier  // Adjust this speed as needed
+        background2.position.x -= 2 * speedMultiplier
         
         moveShip()
         
