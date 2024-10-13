@@ -176,10 +176,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Remove any existing fire actions
         removeAction(forKey: "firing")
 
-        // Create a new fire action with the updated speedMultiplier
         let fireAction = SKAction.repeatForever(SKAction.sequence([
-            SKAction.run(fireYellowBall),
-            SKAction.wait(forDuration: 0.5 / Double(speedMultiplier))  // Adjust based on speedMultiplier
+            SKAction.wait(forDuration: 0.5 / Double(speedMultiplier)),  // Wait before firing
+            SKAction.run(fireYellowBall)
         ]))
 
         // Run the new fire action
@@ -368,7 +367,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         yellowBall.physicsBody?.affectedByGravity = false
         
         // Set initial velocity to move right
-        yellowBall.physicsBody?.velocity = CGVector(dx: 300, dy: 0)
+        yellowBall.physicsBody?.velocity = CGVector(dx: 300 * speedMultiplier, dy: 0)
         
         // Add yellow ball (laser) to the scene
         addChild(yellowBall)
@@ -464,6 +463,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 speedMultiplier = CGFloat(speedValue)
 
+                startFiringBullets()
+                
                 // Define the two RGBA colors
                 let startColor = (r: CGFloat(0), g: CGFloat(171), b: CGFloat(255), a: CGFloat(0.56))
                 let endColor = (r: CGFloat(255), g: CGFloat(61), b: CGFloat(0), a: CGFloat(0.56))
