@@ -164,12 +164,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.run(spawnAsteroidsAction)
         
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
-        let fireAction = SKAction.repeatForever(SKAction.sequence([SKAction.run(fireYellowBall), SKAction.wait(forDuration: 0.5)]))
-        run(fireAction)
+        startFiringBullets()
     }
     
     func interpolate(from: CGFloat, to: CGFloat, progress: CGFloat) -> CGFloat {
         return from + (to - from) * progress
+    }
+    
+    // will fire bullets
+    func startFiringBullets() {
+        // Remove any existing fire actions
+        removeAction(forKey: "firing")
+
+        // Create a new fire action with the updated speedMultiplier
+        let fireAction = SKAction.repeatForever(SKAction.sequence([
+            SKAction.run(fireYellowBall),
+            SKAction.wait(forDuration: 0.5 / Double(speedMultiplier))  // Adjust based on speedMultiplier
+        ]))
+
+        // Run the new fire action
+        run(fireAction, withKey: "firing")
     }
     
     // Function used to add all progress nodes
@@ -486,6 +500,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         resetMovementKnobPosition()
         isJoystickActive = false  // Ensure joystick is no longer active
         isSpeedBarMoving = false
+        
+        startFiringBullets()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -493,13 +509,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         resetMovementKnobPosition()
         isJoystickActive = false
         isSpeedBarMoving = false
+        
+        startFiringBullets()
     }
     
     // MARK: - Update Cycle
     override func update(_ currentTime: TimeInterval) {
         // Move both backgrounds to the left
-        background1.position.x -= 2  // Adjust this speed as needed
-        background2.position.x -= 2
+        background1.position.x -= 2 * speedMultiplier  // Adjust this speed as needed
+        background2.position.x -= 2 * speedMultiplier
         
         moveShip()
         
