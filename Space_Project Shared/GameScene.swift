@@ -80,9 +80,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //  Used to determine if speedbar being moved
     var isSpeedBarMoving = false
     
+//  Saved speed Multiplier
+    let savedSpeedMultiplier = UserDefaults.standard.float(forKey: "speedBarValue")
+    var speedMultiplier: CGFloat!
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
+        
+//      Determines multiplier
+        speedMultiplier = savedSpeedMultiplier != 0 ? CGFloat(savedSpeedMultiplier) : 1.0
         
         levelDisplay.fontName = "Futura-Bold"
         levelDisplay.fontSize = 20
@@ -200,7 +207,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     //  Function that moves the ship to the right
     func moveShip() {
         // Move the ship to the right by `shipSpeed`
-        shipForProgress.position.x += shipSpeed
+        shipForProgress.position.x += (shipSpeed * speedMultiplier)
         
         // Ensure the ship doesn't move beyond the progress bar's bounds
         let maxXPosition = holderProgress.position.x + holderProgress.size.width / 2 - shipForProgress.size.width / 2
@@ -434,6 +441,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 
                 // Calculate the position ratio (0.0 on the left, 1.0 on the right)
                 let positionRatio = (newXPosition - minX) / (maxX - minX)
+                
+                // Determines the speedValue based on how far speed is moved left or right
+                let speedValue = 0.5 + (positionRatio * (2.0 - 0.5))
+                
+                // Save the speedValue to UserDefaults
+                UserDefaults.standard.set(speedValue, forKey: "speedBarValue")
+                
+                speedMultiplier = CGFloat(speedValue)
 
                 // Define the two RGBA colors
                 let startColor = (r: CGFloat(0), g: CGFloat(171), b: CGFloat(255), a: CGFloat(0.56))
