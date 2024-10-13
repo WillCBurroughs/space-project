@@ -89,7 +89,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
         
 //      Determines multiplier
-        speedMultiplier = savedSpeedMultiplier != 0 ? CGFloat(savedSpeedMultiplier) : 1.0
+        speedMultiplier = CGFloat(1.0)
         
         levelDisplay.fontName = "Futura-Bold"
         levelDisplay.fontSize = 20
