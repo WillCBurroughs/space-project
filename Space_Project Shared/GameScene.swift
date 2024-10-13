@@ -157,11 +157,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addMovementBar()
         
         // Schedule the enemy creation every x seconds
-        let spawnAsteroidsAction = SKAction.repeatForever(SKAction.sequence([SKAction.run {
-            createAsteroid(scene: self, screenSize: self.size, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBullet: self.yellowBallCategory)
-        }, SKAction.wait(forDuration: 1.0)]))
-
-        self.run(spawnAsteroidsAction)
+        startSpawningAsteroids()
         
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
         startFiringBullets()
@@ -183,6 +179,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Run the new fire action
         run(fireAction, withKey: "firing")
+    }
+    
+//  Used to spawn asteroids 
+    func startSpawningAsteroids() {
+        // Remove any existing spawn asteroid actions
+        removeAction(forKey: "spawningAsteroids")
+
+        // Create a new spawn action with the updated speedMultiplier
+        let spawnAsteroidsAction = SKAction.repeatForever(SKAction.sequence([
+            SKAction.wait(forDuration: 1.0 / Double(speedMultiplier)),  // Adjust spawn frequency
+            SKAction.run {
+                createAsteroid(scene: self, screenSize: self.size, speedMultiplier: self.speedMultiplier, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBullet: self.yellowBallCategory)
+            }
+        ]))
+
+        // Run the new spawn action
+        run(spawnAsteroidsAction, withKey: "spawningAsteroids")
     }
     
     // Function used to add all progress nodes
@@ -456,7 +469,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let positionRatio = (newXPosition - minX) / (maxX - minX)
                 
                 // Determines the speedValue based on how far speed is moved left or right
-                let speedValue = 0.5 + (positionRatio * (2.0 - 0.5))
+                let speedValue = 0.5 + (positionRatio * (2 - 0.5))
                 
                 // Save the speedValue to UserDefaults
                 UserDefaults.standard.set(speedValue, forKey: "speedBarValue")
@@ -464,6 +477,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 speedMultiplier = CGFloat(speedValue)
 
                 startFiringBullets()
+                startSpawningAsteroids()
                 
                 // Define the two RGBA colors
                 let startColor = (r: CGFloat(0), g: CGFloat(171), b: CGFloat(255), a: CGFloat(0.56))
@@ -503,6 +517,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         isSpeedBarMoving = false
         
         startFiringBullets()
+        startSpawningAsteroids()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -512,6 +527,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         isSpeedBarMoving = false
         
         startFiringBullets()
+        startSpawningAsteroids()
     }
     
     // MARK: - Update Cycle
