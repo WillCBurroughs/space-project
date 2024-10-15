@@ -84,9 +84,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let savedSpeedMultiplier = UserDefaults.standard.float(forKey: "speedBarValue")
     var speedMultiplier: CGFloat!
     
+    //  Loading in player health from UserDefaults
+    var playerHealth = UserDefaults.standard.integer(forKey: "playerHealth")
+    var displayHealthLabel = SKLabelNode(text: "")
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
+        
+        // Setup the label to display the player's health
+        displayHealthLabel.fontName = "Futura-Bold"
+        displayHealthLabel.fontSize = 14
+        displayHealthLabel.fontColor = SKColor.white
+        displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
+        displayHealthLabel.zPosition = 10  // Ensure it's in front of other elements
+        displayHealthLabel.text = "\(playerHealth)"
+        addChild(displayHealthLabel)
         
 //      Determines multiplier
         speedMultiplier = CGFloat(1.0)
@@ -364,7 +377,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Function to fire yellow balls from the blue ball
     func fireYellowBall() {
-        let yellowBall = SKSpriteNode(imageNamed: "playerLaser")
+        let yellowBall = SKSpriteNode(imageNamed: "playerlaser")
         
         // Position yellow ball at the blue ball's position
         yellowBall.position = CGPoint(x: circularSprite.position.x + 90, y: circularSprite.position.y)
