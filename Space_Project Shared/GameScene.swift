@@ -85,7 +85,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var speedMultiplier: CGFloat!
     
     //  Loading in player health from UserDefaults
-    var playerHealth = UserDefaults.standard.integer(forKey: "playerHealth")
+    var playerHealth: Int! = UserDefaults.standard.integer(forKey: "playerHealth")
     var displayHealthLabel = SKLabelNode(text: "")
     
     override func didMove(to view: SKView) {
@@ -98,7 +98,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         displayHealthLabel.fontColor = SKColor.white
         displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
         displayHealthLabel.zPosition = 10  // Ensure it's in front of other elements
-        displayHealthLabel.text = "\(playerHealth)"
+        
+//      If not set, set to 3
+        if playerHealth == 0 || playerHealth <= 3 {
+            playerHealth = 3
+            UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
+        }
+        
+        displayHealthLabel.text =  "\(playerHealth!)"
         addChild(displayHealthLabel)
         
 //      Determines multiplier
@@ -583,6 +590,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Detect collisions between player (blueBall) and enemy objects (e.g., asteroids)
         if (bodyA?.physicsBody?.categoryBitMask == playerObjectCategory && bodyB?.physicsBody?.categoryBitMask == enemyObjectCategory) ||
            (bodyA?.physicsBody?.categoryBitMask == enemyObjectCategory && bodyB?.physicsBody?.categoryBitMask == playerObjectCategory) {
+
+            playerHealth -= 1
+            UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
+            displayHealthLabel.text = "\(playerHealth!)"
 
             print("Player collided with an enemy!")
         }
