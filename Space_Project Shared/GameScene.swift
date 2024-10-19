@@ -85,6 +85,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var speedMultiplier: CGFloat!
     
     //  Loading in player health from UserDefaults
+    var playerStartingHealth: Int! = UserDefaults.standard.integer(forKey: "playerStartingHealth")
     var playerHealth: Int! = UserDefaults.standard.integer(forKey: "playerHealth")
     var displayHealthLabel = SKLabelNode(text: "")
     
@@ -100,9 +101,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         displayHealthLabel.zPosition = 10  // Ensure it's in front of other elements
         
 //      If not set, set to 3
-        if playerHealth == 0 || playerHealth <= 3 {
+        if playerStartingHealth <= 3 {
             playerHealth = 3
             UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
+        } else {
+            playerHealth = playerStartingHealth
         }
         
         displayHealthLabel.text =  "\(playerHealth!)"
@@ -593,6 +596,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             playerHealth -= 1
             UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
+            
+//          player has died
+            if playerHealth <= 0 {
+                transitionToLevelsScene()
+            }
             displayHealthLabel.text = "\(playerHealth!)"
 
             print("Player collided with an enemy!")
