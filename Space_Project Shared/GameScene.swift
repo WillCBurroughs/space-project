@@ -182,6 +182,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Schedule the enemy creation every x seconds
         startSpawningAsteroids()
         
+//      Used to spawn enemies
+        startSpawningEnemies()
+        
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
         startFiringBullets()
     }
@@ -219,6 +222,32 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Run the new spawn action
         run(spawnAsteroidsAction, withKey: "spawningAsteroids")
+    }
+    
+//  Used to spawn new enemies
+    
+    func startSpawningEnemies() {
+        // Remove any existing spawn enemy actions
+        removeAction(forKey: "spawningEnemies")
+
+        // Create a new spawn action with the updated speedMultiplier
+        let spawnEnemiesAction = SKAction.repeatForever(SKAction.sequence([
+            SKAction.wait(forDuration: 1.0 / Double(speedMultiplier)),  // Adjust spawn frequency based on speedMultiplier
+            SKAction.run {
+                createFollowingEnemy(
+                    scene: self,
+                    screenSize: self.size,
+                    playerNode: self.circularSprite,  // Assuming you have a playerNode defined
+                    speedMultiplier: self.speedMultiplier,
+                    enemyCategory: self.enemyObjectCategory,
+                    playerCategory: self.playerObjectCategory,
+                    playerBulletCategory: self.yellowBallCategory  // Adjust as per your bullet category
+                )
+            }
+        ]))
+
+        // Run the new spawn action
+        run(spawnEnemiesAction, withKey: "spawningEnemies")
     }
     
     // Function used to add all progress nodes
