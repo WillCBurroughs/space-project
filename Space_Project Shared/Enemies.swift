@@ -107,8 +107,11 @@ func createFollowingEnemy(scene: SKScene, screenSize: CGSize, playerNode: SKSpri
         let removeBulletAction = SKAction.removeFromParent()
         bullet.run(SKAction.sequence([moveBulletAction, removeBulletAction]))
     }
+    
+    // Added to prevent enemy from shooting while off screen
+    let initialFireDelay = SKAction.wait(forDuration: 1.0 / speedMultiplier)
     let fireInterval = SKAction.wait(forDuration: 2.0)  // Adjust to change how often the enemy fires
-    let fireSequence = SKAction.sequence([fireAction, fireInterval])
+    let fireSequence = SKAction.sequence([initialFireDelay, fireAction, fireInterval])
     let repeatFire = SKAction.repeatForever(fireSequence)
     
     // Run the fire sequence
