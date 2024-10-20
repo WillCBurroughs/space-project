@@ -89,6 +89,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerHealth: Int! = UserDefaults.standard.integer(forKey: "playerHealth")
     var displayHealthLabel = SKLabelNode(text: "")
     
+    var pauseButton = SKSpriteNode(imageNamed: "pauseButton")
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
@@ -100,6 +102,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
         displayHealthLabel.zPosition = 10  // Ensure it's in front of other elements
         
+//      Addition of pauseButton to screen
+        pauseButton.position = CGPoint(x: size.width - 50, y: size.height - 40)
+        pauseButton.zPosition = 100
+        pauseButton.size = CGSize(width: 80, height: 80)
+        addChild(pauseButton)
+
 //      If not set, set to 3
         if playerStartingHealth <= 3 {
             playerHealth = 3
@@ -232,7 +240,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Create a new spawn action with the updated speedMultiplier
         let spawnEnemiesAction = SKAction.repeatForever(SKAction.sequence([
-            SKAction.wait(forDuration: 1.0 / Double(speedMultiplier)),  // Adjust spawn frequency based on speedMultiplier
+            SKAction.wait(forDuration: 3.0 / Double(speedMultiplier)),  // Adjust spawn frequency based on speedMultiplier
             SKAction.run {
                 createFollowingEnemy(
                     scene: self,
@@ -530,6 +538,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                 startFiringBullets()
                 startSpawningAsteroids()
+                startSpawningEnemies()
                 
                 // Define the two RGBA colors
                 let startColor = (r: CGFloat(0), g: CGFloat(171), b: CGFloat(255), a: CGFloat(0.56))
@@ -570,6 +579,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         startFiringBullets()
         startSpawningAsteroids()
+        startSpawningEnemies()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -580,6 +590,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         startFiringBullets()
         startSpawningAsteroids()
+        startSpawningEnemies()
     }
     
     // MARK: - Update Cycle
