@@ -10,7 +10,7 @@ import SpriteKit
 // Then more cosmetics to make it look like given design
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-
+    
     var joystickHolder: SKShapeNode!
     var movementBall: SKShapeNode!
     var circularSprite: SKSpriteNode!  // The circular sprite that moves (blue ball)
@@ -30,33 +30,33 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipForProgress: SKSpriteNode!
     var endLevelIcon: SKSpriteNode!
     
-//  Used to put level number on the screen
+    //  Used to put level number on the screen
     var levelDisplay = SKLabelNode(text: "Level ")
     
-//    Used to determine width of shipProgress
+    //    Used to determine width of shipProgress
     var shipProgressWidth: CGFloat = 0
     
-//    Used to keep track ship speed
+    //    Used to keep track ship speed
     var shipSpeed: CGFloat = 0.1
     
-//  add endLevelIcon
+    //  add endLevelIcon
     
     var lastUpdateTime: TimeInterval = 0
     var timeSinceLastEnemy: TimeInterval = 0
     
-//  Detecting collisions with enemy
+    //  Detecting collisions with enemy
     let enemyObjectCategory: UInt32 = 0x1 << 3
     
-//  Holding Coin area and life area below
+    //  Holding Coin area and life area below
     var coinHolder: SKSpriteNode!
     var lifeHolder: SKSpriteNode!
     
-//  Need to set coins and lifes currently saved
+    //  Need to set coins and lifes currently saved
     let currentLevel = UserDefaults.standard.integer(forKey: "selectedLevel")
     
     let adjustmentFactor = CGFloat(8)
     
-//  Used for new movement controls
+    //  Used for new movement controls
     var movementBar: SKSpriteNode!
     var movementKnob: SKSpriteNode!
     var isMovementKnobActive = false
@@ -66,21 +66,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipAcceleration: CGFloat = 0.1
     var maxShipSpeed: CGFloat = 2.0
     
-//  Used to add ship Speed bar and knob and speedShipBar
+    //  Used to add ship Speed bar and knob and speedShipBar
     var speedBar = SKSpriteNode(imageNamed: "speedBar")
     var speedKnob = SKShapeNode(ellipseOf: CGSize(width: 50, height: 50))
     
-//  Used to show current speed will lead from left of speedBar all the way to speedKnob
+    //  Used to show current speed will lead from left of speedBar all the way to speedKnob
     var speedShipBar: SKSpriteNode!
-
-//  Used to add hot and cold section
+    
+    //  Used to add hot and cold section
     var hot = SKSpriteNode(imageNamed: "hot")
     var cold = SKSpriteNode(imageNamed: "cold")
     
-//  Used to determine if speedbar being moved
+    //  Used to determine if speedbar being moved
     var isSpeedBarMoving = false
     
-//  Saved speed Multiplier
+    //  Saved speed Multiplier
     let savedSpeedMultiplier = UserDefaults.standard.float(forKey: "speedBarValue")
     var speedMultiplier: CGFloat!
     
@@ -93,6 +93,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var pauseButton = SKSpriteNode(imageNamed: "pauseButton")
     var isGamePaused = false
     
+    //  All things added to this during pause
+    var pauseOverlay: SKSpriteNode?
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
@@ -104,13 +107,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
         displayHealthLabel.zPosition = 10  // Ensure it's in front of other elements
         
-//      Addition of pauseButton to screen
+        //      Addition of pauseButton to screen
         pauseButton.position = CGPoint(x: size.width - 50, y: size.height - 40)
         pauseButton.zPosition = 100
         pauseButton.size = CGSize(width: 80, height: 80)
         addChild(pauseButton)
-
-//      If not set, set to 3
+        
+        //      If not set, set to 3
         if playerStartingHealth <= 3 {
             playerHealth = 3
             UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
@@ -121,7 +124,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         displayHealthLabel.text =  "\(playerHealth!)"
         addChild(displayHealthLabel)
         
-//      Determines multiplier
+        //      Determines multiplier
         speedMultiplier = CGFloat(1.0)
         
         levelDisplay.fontName = "Futura-Bold"
@@ -131,18 +134,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         speedBar.position = CGPoint(x: size.width - 150, y: 60)
         addChild(speedBar)
         
-//      Adding cold icon to speedBar
+        //      Adding cold icon to speedBar
         cold.size = CGSize(width: 42, height: 42)
         cold.position = CGPoint(x: size.width - 218.4, y: 60)
         cold.zPosition = 5
         addChild(cold)
-
-//      Adding hot icon to speedBar
+        
+        //      Adding hot icon to speedBar
         hot.size = CGSize(width: 42, height: 42)
         hot.position = CGPoint(x: size.width - 82, y: 60)
         hot.zPosition = 5
         addChild(hot)
-
+        
         // Setup speedShipBar
         speedShipBar = SKSpriteNode(color: .clear, size: CGSize(width: 922 / 5, height: 243 / 5))
         speedShipBar.position = CGPoint(x: size.width - 240, y: 60)
@@ -156,23 +159,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         speedKnob.zPosition = 4
         addChild(speedKnob)
         
-//      Sets our custom font color
+        //      Sets our custom font color
         
         levelDisplay.fontColor = SKColor(red: 84/255, green: 93/255, blue: 175/255, alpha: 1.0)
         levelDisplay.position = CGPoint(x: size.width / 2 + 300, y: size.height - 38 - adjustmentFactor)
         levelDisplay.name = "levelDisplay"
         
-//      Sets the current level for display
+        //      Sets the current level for display
         levelDisplay.text = "Level \(currentLevel)"
         addChild(levelDisplay)
         
-//      Creating coinHolder
+        //      Creating coinHolder
         coinHolder = SKSpriteNode(imageNamed: "coinSlot")
         coinHolder.position = CGPoint(x: 70, y: size.height - 40)
         coinHolder.size = CGSize(width: 331 / 4, height: 143 / 4)
         addChild(coinHolder)
         
-//      Creating lifeHolder
+        //      Creating lifeHolder
         lifeHolder = SKSpriteNode(imageNamed: "heartSlot")
         lifeHolder.position = CGPoint(x: 160, y: size.height - 40)
         lifeHolder.size = CGSize(width: 331/4, height: 143/4)
@@ -186,13 +189,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         setupProgress()
         
-//      Creates movement bar
+        //      Creates movement bar
         addMovementBar()
         
         // Schedule the enemy creation every x seconds
         startSpawningAsteroids()
         
-//      Used to spawn enemies
+        //      Used to spawn enemies
         startSpawningEnemies()
         
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
@@ -207,24 +210,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func startFiringBullets() {
         // Remove any existing fire actions
         removeAction(forKey: "firing")
-
+        
         let fireAction = SKAction.repeatForever(SKAction.sequence([
             SKAction.wait(forDuration: 0.5 / Double(speedMultiplier)),  // Wait before firing
             SKAction.run(fireYellowBall)
         ]))
-
+        
         // Run the new fire action
         run(fireAction, withKey: "firing")
     }
     
+    // Sets up pause features (overlay, buttons, and pause menu)
+    func setupPauseScreen() {
+        if pauseOverlay == nil {
+            // Create the overlay as an SKSpriteNode (with or without a color, or an image if needed)
+            pauseOverlay = SKSpriteNode(color: SKColor(red: 0, green: 0, blue: 0, alpha: 0.6), size: self.size)
+            
+            // Set the position to the center of the screen
+            pauseOverlay?.position = CGPoint(x: frame.midX, y: frame.midY)
+            
+            // Set zPosition to make sure it's on top of everything else
+            pauseOverlay?.zPosition = 95
+            
+            // Add the overlay to the scene
+            addChild(pauseOverlay!)
+        }
+    }
     // Function to toggle the pause state
     func togglePause() {
         if isGamePaused {
             // Unpause the game
             scene?.isPaused = false
             physicsWorld.speed = 1.0
+            pauseOverlay?.removeFromParent()
+            pauseOverlay = nil
         } else {
             // Pause the game
+            setupPauseScreen()
             scene?.isPaused = true
             physicsWorld.speed = 0
         }
