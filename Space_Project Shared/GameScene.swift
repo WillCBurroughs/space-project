@@ -89,7 +89,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerHealth: Int! = UserDefaults.standard.integer(forKey: "playerHealth")
     var displayHealthLabel = SKLabelNode(text: "")
     
+    //  Pause button and pause boolean
     var pauseButton = SKSpriteNode(imageNamed: "pauseButton")
+    var isGamePaused = false
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
@@ -213,6 +215,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Run the new fire action
         run(fireAction, withKey: "firing")
+    }
+    
+    // Function to toggle the pause state
+    func togglePause() {
+        if isGamePaused {
+            // Unpause the game
+            scene?.isPaused = false
+            physicsWorld.speed = 1.0
+        } else {
+            // Pause the game
+            scene?.isPaused = true
+            physicsWorld.speed = 0
+        }
+        isGamePaused.toggle()  // Toggle the pause state
     }
     
 //  Used to spawn asteroids 
@@ -456,6 +472,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let location = touch.location(in: self)
             if movementKnob.contains(location) {
                 isMovementKnobActive = true
+            }
+            
+            if pauseButton.contains(location) {
+                togglePause()
             }
             
             if speedKnob.contains(location) {
