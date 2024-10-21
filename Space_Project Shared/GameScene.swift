@@ -40,7 +40,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var shipSpeed: CGFloat = 0.1
     
     //  add endLevelIcon
-    
     var lastUpdateTime: TimeInterval = 0
     var timeSinceLastEnemy: TimeInterval = 0
     
@@ -95,6 +94,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //  All things added to this during pause
     var pauseOverlay: SKSpriteNode?
+    var pauseMenu: SKSpriteNode?
+    
+    // Declaring resume and quit button
+    var resumeButton = SKShapeNode(circleOfRadius: 20)
+    var quitButton = SKShapeNode(circleOfRadius: 20)
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
@@ -126,6 +130,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //      Determines multiplier
         speedMultiplier = CGFloat(1.0)
+        
+        initializePauseMenu()
         
         levelDisplay.fontName = "Futura-Bold"
         levelDisplay.fontSize = 20
@@ -220,37 +226,92 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(fireAction, withKey: "firing")
     }
     
+    // Create bones of pause menu
+    func initializePauseMenu() {
+        // Create the pause menu node container
+        pauseMenu = SKSpriteNode(imageNamed: "pauseMenu")
+        pauseMenu?.zPosition = 96  // Above the overlay
+        pauseMenu!.size = CGSize(width: 300, height: 300)
+        
+        // Example: Adding a resume button to the pause menu
+        resumeButton.position = CGPoint(x: 50, y: 50)
+        resumeButton.fillColor = .blue
+        pauseMenu?.addChild(resumeButton)
+        
+        redBall = SKShapeNode(circleOfRadius: 20)
+        redBall.fillColor = .red
+        redBall.strokeColor = .white
+        redBall.lineWidth = 5
+        
+        // Example: Adding a quit button to the pause menu
+        quitButton = SKShapeNode(circleOfRadius: 20)
+        quitButton.fillColor = .red
+        quitButton.position = CGPoint(x: 0, y: 50)
+        quitButton.strokeColor = .white
+        pauseMenu?.addChild(quitButton)
+        
+        // Initially, the pause menu is hidden
+        pauseMenu?.isHidden = true
+        
+        // Add the pause menu to the scene
+        addChild(pauseMenu!)
+    }
+    
     // Sets up pause features (overlay, buttons, and pause menu)
     func setupPauseScreen() {
         if pauseOverlay == nil {
-            // Create the overlay as an SKSpriteNode (with or without a color, or an image if needed)
+            // Create and configure the pause overlay
             pauseOverlay = SKSpriteNode(color: SKColor(red: 0, green: 0, blue: 0, alpha: 0.6), size: self.size)
-            
-            // Set the position to the center of the screen
             pauseOverlay?.position = CGPoint(x: frame.midX, y: frame.midY)
-            
-            // Set zPosition to make sure it's on top of everything else
             pauseOverlay?.zPosition = 95
-            
-            // Add the overlay to the scene
             addChild(pauseOverlay!)
+
+            // Create pause menu node container
+            pauseMenu = SKSpriteNode(imageNamed: "pauseMenu")
+            pauseMenu?.zPosition = 96  // Ensure it's on top of the overlay
+            pauseMenu!.position = CGPoint(x: frame.midX, y: frame.midY)
+            pauseMenu!.size = CGSize(width:self.size.width * 0.7, height: self.size.width * 0.4)
+
+            // Example: Adding a resume button to the pause menu
+            resumeButton = SKShapeNode(circleOfRadius: 25)
+            resumeButton.position = CGPoint(x: 0 + frame.midX * 0.01, y: 0 - frame.midY * 0.66)
+            resumeButton.fillColor = .red
+            resumeButton.zPosition = 100
+            pauseMenu?.addChild(resumeButton)
+            print("Resume button added")
+            
+            // Example: Adding a quit button to the pause menu
+            quitButton = SKShapeNode(circleOfRadius: 20)
+            quitButton.position = CGPoint(x: 50, y: 50)
+            quitButton.fillColor = .blue
+            quitButton.zPosition = 100
+            pauseMenu?.addChild(quitButton)
+            print("Quit button added")
+
+            // Add the pause menu to the scene
+            addChild(pauseMenu!)
+            print("Pause menu added")
         }
     }
+    
     // Function to toggle the pause state
     func togglePause() {
         if isGamePaused {
             // Unpause the game
             scene?.isPaused = false
             physicsWorld.speed = 1.0
+            
             pauseOverlay?.removeFromParent()
+            pauseMenu?.removeFromParent()
             pauseOverlay = nil
+            pauseMenu = nil
         } else {
             // Pause the game
             setupPauseScreen()
             scene?.isPaused = true
             physicsWorld.speed = 0
         }
-        isGamePaused.toggle()  // Toggle the pause state
+        isGamePaused.toggle()
     }
     
 //  Used to spawn asteroids 
@@ -488,22 +549,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         yellowBall.run(removeAction)
     }
     
-    // MARK: - Touch Handling
+//    Touch handling
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
+            // First, get the touch location relative to the scene
             let location = touch.location(in: self)
+
+            // Handle movement knob touches
             if movementKnob.contains(location) {
                 isMovementKnobActive = true
             }
-            
-            if pauseButton.contains(location) {
-                togglePause()
-            }
-            
+
+            // Handle speed knob touches
             if speedKnob.contains(location) {
                 isSpeedBarMoving = true
             }
-            
+
+            // Check for pause state: Handle resume and pause buttons
+            if isGamePaused {
+                
+                // If the game is paused, check for the resume button in the pause menu's coordinate space
+                if let pauseMenu = pauseMenu {  // Ensure pauseMenu is not nil
+                    let pauseMenuLocation = touch.location(in: pauseMenu)  // Get touch location in pauseMenu's coordinate space
+                    if resumeButton.contains(pauseMenuLocation) {
+                        togglePause()  // Resume the game
+                    }
+                }
+                
+            } else {
+                // If the game is not paused, check for the pause button in the scene's coordinate space
+                if pauseButton.contains(location) {
+                    togglePause()  // Pause the game
+                }
+            }
         }
     }
     
