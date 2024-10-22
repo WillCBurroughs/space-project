@@ -99,6 +99,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Declaring resume and quit button
     var resumeButton = SKShapeNode(circleOfRadius: 20)
     var quitButton = SKShapeNode(circleOfRadius: 20)
+    var resetButton = SKShapeNode(circleOfRadius: 20)
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
@@ -298,7 +299,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             quitButton.zPosition = 100
             pauseMenu?.addChild(quitButton)
             print("Quit button added")
-
+            
+            resetButton = SKShapeNode(circleOfRadius: resumeButtonRadius)
+            
+            let resetButtonXOffset = self.size.width * -0.09
+            
+            resetButton.position = CGPoint(x: 0 + resetButtonXOffset, y: pauseMenu!.position.y + buttonOffsetY)
+            resetButton.fillColor = .blue
+            resetButton.zPosition = 100
+            pauseMenu?.addChild(resetButton)
+            
             // Add the pause menu to the scene
             addChild(pauseMenu!)
             print("Pause menu added")
