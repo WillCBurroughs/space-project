@@ -262,20 +262,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if pauseOverlay == nil {
             // Create and configure the pause overlay
             pauseOverlay = SKSpriteNode(color: SKColor(red: 0, green: 0, blue: 0, alpha: 0.6), size: self.size)
-            pauseOverlay?.position = CGPoint(x: frame.midX, y: frame.midY)
+            pauseOverlay?.position = CGPoint(x: size.width / 2, y: size.height / 2)
             pauseOverlay?.zPosition = 95
             addChild(pauseOverlay!)
 
             // Create pause menu node container
             pauseMenu = SKSpriteNode(imageNamed: "pauseMenu")
             pauseMenu?.zPosition = 96  // Ensure it's on top of the overlay
-            pauseMenu!.position = CGPoint(x: frame.midX, y: frame.midY)
-            pauseMenu!.size = CGSize(width:self.size.width * 0.7, height: self.size.width * 0.4)
+            pauseMenu!.position = CGPoint(x: size.width / 2, y: size.height / 2)
+            pauseMenu!.size = CGSize(width:self.size.width * 0.8, height: self.size.height)
 
-            // Example: Adding a resume button to the pause menu
-            resumeButton = SKShapeNode(circleOfRadius: 25)
-            resumeButton.position = CGPoint(x: 0 + frame.midX * 0.01, y: 0 - frame.midY * 0.66)
-            resumeButton.fillColor = .red
+            // Adding a resume button to the pause menu
+            let resumeButtonRadius = self.size.width / 28  // Define radius based on screen size
+            resumeButton = SKShapeNode(circleOfRadius: resumeButtonRadius)
+
+            // Position it relative to the pauseMenu container's size
+            let buttonOffsetY = pauseMenu!.size.height * -0.89  // Adjust this offset based on your design
+            resumeButton.position = CGPoint(x: 0 + self.size.width * 0.008, y: pauseMenu!.position.y + buttonOffsetY)
+            
+            // Button styling
+            resumeButton.fillColor = .clear
+            resumeButton.strokeColor = .clear
             resumeButton.zPosition = 100
             pauseMenu?.addChild(resumeButton)
             print("Resume button added")
