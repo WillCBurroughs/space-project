@@ -305,13 +305,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let resetButtonXOffset = self.size.width * -0.09
             
             resetButton.position = CGPoint(x: 0 + resetButtonXOffset, y: pauseMenu!.position.y + buttonOffsetY)
-            resetButton.fillColor = .blue
+            resetButton.fillColor = .clear
+            resetButton.strokeColor = .clear
             resetButton.zPosition = 100
             pauseMenu?.addChild(resetButton)
             
             // Add the pause menu to the scene
             addChild(pauseMenu!)
             print("Pause menu added")
+        }
+    }
+    
+    func resetLevel() {
+        if let currentScene = self.scene {
+            let newScene = type(of: currentScene).init(size: self.size)
+            newScene.scaleMode = self.scaleMode
+            let transition = SKTransition.fade(withDuration: 1.0)
+            self.view?.presentScene(newScene, transition: transition)
         }
     }
     
@@ -598,6 +608,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     
                     if quitButton.contains(pauseMenuLocation) {
                         transitionToLevelsScene() // Quits level
+                    }
+                    if resetButton.contains(pauseMenuLocation){
+                        resetLevel()
                     }
                 }
                 
