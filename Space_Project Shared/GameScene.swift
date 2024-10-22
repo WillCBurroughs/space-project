@@ -288,9 +288,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("Resume button added")
             
             // Example: Adding a quit button to the pause menu
-            quitButton = SKShapeNode(circleOfRadius: 20)
-            quitButton.position = CGPoint(x: 50, y: 50)
-            quitButton.fillColor = .blue
+            quitButton = SKShapeNode(circleOfRadius: resumeButtonRadius)
+            
+            let quitButtonXOffset = self.size.width * 0.1
+            
+            quitButton.position = CGPoint(x: 0 + quitButtonXOffset, y: pauseMenu!.position.y + buttonOffsetY)
+            quitButton.fillColor = .clear
+            quitButton.strokeColor = .clear
             quitButton.zPosition = 100
             pauseMenu?.addChild(quitButton)
             print("Quit button added")
@@ -580,6 +584,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     let pauseMenuLocation = touch.location(in: pauseMenu)  // Get touch location in pauseMenu's coordinate space
                     if resumeButton.contains(pauseMenuLocation) {
                         togglePause()  // Resume the game
+                    }
+                    
+                    if quitButton.contains(pauseMenuLocation) {
+                        transitionToLevelsScene() // Quits level
                     }
                 }
                 
