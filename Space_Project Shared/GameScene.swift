@@ -101,6 +101,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var quitButton = SKShapeNode(circleOfRadius: 20)
     var resetButton = SKShapeNode(circleOfRadius: 20)
     
+    // Declaring settings button in menu
+    var menuOptions = SKShapeNode(circleOfRadius: 20)
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
@@ -309,6 +312,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             resetButton.strokeColor = .clear
             resetButton.zPosition = 100
             pauseMenu?.addChild(resetButton)
+            
+            // Options section
+            menuOptions = SKShapeNode(circleOfRadius: resumeButtonRadius * 1.3)
+            
+            let optionsMenuXOffset = self.size.width * 0.25
+            let optionsMenuYOffset = self.size.height * 0.15
+            
+            menuOptions.position = CGPoint(x: 0 + optionsMenuXOffset , y: 0)
+            menuOptions.fillColor = .red
+            menuOptions.zPosition = 100
+            pauseMenu?.addChild(menuOptions)
             
             // Add the pause menu to the scene
             addChild(pauseMenu!)
