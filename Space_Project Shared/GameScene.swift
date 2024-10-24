@@ -316,11 +316,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             // Options section
             menuOptions = SKShapeNode(circleOfRadius: resumeButtonRadius * 1.3)
             
-            let optionsMenuXOffset = self.size.width * 0.25
-            let optionsMenuYOffset = self.size.height * 0.15
+            let optionsMenuXOffset = self.size.width * 0.24
+            let optionsMenuYOffset = self.size.height * 0.25
             
-            menuOptions.position = CGPoint(x: 0 + optionsMenuXOffset , y: 0)
-            menuOptions.fillColor = .red
+            menuOptions.position = CGPoint(x: 0 + optionsMenuXOffset , y: 0 + optionsMenuYOffset)
+            menuOptions.fillColor = .clear
+            menuOptions.strokeColor = .clear
             menuOptions.zPosition = 100
             pauseMenu?.addChild(menuOptions)
             
