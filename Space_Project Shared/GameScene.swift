@@ -360,6 +360,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         isGamePaused.toggle()
     }
     
+    // Allowing options menu to appear and pause menu to be removed
+    func setupOptionsMenu() {
+        pauseMenu?.removeFromParent()
+        pauseMenu = nil
+    }
+    
 //  Used to spawn asteroids 
     func startSpawningAsteroids() {
         // Remove any existing spawn asteroid actions
@@ -626,6 +632,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     }
                     if resetButton.contains(pauseMenuLocation){
                         resetLevel()
+                    }
+                    
+                    if menuOptions.contains(pauseMenuLocation){
+                        setupOptionsMenu()
                     }
                 }
                 
