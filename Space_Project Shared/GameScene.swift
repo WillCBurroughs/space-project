@@ -523,13 +523,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     // Function to add a circular sprite in the middle of the screen (blue ball)
     func addCircularSprite() {
-        circularSprite = SKSpriteNode(imageNamed: "Ship-Level1")
+        circularSprite = SKSpriteNode(imageNamed: "new_ship")
         
-        circularSprite.size = CGSize(width: 180, height: 80)
+        circularSprite.size = CGSize(width: 150, height: 52)
         circularSprite.position = CGPoint(x: 180, y: self.size.height / 2)
         
+//      Adjustment factor
+        let physicsBodySize = CGSize(width: circularSprite.size.width * 0.1, height: circularSprite.size.height * 0.1)
+        
         // Add physics body to blue ball
-        circularSprite.physicsBody = SKPhysicsBody(circleOfRadius: 20)
+        circularSprite.physicsBody = SKPhysicsBody(rectangleOf: physicsBodySize)
         circularSprite.physicsBody?.isDynamic = true
         circularSprite.physicsBody?.categoryBitMask = playerObjectCategory
         circularSprite.physicsBody?.contactTestBitMask = enemyObjectCategory
