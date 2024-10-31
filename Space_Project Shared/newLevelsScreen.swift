@@ -25,7 +25,17 @@ class NewLevelsScreen: SKScene {
     
     let resetProgressButton = SKShapeNode(circleOfRadius: 30)  // Used to set all values back to zero
     
+    // Adding back button for main menu
+    var backButton = SKShapeNode(rectOf: CGSize(width: 100, height: 50))
+    
     override func didMove(to view: SKView) {
+        
+        
+        backButton.fillColor = .black
+        backButton.name = "backButton"
+        backButton.zPosition = 50
+        backButton.position = CGPoint(x: 150, y: self.size.height - 50)
+        addChild(backButton)
         
         // Retrieve the highest completed level by the user
         let highestCompletedLevel = UserDefaults.standard.integer(forKey: highestCompletedLevelKey)
@@ -136,11 +146,26 @@ class NewLevelsScreen: SKScene {
                 let selectedLevel = UserDefaults.standard.integer(forKey: selectedLevelKey)
                 startLevel(levelNumber: selectedLevel)  // Start the selected level
             }
+            
+            if node.name == "backButton" {
+                transitionToMainMenu()
+            }
+            
             if node.name == "resetProgress" {
                 resetProgress()
             }
         }
         
+    }
+    
+    func transitionToMainMenu() {
+        
+        let menuScene = HomeScreen(size: self.size)
+        menuScene.scaleMode = self.scaleMode
+        
+        // Transition to the main menu
+        let transition = SKTransition.fade(withDuration: 1.0)
+        self.view?.presentScene(menuScene, transition: transition)
     }
     
     // Function to remove the popup from the scene
@@ -222,7 +247,7 @@ class NewLevelsScreen: SKScene {
     // Function to reset game progress
     func resetProgress(){
         UserDefaults.standard.set(0, forKey: highestCompletedLevelKey)
-
+        UserDefaults.standard.set(0, forKey: "playerCoins")
         // Reload the scene to update the level buttons
         let newScene = NewLevelsScreen(size: self.size)
         newScene.scaleMode = self.scaleMode

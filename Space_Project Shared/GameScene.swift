@@ -88,6 +88,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerHealth: Int! = UserDefaults.standard.integer(forKey: "playerHealth")
     var displayHealthLabel = SKLabelNode(text: "")
     
+    //  Loading in coin value
+    var playerCoins: Int! = UserDefaults.standard.integer(forKey: "playerCoins")
+    var coinLabel = SKLabelNode(text: "")
+    
     //  Pause button and pause boolean
     var pauseButton = SKSpriteNode(imageNamed: "pauseButton")
     var isGamePaused = false
@@ -115,7 +119,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
         displayHealthLabel.zPosition = 10  // Ensure it's in front of other elements
         
-        //      Addition of pauseButton to screen
+        // Setup display for player's coins
+        coinLabel.fontName = "Futura-Bold"
+        coinLabel.fontSize = 14
+        coinLabel.fontColor = SKColor.white
+        coinLabel.position = CGPoint(x: 85, y: size.height - 45)
+        coinLabel.zPosition = 10
+        
+        // Addition of pauseButton to screen
         pauseButton.position = CGPoint(x: size.width - 50, y: size.height - 40)
         pauseButton.zPosition = 100
         pauseButton.size = CGSize(width: 80, height: 80)
@@ -128,6 +139,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else {
             playerHealth = playerStartingHealth
         }
+        
+        playerCoins = UserDefaults.standard.integer(forKey: "playerCoins")
+        coinLabel.text = "\(playerCoins!)"
+        addChild(coinLabel)
+        
         
         displayHealthLabel.text =  "\(playerHealth!)"
         addChild(displayHealthLabel)
@@ -375,7 +391,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let spawnAsteroidsAction = SKAction.repeatForever(SKAction.sequence([
             SKAction.wait(forDuration: 1.0 / Double(speedMultiplier)),  // Adjust spawn frequency
             SKAction.run {
-                createAsteroid(scene: self, screenSize: self.size, speedMultiplier: self.speedMultiplier, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBullet: self.yellowBallCategory)
+                createAsteroid(scene: self, screenSize: self.size, speedMultiplier: self.speedMultiplier, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBullet: self.yellowBallCategory, coinValue: 1)
             }
         ]))
 
@@ -400,7 +416,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     speedMultiplier: self.speedMultiplier,
                     enemyCategory: self.enemyObjectCategory,
                     playerCategory: self.playerObjectCategory,
-                    playerBulletCategory: self.yellowBallCategory  // Adjust as per your bullet category
+                    playerBulletCategory: self.yellowBallCategory,
+                    coinValue: 2 // Adjust as per your bullet category
                 )
             }
         ]))
@@ -832,11 +849,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             print("Player collided with an enemy!")
         }
 
-        // Detect collisions between yellowBall and enemy objects (e.g., asteroids)
+        // Detect collisions between lazer and enemy objects (e.g., asteroids)
         if (bodyA?.physicsBody?.categoryBitMask == yellowBallCategory && bodyB?.physicsBody?.categoryBitMask == enemyObjectCategory) ||
            (bodyA?.physicsBody?.categoryBitMask == enemyObjectCategory && bodyB?.physicsBody?.categoryBitMask == yellowBallCategory) {
             bodyA?.removeFromParent()
             bodyB?.removeFromParent()
+            
+            // Identify which is the enemy
+            let enemy = bodyA?.physicsBody?.categoryBitMask == enemyObjectCategory ? bodyA : bodyB
+
+            // Retrieve the coinValue from the asteroid's userData
+            if let coinValue = enemy?.userData?["coinValue"] as? Int {
+                playerCoins += coinValue
+                UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
+            }
+            
+            coinLabel.text = "\(playerCoins!)"
+            
             print("Yellow ball collided with an asteroid!")
         }
     }
