@@ -108,6 +108,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Declaring settings button in menu
     var menuOptions = SKShapeNode(circleOfRadius: 20)
     
+    // Settings screen area
+    var settingsMenu: SKSpriteNode?
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
@@ -378,8 +381,22 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     // Allowing options menu to appear and pause menu to be removed
     func setupOptionsMenu() {
+        // Ensure pause menu and overlay are removed before displaying the settings menu
         pauseMenu?.removeFromParent()
-        pauseMenu = nil
+
+        // If settingsMenu exists, remove it to prevent duplicate overlays
+        settingsMenu?.removeFromParent()
+
+        // Create the settings menu with a high zPosition
+        settingsMenu = SKSpriteNode(imageNamed: "settings")
+        settingsMenu?.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        settingsMenu?.size = CGSize(width: self.size.width * 1.2, height: self.size.height)
+        settingsMenu?.zPosition = 200  // Set high zPosition to ensure it’s on top
+
+        // Add the settings menu to the scene
+        if let settingsMenu = settingsMenu {
+            addChild(settingsMenu)
+        }
     }
     
 //  Used to spawn asteroids 
