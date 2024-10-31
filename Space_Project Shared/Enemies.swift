@@ -7,7 +7,7 @@
 
 import SpriteKit
 
-func createAsteroid(scene: SKScene, screenSize: CGSize, speedMultiplier:CGFloat, enemyCategory: UInt32, playerCategory: UInt32, playerBullet: UInt32) {
+func createAsteroid(scene: SKScene, screenSize: CGSize, speedMultiplier:CGFloat, enemyCategory: UInt32, playerCategory: UInt32, playerBullet: UInt32, coinValue: Int) {
     // Create the asteroid node (you can replace this with any image or shape)
     let asteroid = SKSpriteNode(imageNamed: "asteroid")
     asteroid.size = CGSize(width: 90, height: 70) // Set asteroid size
@@ -31,6 +31,9 @@ func createAsteroid(scene: SKScene, screenSize: CGSize, speedMultiplier:CGFloat,
 
     // Add asteroid to the scene
     scene.addChild(asteroid)
+    
+    // Saves coins on enemy
+    asteroid.userData = ["coinValue": coinValue]
 
     // Move the asteroid from the right to the left across the screen
     let baseMoveDuration = TimeInterval(CGFloat.random(in: 5...10))  // Random speed between 5 to 10 seconds
@@ -46,7 +49,7 @@ func createAsteroid(scene: SKScene, screenSize: CGSize, speedMultiplier:CGFloat,
 }
 
 // Testing enemy that follows player up and down screen
-func createFollowingEnemy(scene: SKScene, screenSize: CGSize, playerNode: SKSpriteNode, speedMultiplier: CGFloat, enemyCategory: UInt32, playerCategory: UInt32, playerBulletCategory: UInt32) {
+func createFollowingEnemy(scene: SKScene, screenSize: CGSize, playerNode: SKSpriteNode, speedMultiplier: CGFloat, enemyCategory: UInt32, playerCategory: UInt32, playerBulletCategory: UInt32, coinValue: Int) {
     // Create the enemy node (you can replace this with any image or shape)
     let enemy = SKSpriteNode(imageNamed: "enemyShip")
     enemy.size = CGSize(width: 100, height: 80)  // Set enemy size
@@ -70,7 +73,10 @@ func createFollowingEnemy(scene: SKScene, screenSize: CGSize, playerNode: SKSpri
 
     // Add enemy to the scene
     scene.addChild(enemy)
-
+    
+    // Saving how many coins enemy is worth on enemy 
+    enemy.userData = ["coinValue": coinValue]
+    
     // Create an action to follow the player node up and down the screen
     let followAction = SKAction.run {
         let playerYPosition = playerNode.position.y
