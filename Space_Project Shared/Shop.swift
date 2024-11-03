@@ -11,6 +11,7 @@ class Shop: SKScene {
     
     let backHome = SKShapeNode()
     let background = SKSpriteNode(imageNamed: "spacebackground-small")
+    let store = SKSpriteNode(imageNamed: "storeMenu")
     
     override func didMove(to view: SKView) {
         
@@ -23,6 +24,12 @@ class Shop: SKScene {
             let homeScene = HomeScreen(size: self.size)
             transitionToScene(view: self.view, scene: homeScene)
         }
+        
+        store.position = CGPoint(x: size.width / 2, y: size.height * 0.6)
+        store.zPosition = 1
+        store.size = CGSize(width: self.size.width, height: self.size.height)
+        self.addChild(store)
+        
         
         let label = SKLabelNode(text: "Shop Screen")
         label.fontName = "Arial-BoldMT"
