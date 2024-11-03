@@ -10,9 +10,14 @@ import SpriteKit
 class Shop: SKScene {
     
     let backHome = SKShapeNode()
+    let background = SKSpriteNode(imageNamed: "spacebackground-small")
     
     override func didMove(to view: SKView) {
-        backgroundColor = .white  // Set a different background color for clarity
+        
+        background.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        background.zPosition = -1
+        background.size = CGSize(width: self.size.width, height: self.size.height)
+        self.addChild(background)
         
         createCapsuleButton(buttonNode: backHome, text: "Back to Menu", position: CGPoint(x: size.width / 2, y: size.height / 2 - 100), width: 200, height: 60, parent: self) {
             let homeScene = HomeScreen(size: self.size)
