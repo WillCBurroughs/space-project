@@ -111,6 +111,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Settings screen area
     var settingsMenu: SKSpriteNode?
     
+    // Used to keep track of player_lives > 0 (still alive)
+//    var player_is_alive = true
+//    var death_background = SKSpriteNode(imageNamed: "death_background")
+    
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
@@ -845,6 +849,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         circularSprite.position.y = clampedY
     }
     
+//    func handle_player_death() {
+//        scene?.isPaused = true
+//    }
+    
     // MARK: - Collision Detection
     func didBegin(_ contact: SKPhysicsContact) {
         let bodyA = contact.bodyA.node
@@ -859,6 +867,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
 //          player has died
             if playerHealth <= 0 {
+                
+//                handle_player_death()
                 transitionToLevelsScene()
             }
             displayHealthLabel.text = "\(playerHealth!)"
