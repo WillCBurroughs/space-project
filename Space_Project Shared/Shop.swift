@@ -15,6 +15,8 @@ class Shop: SKScene {
     let store = SKSpriteNode(imageNamed: "storeMenu")
     let shopButtons = SKSpriteNode(imageNamed: "shopButtons")
     
+    var quitButton = SKShapeNode()
+    
     override func didMove(to view: SKView) {
         
         background.position = CGPoint(x: size.width / 2, y: size.height / 2)
@@ -37,6 +39,14 @@ class Shop: SKScene {
         shopButtons.size = CGSize(width: self.size.width * 0.65, height: self.size.height * 0.37)
         self.addChild(shopButtons)
         
+        quitButton = SKShapeNode(ellipseOf: CGSize(width: store.size.width * 0.06, height: store.size.width * 0.06))
+        quitButton.position = CGPoint(x: size.width * 0.802, y: size.height * 0.82)
+        quitButton.zPosition = 3
+        quitButton.fillColor = .clear
+        quitButton.strokeColor = .clear
+        self.addChild(quitButton)
+        
+        
         let label = SKLabelNode(text: "Shop Screen")
         label.fontName = "Arial-BoldMT"
         label.fontSize = 40
@@ -44,4 +54,23 @@ class Shop: SKScene {
         label.position = CGPoint(x: size.width / 2, y: size.height / 2)
         addChild(label)
     }
+    
+    func backToMenu() {
+        let homeScreen = HomeScreen(size: size)
+        let transition = SKTransition.fade(withDuration: 1.0)
+        view?.presentScene(homeScreen, transition: transition)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for touch in touches {
+            // First, get the touch location relative to the scene
+            let location = touch.location(in: self)
+            
+            // Handle movement knob touches
+            if quitButton.contains(location) {
+                backToMenu()
+            }
+        }
+    }
+    
 }
