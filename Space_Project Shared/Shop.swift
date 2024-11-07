@@ -17,6 +17,9 @@ class Shop: SKScene {
     
     var quitButton = SKShapeNode()
     
+    var playerCoins: Int! = UserDefaults.standard.integer(forKey: "playerCoins")
+    var coinLabel = SKLabelNode()
+    
     override func didMove(to view: SKView) {
         
         background.position = CGPoint(x: size.width / 2, y: size.height / 2)
@@ -46,6 +49,20 @@ class Shop: SKScene {
         quitButton.strokeColor = .clear
         self.addChild(quitButton)
         
+        
+//        displayHealthLabel.fontName = "Futura-Bold"
+//        displayHealthLabel.fontSize = 14
+//        displayHealthLabel.fontColor = SKColor.white
+//        displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
+//        displayHealthLabel.zPosition = 10
+        
+        coinLabel = SKLabelNode(text: "\(playerCoins ?? 0)")
+        coinLabel.fontName = "Futura-Bold"
+        coinLabel.fontSize = 14
+        coinLabel.fontColor = SKColor.white
+        coinLabel.zPosition = 4
+        coinLabel.position = CGPoint(x: size.width * 0.335, y: size.height * 0.65)
+        addChild(coinLabel)
         
         let label = SKLabelNode(text: "Shop Screen")
         label.fontName = "Arial-BoldMT"
