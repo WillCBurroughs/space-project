@@ -70,7 +70,13 @@ class Shop: SKScene {
 //        displayHealthLabel.fontColor = SKColor.white
 //        displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
 //        displayHealthLabel.zPosition = 10
+
+        setupLabels()
         
+    }
+    
+    func setupLabels() {
+        playerCoins = 1000
         coinLabel = SKLabelNode(text: "\(playerCoins ?? 0)")
         coinLabel.fontName = "Futura-Bold"
         coinLabel.fontSize = 14
@@ -79,26 +85,13 @@ class Shop: SKScene {
         coinLabel.position = CGPoint(x: size.width * 0.335, y: size.height * 0.65)
         addChild(coinLabel)
         
-        if playerStartingHealth <= 3 {
-            playerHealth = 3
-            UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
-        } else {
-            playerHealth = playerStartingHealth
-        }
-        
-        healthLabel = SKLabelNode(text: "\(playerHealth ?? 0)")
+        healthLabel = SKLabelNode(text: "\(playerHealth ?? 3)")
         healthLabel.fontName = "Futura-Bold"
         healthLabel.fontSize = 14
         healthLabel.fontColor = SKColor.white
         healthLabel.zPosition = 4
         healthLabel.position = CGPoint(x: size.width * 0.7, y: size.height * 0.65)
         addChild(healthLabel)
-        
-        // If the price has not been set, put it to 200
-        if fireRateCost < 200 {
-            fireRateCost = 200
-            UserDefaults.standard.set(fireRateCost, forKey: "fireRateCost")
-        }
         
         fireRateLabel = SKLabelNode(text: "\(fireRateCost ?? 200)")
         fireRateLabel.fontName = "Futura-Bold"
@@ -108,12 +101,6 @@ class Shop: SKScene {
         fireRateLabel.position = CGPoint(x: size.width * 0.435, y: size.height * 0.455)
         addChild(fireRateLabel)
         
-        // set this for durabilityCost
-        if durabilityCost < 200 {
-            durabilityCost = 200
-            UserDefaults.standard.set(durabilityCost, forKey: "durabilityCost")
-        }
-        
         durabilityLabel = SKLabelNode(text: "\(durabilityCost ?? 200)")
         durabilityLabel.fontName = "Futura-Bold"
         durabilityLabel.fontSize = 12
@@ -121,12 +108,6 @@ class Shop: SKScene {
         durabilityLabel.zPosition = 4
         durabilityLabel.position = CGPoint(x: size.width * 0.74, y: size.height * 0.455)
         addChild(durabilityLabel)
-        
-        // set this for scoreCost
-        if scoreCost < 200 {
-            scoreCost = 200
-            UserDefaults.standard.set(scoreCost, forKey: "scoreCost")
-        }
         
         scoreLabel = SKLabelNode(text: "\(scoreCost ?? 200)")
         scoreLabel.fontName = "Futura-Bold"
@@ -136,12 +117,6 @@ class Shop: SKScene {
         scoreLabel.position = CGPoint(x: size.width * 0.435, y: size.height * 0.318)
         addChild(scoreLabel)
         
-        // set this for coinUpgradeCost
-        if coinUpgradeCost < 200 {
-            coinUpgradeCost = 200
-            UserDefaults.standard.set(coinUpgradeCost, forKey: "coinUpgradeCost")
-        }
-        
         coinUpgradeLabel = SKLabelNode(text: "\(coinUpgradeCost ?? 200)")
         coinUpgradeLabel.fontName = "Futura-Bold"
         coinUpgradeLabel.fontSize = 12
@@ -149,13 +124,60 @@ class Shop: SKScene {
         coinUpgradeLabel.zPosition = 4
         coinUpgradeLabel.position = CGPoint(x: size.width * 0.74, y: size.height * 0.318)
         addChild(coinUpgradeLabel)
-        
-        let label = SKLabelNode(text: "Shop Screen")
-        label.fontName = "Arial-BoldMT"
-        label.fontSize = 40
-        label.fontColor = .black
-        label.position = CGPoint(x: size.width / 2, y: size.height / 2)
-        addChild(label)
+    }
+    
+    func upgradeAttribute(attribute: String) {
+        switch attribute {
+        case "fireRate":
+            if playerCoins >= fireRateCost {
+                playerCoins -= fireRateCost
+                fireRate *= 3
+                fireRateCost *= 3
+                UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
+                UserDefaults.standard.set(fireRate, forKey: "fireRate")
+                UserDefaults.standard.set(fireRateCost, forKey: "fireRateCost")
+                fireRateLabel.text = "\(fireRateCost ?? 200)"
+                coinLabel.text = "\(playerCoins ?? 0)"
+            }
+            
+        case "durability":
+            if playerCoins >= durabilityCost {
+                playerCoins -= durabilityCost
+                durability += 1
+                durabilityCost *= 3
+                UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
+                UserDefaults.standard.set(durability, forKey: "durability")
+                UserDefaults.standard.set(durabilityCost, forKey: "durabilityCost")
+                durabilityLabel.text = "\(durabilityCost ?? 200)"
+                coinLabel.text = "\(playerCoins ?? 0)"
+            }
+            
+        case "score":
+            if playerCoins >= scoreCost {
+                playerCoins -= scoreCost
+                // Assuming score has an effect multiplier
+                scoreCost *= 3
+                UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
+                UserDefaults.standard.set(scoreCost, forKey: "scoreCost")
+                scoreLabel.text = "\(scoreCost ?? 200)"
+                coinLabel.text = "\(playerCoins ?? 0)"
+            }
+            
+        case "coinMultiplier":
+            if playerCoins >= coinUpgradeCost {
+                playerCoins -= coinUpgradeCost
+                coinMultiplier *= 2
+                coinUpgradeCost *= 3
+                UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
+                UserDefaults.standard.set(coinMultiplier, forKey: "coinMultiplier")
+                UserDefaults.standard.set(coinUpgradeCost, forKey: "coinUpgradeCost")
+                coinUpgradeLabel.text = "\(coinUpgradeCost ?? 200)"
+                coinLabel.text = "\(playerCoins ?? 0)"
+            }
+            
+        default:
+            break
+        }
     }
     
     func backToMenu() {
@@ -164,7 +186,7 @@ class Shop: SKScene {
         view?.presentScene(homeScreen, transition: transition)
     }
     
-//    TODO -- Need to write function to convert labels to end with k when thousand and m when millions, etc
+//    TODO -- Need to write function to convert labels to end with k when thousand and m when millions b when billions and t for trillions, etc
 //    TODO -- Write function with parameters for whichever button was pressed to process changes in price and sub coins
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -175,6 +197,22 @@ class Shop: SKScene {
             // Handle movement knob touches
             if quitButton.contains(location) {
                 backToMenu()
+            }
+            
+            if fireRateLabel.contains(location) {
+                upgradeAttribute(attribute: "fireRate")
+            }
+            
+            if durabilityLabel.contains(location) {
+                upgradeAttribute(attribute: "durability")
+            }
+            
+            if scoreLabel.contains(location) {
+                upgradeAttribute(attribute: "score")
+            }
+            
+            if coinUpgradeLabel.contains(location) {
+                upgradeAttribute(attribute: "coinMultiplier")
             }
         }
     }
