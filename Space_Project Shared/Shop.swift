@@ -20,17 +20,17 @@ class Shop: SKScene {
     var playerCoins: Int! = UserDefaults.standard.integer(forKey: "playerCoins")
     var coinLabel = SKLabelNode()
     
+    var playerStartingHealth: Int! = UserDefaults.standard.integer(forKey: "playerStartingHealth")
+    var playerHealth: Int! = UserDefaults.standard.integer(forKey: "playerHealth")
+    
+    var healthLabel = SKLabelNode()
+    
     override func didMove(to view: SKView) {
         
         background.position = CGPoint(x: size.width / 2, y: size.height / 2)
         background.zPosition = -1
         background.size = CGSize(width: self.size.width, height: self.size.height)
         self.addChild(background)
-        
-        createCapsuleButton(buttonNode: backHome, text: "Back to Menu", position: CGPoint(x: size.width / 2, y: size.height / 2 - 100), width: 200, height: 60, parent: self) {
-            let homeScene = HomeScreen(size: self.size)
-            transitionToScene(view: self.view, scene: homeScene)
-        }
         
         store.position = CGPoint(x: size.width / 2, y: size.height * 0.6)
         store.zPosition = 1
@@ -63,6 +63,21 @@ class Shop: SKScene {
         coinLabel.zPosition = 4
         coinLabel.position = CGPoint(x: size.width * 0.335, y: size.height * 0.65)
         addChild(coinLabel)
+        
+        if playerStartingHealth <= 3 {
+            playerHealth = 3
+            UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
+        } else {
+            playerHealth = playerStartingHealth
+        }
+        
+        healthLabel = SKLabelNode(text: "\(playerHealth ?? 0)")
+        healthLabel.fontName = "Futura-Bold"
+        healthLabel.fontSize = 14
+        healthLabel.fontColor = SKColor.white
+        healthLabel.zPosition = 4
+        healthLabel.position = CGPoint(x: size.width * 0.7, y: size.height * 0.65)
+        addChild(healthLabel)
         
         let label = SKLabelNode(text: "Shop Screen")
         label.fontName = "Arial-BoldMT"
