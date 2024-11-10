@@ -25,9 +25,16 @@ class Shop: SKScene {
     var healthLabel = SKLabelNode()
     
     var fireRateLabel = SKLabelNode()
+    var fireRateButton = SKShapeNode()
+    
     var durabilityLabel = SKLabelNode()
+    var durabilityButton = SKShapeNode()
+    
     var scoreLabel = SKLabelNode()
+    var scoreButton = SKShapeNode()
+    
     var coinUpgradeLabel = SKLabelNode()
+    var coinUpgradeButton = SKShapeNode()
     
     var fireRateCost: Int! = UserDefaults.standard.integer(forKey: "fireRateCost")
     var durabilityCost: Int! = UserDefaults.standard.integer(forKey: "durabilityCost")
@@ -38,7 +45,6 @@ class Shop: SKScene {
     var playerStartingHealth: Int! = UserDefaults.standard.integer(forKey: "playerStartingHealth")
     var durability: Int! = UserDefaults.standard.integer(forKey: "durability")
     var coinMultiplier: Int! = UserDefaults.standard.integer(forKey: "coinMultiplier")
-    
     
     override func didMove(to view: SKView) {
         
@@ -71,12 +77,13 @@ class Shop: SKScene {
 //        displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
 //        displayHealthLabel.zPosition = 10
 
+        
         setupLabels()
         
     }
     
     func setupLabels() {
-        playerCoins = 1000
+        playerCoins = 10000
         coinLabel = SKLabelNode(text: "\(playerCoins ?? 0)")
         coinLabel.fontName = "Futura-Bold"
         coinLabel.fontSize = 14
@@ -93,6 +100,13 @@ class Shop: SKScene {
         healthLabel.position = CGPoint(x: size.width * 0.7, y: size.height * 0.65)
         addChild(healthLabel)
         
+        fireRateButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.3 , height: self.size.width * 0.06))
+        fireRateButton.fillColor = SKColor.clear
+        fireRateButton.strokeColor = SKColor.clear
+        fireRateButton.zPosition = 3.9
+        fireRateButton.position = CGPoint(x: size.width * 0.35, y: size.height * 0.46)
+        addChild(fireRateButton)
+        
         fireRateLabel = SKLabelNode(text: "\(fireRateCost ?? 200)")
         fireRateLabel.fontName = "Futura-Bold"
         fireRateLabel.fontSize = 12
@@ -100,6 +114,13 @@ class Shop: SKScene {
         fireRateLabel.zPosition = 4
         fireRateLabel.position = CGPoint(x: size.width * 0.435, y: size.height * 0.455)
         addChild(fireRateLabel)
+
+        durabilityButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.3 , height: self.size.width * 0.06))
+        durabilityButton.fillColor = SKColor.clear
+        durabilityButton.strokeColor = SKColor.clear
+        durabilityButton.zPosition = 3.9
+        durabilityButton.position = CGPoint(x: size.width * 0.655, y: size.height * 0.46)
+        addChild(durabilityButton)
         
         durabilityLabel = SKLabelNode(text: "\(durabilityCost ?? 200)")
         durabilityLabel.fontName = "Futura-Bold"
@@ -109,6 +130,13 @@ class Shop: SKScene {
         durabilityLabel.position = CGPoint(x: size.width * 0.74, y: size.height * 0.455)
         addChild(durabilityLabel)
         
+        scoreButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.3 , height: self.size.width * 0.06))
+        scoreButton.fillColor = SKColor.clear
+        scoreButton.strokeColor = SKColor.clear
+        scoreButton.zPosition = 3.9
+        scoreButton.position = CGPoint(x: size.width * 0.35, y: size.height * 0.323)
+        addChild(scoreButton)
+        
         scoreLabel = SKLabelNode(text: "\(scoreCost ?? 200)")
         scoreLabel.fontName = "Futura-Bold"
         scoreLabel.fontSize = 12
@@ -116,6 +144,13 @@ class Shop: SKScene {
         scoreLabel.zPosition = 4
         scoreLabel.position = CGPoint(x: size.width * 0.435, y: size.height * 0.318)
         addChild(scoreLabel)
+        
+        coinUpgradeButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.3 , height: self.size.width * 0.06))
+        coinUpgradeButton.fillColor = SKColor.clear
+        coinUpgradeButton.strokeColor = SKColor.clear
+        coinUpgradeButton.zPosition = 3.9
+        coinUpgradeButton.position = CGPoint(x: size.width * 0.655, y: size.height * 0.323)
+        addChild(coinUpgradeButton)
         
         coinUpgradeLabel = SKLabelNode(text: "\(coinUpgradeCost ?? 200)")
         coinUpgradeLabel.fontName = "Futura-Bold"
@@ -199,19 +234,19 @@ class Shop: SKScene {
                 backToMenu()
             }
             
-            if fireRateLabel.contains(location) {
+            if fireRateLabel.contains(location) || fireRateButton.contains(location) {
                 upgradeAttribute(attribute: "fireRate")
             }
             
-            if durabilityLabel.contains(location) {
+            if durabilityLabel.contains(location) || durabilityButton.contains(location){
                 upgradeAttribute(attribute: "durability")
             }
             
-            if scoreLabel.contains(location) {
+            if scoreLabel.contains(location) || scoreButton.contains(location) {
                 upgradeAttribute(attribute: "score")
             }
             
-            if coinUpgradeLabel.contains(location) {
+            if coinUpgradeLabel.contains(location) || coinUpgradeButton.contains(location) {
                 upgradeAttribute(attribute: "coinMultiplier")
             }
         }
