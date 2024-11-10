@@ -88,6 +88,10 @@ class Shop: SKScene {
             coinUpgradeCost = 200
         }
         
+        if (playerHealth < 3) {
+            playerHealth = 3
+        }
+        
 //        displayHealthLabel.fontName = "Futura-Bold"
 //        displayHealthLabel.fontSize = 14
 //        displayHealthLabel.fontColor = SKColor.white
@@ -99,9 +103,22 @@ class Shop: SKScene {
         
     }
     
+    // Utility function to abbreviate numbers
+    func formatNumber(_ number: Int) -> String {
+        switch number {
+        case 1_000_000_000...:
+            return "\(number / 1_000_000_000)b"  // Billion
+        case 1_000_000...:
+            return "\(number / 1_000_000)m"  // Million
+        case 1_000...:
+            return "\(number / 1_000)k"  // Thousand
+        default:
+            return "\(number)"  // Default
+        }
+    }
+    
     func setupLabels() {
-        playerCoins = 10000
-        coinLabel = SKLabelNode(text: "\(playerCoins ?? 0)")
+        coinLabel = SKLabelNode(text: "\(formatNumber(playerCoins))")
         coinLabel.fontName = "Futura-Bold"
         coinLabel.fontSize = 14
         coinLabel.fontColor = SKColor.white
@@ -124,7 +141,7 @@ class Shop: SKScene {
         fireRateButton.position = CGPoint(x: size.width * 0.35, y: size.height * 0.46)
         addChild(fireRateButton)
         
-        fireRateLabel = SKLabelNode(text: "\(fireRateCost ?? 200)")
+        fireRateLabel = SKLabelNode(text: "\(formatNumber(fireRateCost))")
         fireRateLabel.fontName = "Futura-Bold"
         fireRateLabel.fontSize = 12
         fireRateLabel.fontColor = SKColor.white
@@ -139,7 +156,7 @@ class Shop: SKScene {
         durabilityButton.position = CGPoint(x: size.width * 0.655, y: size.height * 0.46)
         addChild(durabilityButton)
         
-        durabilityLabel = SKLabelNode(text: "\(durabilityCost ?? 200)")
+        durabilityLabel = SKLabelNode(text: "\(formatNumber(durabilityCost))")
         durabilityLabel.fontName = "Futura-Bold"
         durabilityLabel.fontSize = 12
         durabilityLabel.fontColor = SKColor.white
@@ -154,7 +171,7 @@ class Shop: SKScene {
         scoreButton.position = CGPoint(x: size.width * 0.35, y: size.height * 0.323)
         addChild(scoreButton)
         
-        scoreLabel = SKLabelNode(text: "\(scoreCost ?? 200)")
+        scoreLabel = SKLabelNode(text: "\(formatNumber(scoreCost))")
         scoreLabel.fontName = "Futura-Bold"
         scoreLabel.fontSize = 12
         scoreLabel.fontColor = SKColor.white
@@ -169,13 +186,22 @@ class Shop: SKScene {
         coinUpgradeButton.position = CGPoint(x: size.width * 0.655, y: size.height * 0.323)
         addChild(coinUpgradeButton)
         
-        coinUpgradeLabel = SKLabelNode(text: "\(coinUpgradeCost ?? 200)")
+        coinUpgradeLabel = SKLabelNode(text: "\(formatNumber(coinUpgradeCost))")
         coinUpgradeLabel.fontName = "Futura-Bold"
         coinUpgradeLabel.fontSize = 12
         coinUpgradeLabel.fontColor = SKColor.white
         coinUpgradeLabel.zPosition = 4
         coinUpgradeLabel.position = CGPoint(x: size.width * 0.74, y: size.height * 0.318)
         addChild(coinUpgradeLabel)
+    }
+    
+//  Will be called on any purchase
+    func updateLabels() {
+        fireRateLabel.text = formatNumber(fireRateCost ?? 200)
+        durabilityLabel.text = formatNumber(durabilityCost ?? 200)
+        scoreLabel.text = formatNumber(scoreCost ?? 200)
+        coinUpgradeLabel.text = formatNumber(coinUpgradeCost ?? 200)
+        coinLabel.text = formatNumber(playerCoins ?? 0)
     }
     
     func upgradeAttribute(attribute: String) {
@@ -232,6 +258,7 @@ class Shop: SKScene {
         }
     }
     
+    
     func backToMenu() {
         let homeScreen = HomeScreen(size: size)
         let transition = SKTransition.fade(withDuration: 1.0)
@@ -253,18 +280,22 @@ class Shop: SKScene {
             
             if fireRateLabel.contains(location) || fireRateButton.contains(location) {
                 upgradeAttribute(attribute: "fireRate")
+                updateLabels()
             }
             
             if durabilityLabel.contains(location) || durabilityButton.contains(location){
                 upgradeAttribute(attribute: "durability")
+                updateLabels()
             }
             
             if scoreLabel.contains(location) || scoreButton.contains(location) {
                 upgradeAttribute(attribute: "score")
+                updateLabels()
             }
             
             if coinUpgradeLabel.contains(location) || coinUpgradeButton.contains(location) {
                 upgradeAttribute(attribute: "coinMultiplier")
+                updateLabels()
             }
         }
     }
