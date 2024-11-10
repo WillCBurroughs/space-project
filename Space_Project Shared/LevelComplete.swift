@@ -22,8 +22,11 @@ class LevelComplete: SKScene {
     var healthLabel = SKLabelNode(text: "")
     var livesLeftFromLastLevel = UserDefaults.standard.integer(forKey: "livesRemaining")
     
+    var backToLevels = SKShapeNode()
+    var restartLevel = SKShapeNode()
+    
 //  TODO - Add coins and hearts (Done), add function for score
-//  Add button to return to levels menu or restart level
+//  Add button to return to levels menu (done) or restart level
     
     override func didMove(to view: SKView) {
         
@@ -55,7 +58,49 @@ class LevelComplete: SKScene {
         coinLabel.zPosition = 4
         coinLabel.position = CGPoint(x: size.width * 0.405, y: size.height * 0.34)
         addChild(coinLabel)
+        
+        backToLevels = SKShapeNode(ellipseOf: CGSize(width: self.size.width * 0.1, height: self.size.width * 0.1))
+        backToLevels.fillColor = SKColor.clear
+        backToLevels.strokeColor = SKColor.clear
+        backToLevels.position = CGPoint(x: self.size.width * 0.57, y: self.size.height * 0.2)
+        backToLevels.zPosition = 5
+        addChild(backToLevels)
+        
+        restartLevel = SKShapeNode(ellipseOf: CGSize(width: self.size.width * 0.1, height: self.size.width * 0.1))
+        restartLevel.fillColor = SKColor.clear
+        restartLevel.strokeColor = SKColor.clear
+        restartLevel.position = CGPoint(x: self.size.width * 0.42, y: self.size.height * 0.2)
+        restartLevel.zPosition = 5
+        addChild(restartLevel)
+        
     }
+    
+    func transitionToLevelsScene() {
+        let levelsScene = NewLevelsScreen(size: size)
+        let transition = SKTransition.fade(withDuration: 1.0)
+        view?.presentScene(levelsScene, transition: transition)
+    }
+    
+    func restartCompletedLevel() {
+        let gameScene = GameScene(size: size)
+        let transition = SKTransition.fade(withDuration: 1.0)
+        view?.presentScene(gameScene, transition: transition)
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let location = touch.location(in: self)
+            
+            if backToLevels.contains(location) {
+                transitionToLevelsScene()
+            }
+            
+            if restartLevel.contains(location){
+                restartCompletedLevel()
+            }
+        }
+    }
+    
     
     func formatNumber(_ number: Int) -> String {
         switch number {
