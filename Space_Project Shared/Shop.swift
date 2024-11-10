@@ -41,7 +41,7 @@ class Shop: SKScene {
     var scoreCost: Int! = UserDefaults.standard.integer(forKey: "scoreCost")
     var coinUpgradeCost: Int! = UserDefaults.standard.integer(forKey: "coinUpgradeCost")
     
-    var fireRate: Int! = UserDefaults.standard.integer(forKey: "fireRate")
+    var fireRateMultiplier = UserDefaults.standard.float(forKey: "fireRateMultiplier")
     var playerStartingHealth: Int! = UserDefaults.standard.integer(forKey: "playerStartingHealth")
     var durability: Int! = UserDefaults.standard.integer(forKey: "durability")
     var coinMultiplier: Int! = UserDefaults.standard.integer(forKey: "coinMultiplier")
@@ -69,6 +69,10 @@ class Shop: SKScene {
         quitButton.fillColor = .clear
         quitButton.strokeColor = .clear
         self.addChild(quitButton)
+        
+        if(fireRateMultiplier < 1){
+            fireRateMultiplier = 1
+        }
         
         
 //      Default prices
@@ -118,6 +122,7 @@ class Shop: SKScene {
     }
     
     func setupLabels() {
+        playerCoins = 10000
         coinLabel = SKLabelNode(text: "\(formatNumber(playerCoins))")
         coinLabel.fontName = "Futura-Bold"
         coinLabel.fontSize = 14
@@ -209,10 +214,10 @@ class Shop: SKScene {
         case "fireRate":
             if playerCoins >= fireRateCost {
                 playerCoins -= fireRateCost
-                fireRate *= 3
+                fireRateMultiplier *= 1.5
                 fireRateCost *= 3
                 UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
-                UserDefaults.standard.set(fireRate, forKey: "fireRate")
+                UserDefaults.standard.set(fireRateMultiplier, forKey: "fireRateMultiplier")
                 UserDefaults.standard.set(fireRateCost, forKey: "fireRateCost")
                 fireRateLabel.text = "\(fireRateCost ?? 200)"
                 coinLabel.text = "\(playerCoins ?? 0)"
