@@ -114,6 +114,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Settings screen area
     var settingsMenu: SKSpriteNode?
     
+    
+    let maxSpeedValue = 20.0
+    
     // Used to keep track of player_lives > 0 (still alive)
 //    var player_is_alive = true
 //    var death_background = SKSpriteNode(imageNamed: "death_background")
@@ -516,6 +519,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Retrieve the highest completed level from UserDefaults
         let highestCompletedLevel = UserDefaults.standard.integer(forKey: "highestCompletedLevel")
         
+        let livesRemaining = UserDefaults.standard.set(playerHealth, forKey: "livesRemaining")
+        
         // Check if the current level is higher than the saved `highestCompletedLevel`
         if currentLevel > highestCompletedLevel {
             // Update `highestCompletedLevel` in UserDefaults
@@ -770,7 +775,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let positionRatio = (newXPosition - minX) / (maxX - minX)
                 
                 // Determines the speedValue based on how far speed is moved left or right
-                let speedValue = 0.5 + (positionRatio * (20 - 0.5))
+                let speedValue = 0.5 + (positionRatio * (maxSpeedValue - 0.5))
                 
                 // Save the speedValue to UserDefaults
                 UserDefaults.standard.set(speedValue, forKey: "speedBarValue")

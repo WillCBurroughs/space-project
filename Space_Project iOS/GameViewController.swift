@@ -20,7 +20,8 @@ class GameViewController: UIViewController {
 //        let splashScene = NewLevelsScreen(size: view.bounds.size)
         
 //        let splashScene = GameScene(size: view.bounds.size)
-        let splashScene = Shop(size: view.bounds.size)
+//        let splashScene = Shop(size: view.bounds.size)
+        let splashScene = LevelComplete(size: view.bounds.size)
         
         // Present the splash scene
         let skView = self.view as! SKView
