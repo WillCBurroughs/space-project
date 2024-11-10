@@ -44,7 +44,7 @@ class Shop: SKScene {
     var fireRateMultiplier = UserDefaults.standard.float(forKey: "fireRateMultiplier")
     var playerStartingHealth: Int! = UserDefaults.standard.integer(forKey: "playerStartingHealth")
     var durability: Int! = UserDefaults.standard.integer(forKey: "durability")
-    var coinMultiplier: Int! = UserDefaults.standard.integer(forKey: "coinMultiplier")
+    var coinMultiplier = UserDefaults.standard.float(forKey: "coinMultiplier")
     
     override func didMove(to view: SKView) {
         
@@ -72,6 +72,10 @@ class Shop: SKScene {
         
         if(fireRateMultiplier < 1){
             fireRateMultiplier = 1
+        }
+        
+        if(coinMultiplier < 1){
+            coinMultiplier = 1
         }
         
         

@@ -84,6 +84,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var speedMultiplier: CGFloat!
     
     var fireRateMultiplier = UserDefaults.standard.float(forKey: "fireRateMultiplier")
+    var coinMultiplier = UserDefaults.standard.float(forKey: "coinMultiplier")
     
     //  Loading in player health from UserDefaults
     var playerStartingHealth: Int! = UserDefaults.standard.integer(forKey: "playerStartingHealth")
@@ -132,6 +133,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             fireRateMultiplier = 1
         }
         
+        if(coinMultiplier < 1){
+            coinMultiplier = 1
+        }
         
         // Setup display for player's coins
         coinLabel.fontName = "Futura-Bold"
@@ -894,7 +898,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
             // Retrieve the coinValue from the asteroid's userData
             if let coinValue = enemy?.userData?["coinValue"] as? Int {
-                playerCoins += coinValue
+                playerCoins += coinValue * Int(coinMultiplier)
                 UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
             }
             
