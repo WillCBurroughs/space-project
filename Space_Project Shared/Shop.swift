@@ -96,8 +96,9 @@ class Shop: SKScene {
             coinUpgradeCost = 200
         }
         
-        if (playerHealth < 3) {
-            playerHealth = 3
+        if (durability < 3) {
+            durability = 3
+            UserDefaults.standard.set(durability, forKey: "playerStartingHealth")
         }
         
 //        displayHealthLabel.fontName = "Futura-Bold"
@@ -135,7 +136,7 @@ class Shop: SKScene {
         coinLabel.position = CGPoint(x: size.width * 0.335, y: size.height * 0.65)
         addChild(coinLabel)
         
-        healthLabel = SKLabelNode(text: "\(playerHealth ?? 3)")
+        healthLabel = SKLabelNode(text: "\(durability ?? 3)")
         healthLabel.fontName = "Futura-Bold"
         healthLabel.fontSize = 14
         healthLabel.fontColor = SKColor.white
@@ -233,9 +234,11 @@ class Shop: SKScene {
                 durability += 1
                 durabilityCost *= 3
                 UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
-                UserDefaults.standard.set(durability, forKey: "durability")
+                UserDefaults.standard.set(durability, forKey: "playerStartingHealth")
                 UserDefaults.standard.set(durabilityCost, forKey: "durabilityCost")
                 durabilityLabel.text = "\(durabilityCost ?? 200)"
+                durability = UserDefaults.standard.integer(forKey: "playerStartingHealth")
+                healthLabel.text = "\(durability ?? 3)"
                 coinLabel.text = "\(playerCoins ?? 0)"
             }
             
