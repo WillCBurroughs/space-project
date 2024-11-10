@@ -520,10 +520,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if currentLevel > highestCompletedLevel {
             // Update `highestCompletedLevel` in UserDefaults
             UserDefaults.standard.set(currentLevel, forKey: "highestCompletedLevel")
-            transitionToLevelsScene()
+            transitionToLevelCompleteScene()
         }
         else {
-            transitionToLevelsScene()
+            transitionToLevelCompleteScene()
         }
         
     }
@@ -548,6 +548,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let levelsScene = NewLevelsScreen(size: size)
         let transition = SKTransition.fade(withDuration: 1.0)
         view?.presentScene(levelsScene, transition: transition)
+    }
+    
+    func transitionToLevelCompleteScene() {
+        let levelComplete = LevelComplete(size: size)
+        let transition = SKTransition.fade(withDuration: 1.0)
+        view?.presentScene(levelComplete, transition: transition)
     }
     
     // MARK: - Scrolling Background Setup
@@ -764,7 +770,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let positionRatio = (newXPosition - minX) / (maxX - minX)
                 
                 // Determines the speedValue based on how far speed is moved left or right
-                let speedValue = 0.5 + (positionRatio * (2 - 0.5))
+                let speedValue = 0.5 + (positionRatio * (20 - 0.5))
                 
                 // Save the speedValue to UserDefaults
                 UserDefaults.standard.set(speedValue, forKey: "speedBarValue")
