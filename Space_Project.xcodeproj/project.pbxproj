@@ -21,6 +21,7 @@
 		5C879A2A2CAE09100047AC9B /* CreateButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C879A292CAE09100047AC9B /* CreateButton.swift */; };
 		5C879A2C2CAE0A7B0047AC9B /* Levels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C879A2B2CAE0A7B0047AC9B /* Levels.swift */; };
 		5C879A2E2CAE0CE60047AC9B /* Shop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C879A2D2CAE0CE60047AC9B /* Shop.swift */; };
+		5C9691742CE10C9E00859A54 /* LevelComplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C9691732CE10C9E00859A54 /* LevelComplete.swift */; };
 		5CB56AFF2CB4977400888E7A /* Enemies.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB56AFE2CB4977400888E7A /* Enemies.swift */; };
 		5CB56B012CB5D37300888E7A /* newLevelsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB56B002CB5D37300888E7A /* newLevelsScreen.swift */; };
 		5CB56B032CBB372500888E7A /* gradient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CB56B022CBB372500888E7A /* gradient.swift */; };
@@ -42,6 +43,7 @@
 		5C879A292CAE09100047AC9B /* CreateButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateButton.swift; sourceTree = "<group>"; };
 		5C879A2B2CAE0A7B0047AC9B /* Levels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Levels.swift; sourceTree = "<group>"; };
 		5C879A2D2CAE0CE60047AC9B /* Shop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shop.swift; sourceTree = "<group>"; };
+		5C9691732CE10C9E00859A54 /* LevelComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelComplete.swift; sourceTree = "<group>"; };
 		5CB56AFE2CB4977400888E7A /* Enemies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enemies.swift; sourceTree = "<group>"; };
 		5CB56B002CB5D37300888E7A /* newLevelsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newLevelsScreen.swift; sourceTree = "<group>"; };
 		5CB56B022CBB372500888E7A /* gradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gradient.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				5C879A052CAB66A10047AC9B /* Actions.sks */,
 				5C879A062CAB66A10047AC9B /* GameScene.sks */,
 				5C879A072CAB66A10047AC9B /* GameScene.swift */,
+				5C9691732CE10C9E00859A54 /* LevelComplete.swift */,
 				5CB56B022CBB372500888E7A /* gradient.swift */,
 				5CB56AFE2CB4977400888E7A /* Enemies.swift */,
 				5CB56B002CB5D37300888E7A /* newLevelsScreen.swift */,
@@ -186,6 +189,7 @@
 				5C879A262CADF53D0047AC9B /* HomeScreen.swift in Sources */,
 				5C879A242CADF3110047AC9B /* SplashScene.swift in Sources */,
 				5CB56B012CB5D37300888E7A /* newLevelsScreen.swift in Sources */,
+				5C9691742CE10C9E00859A54 /* LevelComplete.swift in Sources */,
 				5CB56B032CBB372500888E7A /* gradient.swift in Sources */,
 				5CB56AFF2CB4977400888E7A /* Enemies.swift in Sources */,
 				5C879A2E2CAE0CE60047AC9B /* Shop.swift in Sources */,
