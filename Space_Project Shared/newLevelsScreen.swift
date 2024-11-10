@@ -158,6 +158,14 @@ class NewLevelsScreen: SKScene {
         
     }
     
+    func resetDefaults() {
+        let defaults = UserDefaults.standard
+        let dictionary = defaults.dictionaryRepresentation()
+        dictionary.keys.forEach { key in
+            defaults.removeObject(forKey: key)
+        }
+    }
+    
     func transitionToMainMenu() {
         
         let menuScene = HomeScreen(size: self.size)
@@ -246,8 +254,9 @@ class NewLevelsScreen: SKScene {
     
     // Function to reset game progress
     func resetProgress(){
-        UserDefaults.standard.set(0, forKey: highestCompletedLevelKey)
-        UserDefaults.standard.set(0, forKey: "playerCoins")
+
+        resetDefaults()
+        
         // Reload the scene to update the level buttons
         let newScene = NewLevelsScreen(size: self.size)
         newScene.scaleMode = self.scaleMode
