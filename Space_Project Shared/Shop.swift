@@ -71,6 +71,23 @@ class Shop: SKScene {
         self.addChild(quitButton)
         
         
+//      Default prices
+        if(fireRateCost < 200){
+            fireRateCost = 200
+        }
+        
+        if(durabilityCost < 200){
+            durabilityCost = 200
+        }
+        
+        if(scoreCost < 200){
+            scoreCost = 200
+        }
+        
+        if(coinUpgradeCost < 200){
+            coinUpgradeCost = 200
+        }
+        
 //        displayHealthLabel.fontName = "Futura-Bold"
 //        displayHealthLabel.fontSize = 14
 //        displayHealthLabel.fontColor = SKColor.white
