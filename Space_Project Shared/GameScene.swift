@@ -83,6 +83,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let savedSpeedMultiplier = UserDefaults.standard.float(forKey: "speedBarValue")
     var speedMultiplier: CGFloat!
     
+    var fireRateMultiplier = UserDefaults.standard.float(forKey: "fireRateMultiplier")
+    
     //  Loading in player health from UserDefaults
     var playerStartingHealth: Int! = UserDefaults.standard.integer(forKey: "playerStartingHealth")
     var playerHealth: Int! = UserDefaults.standard.integer(forKey: "playerHealth")
@@ -125,6 +127,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         displayHealthLabel.fontColor = SKColor.white
         displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
         displayHealthLabel.zPosition = 10  // Ensure it's in front of other elements
+        
+        if(fireRateMultiplier < 1){
+            fireRateMultiplier = 1
+        }
+        
         
         // Setup display for player's coins
         coinLabel.fontName = "Futura-Bold"
@@ -239,13 +246,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         return from + (to - from) * progress
     }
     
-    // will fire bullets
+    // Fires player bullet
     func startFiringBullets() {
         // Remove any existing fire actions
         removeAction(forKey: "firing")
         
         let fireAction = SKAction.repeatForever(SKAction.sequence([
-            SKAction.wait(forDuration: 0.5 / Double(speedMultiplier)),  // Wait before firing
+            SKAction.wait(forDuration: (1 / Double(fireRateMultiplier)) / Double(speedMultiplier)),  // Wait before firing
             SKAction.run(fireYellowBall)
         ]))
         
@@ -428,7 +435,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Create a new spawn action with the updated speedMultiplier
         let spawnEnemiesAction = SKAction.repeatForever(SKAction.sequence([
-            SKAction.wait(forDuration: 3.0 / Double(speedMultiplier)),  // Adjust spawn frequency based on speedMultiplier
+            SKAction.wait(forDuration: 2.0 / Double(speedMultiplier)),  // Adjust spawn frequency based on speedMultiplier
             SKAction.run {
                 createFollowingEnemy(
                     scene: self,
