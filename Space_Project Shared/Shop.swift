@@ -44,6 +44,7 @@ class Shop: SKScene {
     var fireRateMultiplier = UserDefaults.standard.float(forKey: "fireRateMultiplier")
     var durability: Int! = UserDefaults.standard.integer(forKey: "playerStartingHealth")
     var coinMultiplier = UserDefaults.standard.float(forKey: "coinMultiplier")
+    var scoreMultiplier = UserDefaults.standard.float(forKey: "scoreMultiplier")
     
     override func didMove(to view: SKView) {
         
@@ -75,6 +76,10 @@ class Shop: SKScene {
         
         if(coinMultiplier < 1){
             coinMultiplier = 1
+        }
+        
+        if(scoreMultiplier < 1){
+            scoreMultiplier = 1
         }
         
         
@@ -245,7 +250,9 @@ class Shop: SKScene {
             if playerCoins >= scoreCost {
                 playerCoins -= scoreCost
                 // Assuming score has an effect multiplier
+                scoreMultiplier *= 2
                 scoreCost *= 3
+                UserDefaults.standard.set(scoreMultiplier, forKey: "scoreMultiplier")
                 UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
                 UserDefaults.standard.set(scoreCost, forKey: "scoreCost")
                 scoreLabel.text = "\(scoreCost ?? 200)"
