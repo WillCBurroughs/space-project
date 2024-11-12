@@ -86,6 +86,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var fireRateMultiplier = UserDefaults.standard.float(forKey: "fireRateMultiplier")
     var coinMultiplier = UserDefaults.standard.float(forKey: "coinMultiplier")
     
+    var scoreMultiplier = UserDefaults.standard.float(forKey: "scoreMultiplier")
+    
     //  Loading in player health from UserDefaults
     var playerStartingHealth: Int! = UserDefaults.standard.integer(forKey: "playerStartingHealth")
     var playerHealth: Int! = UserDefaults.standard.integer(forKey: "playerHealth")
@@ -114,8 +116,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Settings screen area
     var settingsMenu: SKSpriteNode?
     
+    // Values passed for calculating score
+    //    Total from enemies beaten (Every enemy has different number) * Score Multiplier * 10x if unhit in level * speed multiplier (0.5 to 2.0)
+    
+    var playerUnhit = UserDefaults.standard.bool(forKey: "playerUnhit")
+    var playerScore = UserDefaults.standard.integer(forKey: "playerScore")
     
     let maxSpeedValue = 20.0
+    
+
+
     
     // Used to keep track of player_lives > 0 (still alive)
 //    var player_is_alive = true
@@ -124,6 +134,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self  // Set the contact delegate
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
+        
+        // By default player is unhit
+        playerUnhit = true
         
         // Setup the label to display the player's health
         displayHealthLabel.fontName = "Futura-Bold"
@@ -136,8 +149,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             fireRateMultiplier = 1
         }
         
+        // playerScore must always default to 0 on level load in 
+        playerScore = 0
+        
         if(coinMultiplier < 1){
             coinMultiplier = 1
+        }
+        
+        if(scoreMultiplier < 1){
+            scoreMultiplier = 1.0
         }
         
         // Setup display for player's coins
@@ -426,7 +446,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let spawnAsteroidsAction = SKAction.repeatForever(SKAction.sequence([
             SKAction.wait(forDuration: 1.0 / Double(speedMultiplier)),  // Adjust spawn frequency
             SKAction.run {
-                createAsteroid(scene: self, screenSize: self.size, speedMultiplier: self.speedMultiplier, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBullet: self.yellowBallCategory, coinValue: 1)
+                createAsteroid(scene: self, screenSize: self.size, speedMultiplier: self.speedMultiplier, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBullet: self.yellowBallCategory, coinValue: 1, pointValue: 1)
             }
         ]))
 
@@ -452,7 +472,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     enemyCategory: self.enemyObjectCategory,
                     playerCategory: self.playerObjectCategory,
                     playerBulletCategory: self.yellowBallCategory,
-                    coinValue: 2 // Adjust as per your bullet category
+                    coinValue: 2,
+                    pointValue: 2
                 )
             }
         ]))
@@ -887,6 +908,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             playerHealth -= 1
             UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
             
+            playerUnhit = false
+            UserDefaults.standard.set(playerUnhit, forKey: "playerUnhit")
+            
 //          player has died
             if playerHealth <= 0 {
                 
@@ -911,6 +935,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if let coinValue = enemy?.userData?["coinValue"] as? Int {
                 playerCoins += coinValue * Int(coinMultiplier)
                 UserDefaults.standard.set(playerCoins, forKey: "playerCoins")
+            }
+            
+            if let pointValue = enemy?.userData?["pointValue"] as? Int {
+                playerScore += pointValue * Int(scoreMultiplier)
+                UserDefaults.standard.set(playerScore, forKey: "playerScore")
             }
             
             coinLabel.text = "\(playerCoins!)"
