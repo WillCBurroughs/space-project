@@ -25,6 +25,9 @@ class LevelComplete: SKScene {
     var backToLevels = SKShapeNode()
     var restartLevel = SKShapeNode()
     
+//   Formula for calculating score = Unhit bonus is 10X * Score Multiplier * Scores for enemies beaten * Speed multiplier
+//   Formula for calculating stars = < 1000 * level^2 = 1 star, < 2000 * level^2 = 2 star, > 2000 * level^2 = 3 star
+    
 //  TODO - Add coins and hearts (Done), add function for score
 //  Add button to return to levels menu (done) or restart level
     
