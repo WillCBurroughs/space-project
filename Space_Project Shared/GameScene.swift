@@ -137,6 +137,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // By default player is unhit
         playerUnhit = true
+        UserDefaults.standard.set(playerUnhit, forKey: "playerUnhit")
         
         // Setup the label to display the player's health
         displayHealthLabel.fontName = "Futura-Bold"
