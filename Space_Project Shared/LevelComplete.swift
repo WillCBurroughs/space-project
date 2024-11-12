@@ -28,6 +28,8 @@ class LevelComplete: SKScene {
     var scoreLabel = SKLabelNode(text: "")
     var playerScore = UserDefaults.standard.integer(forKey: "playerScore")
     
+    var playerUnhit = UserDefaults.standard.bool(forKey: "playerUnhit")
+    
 //   Formula for calculating score = Unhit bonus is 10X * Score Multiplier * Scores for enemies beaten * Speed multiplier
 //   Formula for calculating stars = < 1000 * level^2 = 1 star, < 2000 * level^2 = 2 star, > 2000 * level^2 = 3 star
     
@@ -79,7 +81,7 @@ class LevelComplete: SKScene {
         restartLevel.zPosition = 5
         addChild(restartLevel)
         
-        scoreLabel = SKLabelNode(text: "\(formatNumber(playerScore))")
+        scoreLabel = SKLabelNode(text: "\(playerUnhit ? formatNumber(playerScore * 10) : formatNumber(playerScore))")
         scoreLabel.fontName = "Futura-Bold"
         scoreLabel.fontColor = SKColor.white
         scoreLabel.zPosition = 4
