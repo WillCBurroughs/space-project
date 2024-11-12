@@ -170,7 +170,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         // Addition of pauseButton to screen
         pauseButton.position = CGPoint(x: size.width - 50, y: size.height - 40)
-        pauseButton.zPosition = 100
+        pauseButton.zPosition = 94
         pauseButton.size = CGSize(width: 80, height: 80)
         addChild(pauseButton)
         
@@ -893,9 +893,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         circularSprite.position.y = clampedY
     }
     
-//    func handle_player_death() {
-//        scene?.isPaused = true
-//    }
+    func handle_player_death() {
+        
+        pauseOverlay = SKSpriteNode(color: SKColor(red: 0, green: 0, blue: 0, alpha: 0.6), size: self.size)
+        pauseOverlay?.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        pauseOverlay?.zPosition = 95
+        addChild(pauseOverlay!)
+        
+        var losingScreen = SKSpriteNode(imageNamed: "losing_screen")
+        losingScreen.size = CGSize(width: self.size.width * 1, height: self.size.height * 1)
+        losingScreen.zPosition = 200
+        losingScreen.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        addChild(losingScreen)
+        
+        scene?.isPaused = true
+    }
     
     // MARK: - Collision Detection
     func didBegin(_ contact: SKPhysicsContact) {
@@ -915,8 +927,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //          player has died
             if playerHealth <= 0 {
                 
-//                handle_player_death()
-                transitionToLevelsScene()
+                handle_player_death()
+//                transitionToLevelsScene()
             }
             displayHealthLabel.text = "\(playerHealth!)"
 
