@@ -113,6 +113,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Declaring settings button in menu
     var menuOptions = SKShapeNode(circleOfRadius: 20)
     
+    // Menu buttons upon losing the level
+    var loseScreenQuitButton = SKShapeNode(circleOfRadius: 20)
+    var loseScreenRetryButton = SKShapeNode(circleOfRadius: 20)
+    
+    // User will select this to watch ad and continue
+    var loseScreenWatchAdButton = SKShapeNode(circleOfRadius: 20)
+    
     // Settings screen area
     var settingsMenu: SKSpriteNode?
     
@@ -181,6 +188,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else {
             playerHealth = playerStartingHealth
         }
+        
+//      Remove, only for testing levelsLost popup
+        playerHealth = 1
         
         playerCoins = UserDefaults.standard.integer(forKey: "playerCoins")
         coinLabel.text = "\(playerCoins!)"
@@ -701,6 +711,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if speedKnob.contains(location) {
                 isSpeedBarMoving = true
             }
+            
+            if loseScreenQuitButton.contains(location) {
+                transitionToLevelsScene()
+            }
+            
+            if loseScreenRetryButton.contains(location) {
+                resetLevel()
+            }
 
             // Check for pause state: Handle resume and pause buttons
             if isGamePaused {
@@ -905,6 +923,21 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         losingScreen.zPosition = 200
         losingScreen.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
         addChild(losingScreen)
+        
+        loseScreenRetryButton = SKShapeNode(circleOfRadius: self.size.width * 0.047)
+        loseScreenRetryButton.fillColor = SKColor.clear
+        loseScreenRetryButton.strokeColor = SKColor.clear
+        loseScreenRetryButton.zPosition = 201
+        loseScreenRetryButton.position = CGPoint(x: self.size.width * 0.42, y: self.size.height * 0.19)
+        addChild(loseScreenRetryButton)
+        
+        // Must be on top of losing screen
+        loseScreenQuitButton = SKShapeNode(circleOfRadius: self.size.width * 0.047)
+        loseScreenQuitButton.fillColor = SKColor.clear
+        loseScreenQuitButton.strokeColor = SKColor.clear
+        loseScreenQuitButton.zPosition = 201
+        loseScreenQuitButton.position = CGPoint(x: self.size.width * 0.5693, y: self.size.height * 0.19)
+        addChild(loseScreenQuitButton)
         
         scene?.isPaused = true
     }
