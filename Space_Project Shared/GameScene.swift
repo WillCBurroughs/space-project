@@ -939,6 +939,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         loseScreenQuitButton.position = CGPoint(x: self.size.width * 0.5693, y: self.size.height * 0.19)
         addChild(loseScreenQuitButton)
         
+        loseScreenWatchAdButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.37, height: self.size.height * 0.15))
+        loseScreenWatchAdButton.position = CGPoint(x: self.size.width / 2, y: self.size.height * 0.4)
+        loseScreenWatchAdButton.zPosition = 203
+        loseScreenWatchAdButton.strokeColor = SKColor.black
+        loseScreenWatchAdButton.fillColor = SKColor.white
+        addChild(loseScreenWatchAdButton)
+        
         scene?.isPaused = true
     }
     

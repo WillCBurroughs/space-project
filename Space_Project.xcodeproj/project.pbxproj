@@ -46,6 +46,7 @@
 		5C879A2B2CAE0A7B0047AC9B /* Levels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Levels.swift; sourceTree = "<group>"; };
 		5C879A2D2CAE0CE60047AC9B /* Shop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shop.swift; sourceTree = "<group>"; };
 		5C9691732CE10C9E00859A54 /* LevelComplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelComplete.swift; sourceTree = "<group>"; };
+		5C9691752CE6BE0A00859A54 /* Space-Project-iOS-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Space-Project-iOS-Info.plist"; sourceTree = SOURCE_ROOT; };
 		5CB56AFE2CB4977400888E7A /* Enemies.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enemies.swift; sourceTree = "<group>"; };
 		5CB56B002CB5D37300888E7A /* newLevelsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newLevelsScreen.swift; sourceTree = "<group>"; };
 		5CB56B022CBB372500888E7A /* gradient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gradient.swift; sourceTree = "<group>"; };
@@ -116,6 +117,7 @@
 		5C879A0F2CAB66A20047AC9B /* Space_Project iOS */ = {
 			isa = PBXGroup;
 			children = (
+				5C9691752CE6BE0A00859A54 /* Space-Project-iOS-Info.plist */,
 				5C879A102CAB66A20047AC9B /* AppDelegate.swift */,
 				5C879A122CAB66A20047AC9B /* GameViewController.swift */,
 				5C879A142CAB66A20047AC9B /* Main.storyboard */,
@@ -130,7 +132,6 @@
 				A7D0B373C1E7BF503FBF00D5 /* Pods-Space_Project iOS.debug.xcconfig */,
 				20A67D171231E870A62713DA /* Pods-Space_Project iOS.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -408,6 +409,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7994UP2CT6;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Space-Project-iOS-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.action-games";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -440,6 +442,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7994UP2CT6;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Space-Project-iOS-Info.plist";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.action-games";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
