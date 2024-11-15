@@ -1,5 +1,6 @@
 
 import SpriteKit
+import GoogleMobileAds
 
 // First going to add text that gives the current level you are on (Done)
 // Next going to add the planet you are traveling to on progress bar -- Need planets as assets
@@ -113,6 +114,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     // Declaring settings button in menu
     var menuOptions = SKShapeNode(circleOfRadius: 20)
     
+    var losingScreen = SKSpriteNode()
+    
     // Menu buttons upon losing the level
     var loseScreenQuitButton = SKShapeNode(circleOfRadius: 20)
     var loseScreenRetryButton = SKShapeNode(circleOfRadius: 20)
@@ -131,7 +134,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let maxSpeedValue = 20.0
     
-
+    //  used to show ad
+    let rewardedViewModel = RewardedViewModel()
 
     
     // Used to keep track of player_lives > 0 (still alive)
@@ -139,7 +143,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //    var death_background = SKSpriteNode(imageNamed: "death_background")
     
     override func didMove(to view: SKView) {
+        
+        super.didMove(to: view)
+
         physicsWorld.contactDelegate = self  // Set the contact delegate
+        
+        Task {
+            await rewardedViewModel.loadAd()
+        }
+        
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
         
         // By default player is unhit
@@ -184,7 +196,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //      If not set, set to 3
         if playerStartingHealth <= 3 {
             playerHealth = 3
+            playerStartingHealth = 3
             UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
+            UserDefaults.standard.set(playerStartingHealth, forKey: "playerStartingHealth")
         } else {
             playerHealth = playerStartingHealth
         }
@@ -406,6 +420,39 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let transition = SKTransition.fade(withDuration: 1.0)
             self.view?.presentScene(newScene, transition: transition)
         }
+    }
+    
+    func showAd() {
+        if let viewController = self.view?.window?.rootViewController {
+            rewardedViewModel.rewardedAd?.present(fromRootViewController: viewController) {
+                // This block is called after the user finishes watching the ad
+                let reward = self.rewardedViewModel.rewardedAd?.adReward
+                print("User earned reward: \(reward?.amount ?? 0) \(reward?.type ?? "")")
+                
+                // Example: Grant a life or revive the player
+                self.playerHealth += 1
+                UserDefaults.standard.set(self.playerHealth, forKey: "playerHealth")
+                self.displayHealthLabel.text = "\(self.playerHealth!)"
+                
+                // Resume the game or restart the level
+                self.resumeGame()
+            }
+        } else {
+            print("Root view controller is not available.")
+        }
+    }
+    
+    func resumeGame() {
+        // Remove losing screen and resume game
+        pauseOverlay?.removeFromParent()
+        loseScreenWatchAdButton.removeFromParent()
+        loseScreenQuitButton.removeFromParent()
+        loseScreenRetryButton.removeFromParent()
+        losingScreen.removeFromParent()
+
+        
+        // Unpause the game
+        scene?.isPaused = false
     }
     
     // Function to toggle the pause state
@@ -719,6 +766,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if loseScreenRetryButton.contains(location) {
                 resetLevel()
             }
+            
+            if loseScreenWatchAdButton.contains(location){
+                showAd()
+            }
 
             // Check for pause state: Handle resume and pause buttons
             if isGamePaused {
@@ -918,7 +969,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         pauseOverlay?.zPosition = 95
         addChild(pauseOverlay!)
         
-        var losingScreen = SKSpriteNode(imageNamed: "losing_screen")
+        losingScreen = SKSpriteNode(imageNamed: "losing_screen")
         losingScreen.size = CGSize(width: self.size.width * 1, height: self.size.height * 1)
         losingScreen.zPosition = 200
         losingScreen.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
@@ -942,8 +993,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         loseScreenWatchAdButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.37, height: self.size.height * 0.15))
         loseScreenWatchAdButton.position = CGPoint(x: self.size.width / 2, y: self.size.height * 0.4)
         loseScreenWatchAdButton.zPosition = 203
-        loseScreenWatchAdButton.strokeColor = SKColor.black
-        loseScreenWatchAdButton.fillColor = SKColor.white
+        loseScreenWatchAdButton.strokeColor = SKColor.clear
+        loseScreenWatchAdButton.fillColor = SKColor.clear
         addChild(loseScreenWatchAdButton)
         
         scene?.isPaused = true
