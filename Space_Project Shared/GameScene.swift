@@ -277,7 +277,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         setupScrollingBackground()
         
         addCircularSprite()  // Add the blue circular sprite
-        spawnRedBall()  // Spawn the first red ball
         
         setupProgress()
         
@@ -682,38 +681,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     // Function to spawn a bouncing red ball
-    func spawnRedBall() {
-        redBall = SKShapeNode(circleOfRadius: 20)
-        redBall.fillColor = .red
-        redBall.strokeColor = .white
-        redBall.lineWidth = 5
-        
-        // Position randomly on the screen
-        let randomX = CGFloat.random(in: 100...self.size.width - 100)
-        let randomY = CGFloat.random(in: 100...self.size.height - 100)
-        redBall.position = CGPoint(x: self.size.width - 50, y: randomY)
-        
-        // Add physics body to red ball
-        redBall.physicsBody = SKPhysicsBody(circleOfRadius: 20)
-        redBall.physicsBody?.isDynamic = true
-        redBall.physicsBody?.categoryBitMask = enemyObjectCategory
-        redBall.physicsBody?.contactTestBitMask = playerObjectCategory | yellowBallCategory
-        redBall.physicsBody?.collisionBitMask = playerObjectCategory
-        redBall.physicsBody?.restitution = 1.0  // Make the ball bouncy
-        redBall.physicsBody?.linearDamping = 0  // No friction on the ball
-        redBall.physicsBody?.angularDamping = 0
-        redBall.physicsBody?.friction = 0
-        redBall.physicsBody?.affectedByGravity = false
-        
-        // Add an initial random velocity
-        let randomVelocity = CGVector(
-            dx: CGFloat.random(in: (-200)...(-100)),  // Always move left (negative dx)
-            dy: CGFloat.random(in: -200...200)    // Randomize vertical movement
-        )
-        redBall.physicsBody?.velocity = randomVelocity
-        
-        addChild(redBall)
-    }
+//    func spawnRedBall() {
+//        redBall = SKShapeNode(circleOfRadius: 20)
+//        redBall.fillColor = .red
+//        redBall.strokeColor = .white
+//        redBall.lineWidth = 5
+//        
+//        // Position randomly on the screen
+//        let randomX = CGFloat.random(in: 100...self.size.width - 100)
+//        let randomY = CGFloat.random(in: 100...self.size.height - 100)
+//        redBall.position = CGPoint(x: self.size.width - 50, y: randomY)
+//        
+//        // Add physics body to red ball
+//        redBall.physicsBody = SKPhysicsBody(circleOfRadius: 20)
+//        redBall.physicsBody?.isDynamic = true
+//        redBall.physicsBody?.categoryBitMask = enemyObjectCategory
+//        redBall.physicsBody?.contactTestBitMask = playerObjectCategory | yellowBallCategory
+//        redBall.physicsBody?.collisionBitMask = playerObjectCategory
+//        redBall.physicsBody?.restitution = 1.0  // Make the ball bouncy
+//        redBall.physicsBody?.linearDamping = 0  // No friction on the ball
+//        redBall.physicsBody?.angularDamping = 0
+//        redBall.physicsBody?.friction = 0
+//        redBall.physicsBody?.affectedByGravity = false
+//        
+//        // Add an initial random velocity
+//        let randomVelocity = CGVector(
+//            dx: CGFloat.random(in: (-200)...(-100)),  // Always move left (negative dx)
+//            dy: CGFloat.random(in: -200...200)    // Randomize vertical movement
+//        )
+//        redBall.physicsBody?.velocity = randomVelocity
+//        
+//        addChild(redBall)
+//    }
     
     // Function to fire yellow balls from the blue ball
     func fireYellowBall() {
