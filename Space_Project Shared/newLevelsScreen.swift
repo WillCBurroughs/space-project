@@ -126,12 +126,21 @@ class NewLevelsScreen: SKScene {
         addChild(confirmresetButton)
         
         quitResetButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.3, height: self.size.width * 0.06), cornerRadius: 10)
-        quitResetButton.fillColor = SKColor.cyan
+        quitResetButton.fillColor = SKColor.clear
         quitResetButton.strokeColor = SKColor.clear
         quitResetButton.zPosition = 1001
         quitResetButton.position = CGPoint(x: self.size.width / 2, y: self.size.height * 0.28)
+        quitResetButton.name = "quitResetButton"
         addChild(quitResetButton)
         
+        
+    }
+    
+    func removeResetProgressMenu() {
+        
+        confirmReset.removeFromParent()
+        confirmresetButton.removeFromParent()
+        quitResetButton.removeFromParent()
         
     }
     
@@ -189,6 +198,10 @@ class NewLevelsScreen: SKScene {
             
             if node.name == "confirmresetButton" {
                 resetProgress()
+            }
+            
+            if node.name == "quitResetButton" {
+                removeResetProgressMenu()
             }
             
         }
