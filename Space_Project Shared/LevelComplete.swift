@@ -17,6 +17,8 @@ class LevelComplete: SKScene {
     var background = SKSpriteNode(imageNamed: "spacebackground-small")
     var level_complete = SKSpriteNode(imageNamed: "level_complete")
     
+    var level_just_completed = UserDefaults.standard.integer(forKey: "selectedLevel")
+    
     var playerCoins: Int! = UserDefaults.standard.integer(forKey: "playerCoins")
     var coinLabel = SKLabelNode(text: "")
     
@@ -96,13 +98,18 @@ class LevelComplete: SKScene {
         tripleCoinsWatchAd.zPosition = 6
         addChild(tripleCoinsWatchAd)
         
-        
+        // 10 x multiplier for remaining unhit
+        if(playerUnhit){
+            playerScore *= 10
+        }
 //        scoreLabel = SKLabelNode(text: "\(playerUnhit ? formatNumber(playerScore * 10) : formatNumber(playerScore))")
 //        scoreLabel.fontName = "Futura-Bold"
 //        scoreLabel.fontColor = SKColor.white
 //        scoreLabel.zPosition = 4
 //        scoreLabel.position = CGPoint(x: self.size.width * 0.7, y: self.size.height * 0.34)
 //        addChild(scoreLabel)
+        
+        calculateStarsEarned()
         
     }
     
@@ -149,6 +156,102 @@ class LevelComplete: SKScene {
         }
     }
     
+    //   Formula for calculating stars = < 1000 * level^2 = 1 star, < 2000 * level^2 = 2 star, > 2000 * level^2 = 3 star
+    
+    func calculateStarsEarned(){
+        
+        var levelAdjustmentFactor = level_just_completed * level_just_completed
+        
+//      1 star performance
+        if(playerScore < (levelAdjustmentFactor * 50)){
+            create_one_star_visual()
+        }
+        else if(playerScore < (levelAdjustmentFactor * 300)){
+            create_two_star_visual()
+        }
+        else {
+            create_three_star_visual()
+        }
+    }
+    
+    func create_one_star_visual(){
+        
+        var star_size = 0.08
+        
+        var first_star = SKSpriteNode(imageNamed: "goldStar")
+        first_star.position = CGPoint(x: self.size.width * 0.4, y: self.size.height * 0.83)
+        first_star.zPosition = 10
+        first_star.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        first_star.zRotation = 5 * (CGFloat.pi / 180)
+        addChild(first_star)
+        
+        var second_star = SKSpriteNode(imageNamed: "silverStar")
+        second_star.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * 0.86)
+        second_star.zPosition = 10
+        second_star.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        addChild(second_star)
+        
+        var third_star = SKSpriteNode(imageNamed: "silverStar")
+        third_star.position = CGPoint(x: self.size.width * 0.6, y: self.size.height * 0.83)
+        third_star.zPosition = 10
+        third_star.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        third_star.zRotation = -5 * (CGFloat.pi / 180)
+        addChild(third_star)
+    }
+    
+    func create_two_star_visual(){
+        var star_size = 0.08
+        
+        var first_star = SKSpriteNode(imageNamed: "goldStar")
+        first_star.position = CGPoint(x: self.size.width * 0.4, y: self.size.height * 0.83)
+        first_star.zPosition = 10
+        first_star.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        first_star.zRotation = 5 * (CGFloat.pi / 180)
+        addChild(first_star)
+        
+        var second_star = SKSpriteNode(imageNamed: "goldStar")
+        second_star.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * 0.86)
+        second_star.zPosition = 10
+        second_star.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        addChild(second_star)
+        
+        var third_star = SKSpriteNode(imageNamed: "silverStar")
+        third_star.position = CGPoint(x: self.size.width * 0.6, y: self.size.height * 0.83)
+        third_star.zPosition = 10
+        third_star.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        third_star.zRotation = -5 * (CGFloat.pi / 180)
+        addChild(third_star)
+    }
+    
+    func create_three_star_visual(){
+        var star_size = 0.2
+        
+        var first_star = SKSpriteNode(imageNamed: "purpleStar")
+        first_star.position = CGPoint(x: self.size.width * 0.4, y: self.size.height * 0.83)
+        first_star.zPosition = 10
+        first_star.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        first_star.zRotation = 5 * (CGFloat.pi / 180)
+        addChild(first_star)
+        
+        var second_star = SKSpriteNode(imageNamed: "purpleStar")
+        second_star.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * 0.86)
+        second_star.zPosition = 10
+        second_star.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        addChild(second_star)
+        
+        var third_star = SKSpriteNode(imageNamed: "purpleStar")
+        third_star.position = CGPoint(x: self.size.width * 0.6, y: self.size.height * 0.83)
+        third_star.zPosition = 10
+        third_star.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        third_star.zRotation = -5 * (CGFloat.pi / 180)
+        addChild(third_star)
+    }
     
     func formatNumber(_ number: Int) -> String {
         switch number {
