@@ -23,7 +23,7 @@ class NewLevelsScreen: SKScene {
     // Array to hold all the touchable planets (levels)
     var levelNodes: [SKShapeNode] = []
     
-    let resetProgressButton = SKShapeNode(circleOfRadius: 30)  // Used to set all values back to zero
+    let resetProgressButton = SKSpriteNode(imageNamed: "resetBlackhole")
     
     // Adding back button for main menu
     var backButton = SKSpriteNode(imageNamed: "backButton")
@@ -31,6 +31,12 @@ class NewLevelsScreen: SKScene {
     var firstStar = SKSpriteNode()
     var secondStar = SKSpriteNode()
     var thirdStar = SKSpriteNode()
+    
+    
+    var confirmReset = SKSpriteNode(imageNamed: "confirmReset")
+    var confirmresetButton = SKShapeNode()
+    var quitResetButton = SKShapeNode()
+    
     
     override func didMove(to view: SKView) {
         
@@ -50,9 +56,8 @@ class NewLevelsScreen: SKScene {
         background.zPosition = -1  // Ensure background is behind other nodes
         addChild(background)
         
-        resetProgressButton.position = CGPoint(x: size.width - 70, y: size.height - 50)
-        resetProgressButton.fillColor = .black
-        resetProgressButton.strokeColor = .darkGray
+        resetProgressButton.position = CGPoint(x: size.width - 100, y: size.height - 50)
+        resetProgressButton.size = CGSize(width: self.size.width * 0.1, height: self.size.width * 0.1)
         resetProgressButton.name = "resetProgress"
         addChild(resetProgressButton)
         
@@ -106,6 +111,13 @@ class NewLevelsScreen: SKScene {
         }
     }
     
+    func createResetMenu(){
+        confirmReset.size = CGSize(width: self.size.width, height: self.size.height)
+        confirmReset.zPosition = 10
+        confirmReset.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        addChild(confirmReset)
+    }
+    
     // Detect touches to interact with planets
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
@@ -155,7 +167,8 @@ class NewLevelsScreen: SKScene {
             }
             
             if node.name == "resetProgress" {
-                resetProgress()
+                createResetMenu()
+//                resetProgress()
             }
         }
         
