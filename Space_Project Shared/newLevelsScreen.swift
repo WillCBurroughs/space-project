@@ -28,6 +28,10 @@ class NewLevelsScreen: SKScene {
     // Adding back button for main menu
     var backButton = SKSpriteNode(imageNamed: "backButton")
     
+    var firstStar = SKSpriteNode()
+    var secondStar = SKSpriteNode()
+    var thirdStar = SKSpriteNode()
+    
     override func didMove(to view: SKView) {
         
         backButton.name = "backButton"
@@ -182,6 +186,10 @@ class NewLevelsScreen: SKScene {
             let removeAction = SKAction.removeFromParent()
             popup.run(SKAction.sequence([fadeOutAction, removeAction]))
             isPopupDisplayed = false  // Reset flag
+            
+            firstStar.removeFromParent()
+            secondStar.removeFromParent()
+            thirdStar.removeFromParent()
         }
     }
     
@@ -191,10 +199,135 @@ class NewLevelsScreen: SKScene {
         startLevel(levelNumber: levelNumber)  // Start the selected level
     }
     
+// function used for unbeaten level
+    func create_zero_star_visual(){
+        
+        var star_size = 0.08
+        var adjust_y = 0.43
+        
+        firstStar = SKSpriteNode(imageNamed: "silverStar")
+        firstStar.position = CGPoint(x: self.size.width * 0.4, y: self.size.height * adjust_y)
+        firstStar.zPosition = 1000
+        firstStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        firstStar.zRotation = 5 * (CGFloat.pi / 180)
+        addChild(firstStar)
+        
+        secondStar = SKSpriteNode(imageNamed: "silverStar")
+        secondStar.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * (adjust_y + 0.03))
+        secondStar.zPosition = 1000
+        secondStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        addChild(secondStar)
+        
+        thirdStar = SKSpriteNode(imageNamed: "silverStar")
+        thirdStar.position = CGPoint(x: self.size.width * 0.6, y: self.size.height * adjust_y)
+        thirdStar.zPosition = 1000
+        thirdStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        thirdStar.zRotation = -5 * (CGFloat.pi / 180)
+        addChild(thirdStar)
+    }
+    
+//  below functions will be used to call gold stars on popup based on best performance
+    func create_one_star_visual(){
+        
+        var star_size = 0.08
+        var adjust_y = 0.43
+        
+        firstStar = SKSpriteNode(imageNamed: "goldStar")
+        firstStar.position = CGPoint(x: self.size.width * 0.4, y: self.size.height * adjust_y)
+        firstStar.zPosition = 1000
+        firstStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        firstStar.zRotation = 5 * (CGFloat.pi / 180)
+        addChild(firstStar)
+        
+        secondStar = SKSpriteNode(imageNamed: "silverStar")
+        secondStar.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * (adjust_y + 0.03))
+        secondStar.zPosition = 1000
+        secondStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        addChild(secondStar)
+        
+        thirdStar = SKSpriteNode(imageNamed: "silverStar")
+        thirdStar.position = CGPoint(x: self.size.width * 0.6, y: self.size.height * adjust_y)
+        thirdStar.zPosition = 1000
+        thirdStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        thirdStar.zRotation = -5 * (CGFloat.pi / 180)
+        addChild(thirdStar)
+    }
+    
+    func create_two_star_visual(){
+        
+        var star_size = 0.08
+        var adjust_y = 0.43
+        
+        firstStar = SKSpriteNode(imageNamed: "goldStar")
+        firstStar.position = CGPoint(x: self.size.width * 0.4, y: self.size.height * adjust_y)
+        firstStar.zPosition = 1000
+        firstStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        firstStar.zRotation = 5 * (CGFloat.pi / 180)
+        addChild(firstStar)
+        
+        secondStar = SKSpriteNode(imageNamed: "goldStar")
+        secondStar.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * (adjust_y + 0.03))
+        secondStar.zPosition = 1000
+        secondStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        addChild(secondStar)
+        
+        thirdStar = SKSpriteNode(imageNamed: "silverStar")
+        thirdStar.position = CGPoint(x: self.size.width * 0.6, y: self.size.height * adjust_y)
+        thirdStar.zPosition = 1000
+        thirdStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        thirdStar.zRotation = -5 * (CGFloat.pi / 180)
+        addChild(thirdStar)
+    }
+    
+    func create_three_star_visual(){
+        var star_size = 0.2
+        var adjust_y = 0.43
+        
+        firstStar = SKSpriteNode(imageNamed: "purpleStar")
+        firstStar.position = CGPoint(x: self.size.width * 0.4, y: self.size.height * adjust_y)
+        firstStar.zPosition = 1000
+        firstStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        firstStar.zRotation = 5 * (CGFloat.pi / 180)
+        addChild(firstStar)
+        
+        secondStar = SKSpriteNode(imageNamed: "purpleStar")
+        secondStar.position = CGPoint(x: self.size.width * 0.5, y: self.size.height * (adjust_y + 0.03))
+        secondStar.zPosition = 1000
+        secondStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        addChild(secondStar)
+        
+        thirdStar = SKSpriteNode(imageNamed: "purpleStar")
+        thirdStar.position = CGPoint(x: self.size.width * 0.6, y: self.size.height * adjust_y)
+        thirdStar.zPosition = 1000
+        thirdStar.size = CGSize(width: self.size.width * star_size, height: self.size.width * star_size)
+        // Rotating by 5 degrees
+        thirdStar.zRotation = -5 * (CGFloat.pi / 180)
+        addChild(thirdStar)
+    }
+    
     // Function to display the popup for level selection
     func popUpStartLevel(levelSelected: Int) {
         // Set the selected level
         UserDefaults.standard.set(levelSelected, forKey: selectedLevelKey)
+        var bestStarsEarnedLevel = UserDefaults.standard.integer(forKey: "bestStarsEarnedLevel\(levelSelected)")
+        
+//      Used to display stars to screen
+        if bestStarsEarnedLevel == 0 {
+            create_zero_star_visual()
+        } else if bestStarsEarnedLevel == 1 {
+            create_one_star_visual()
+        } else if bestStarsEarnedLevel == 2 {
+            create_two_star_visual()
+        } else if bestStarsEarnedLevel == 3 {
+            create_three_star_visual()
+        }
         
         // Create a semi-transparent background for the popup
         let popupBackground = SKSpriteNode(imageNamed: "playLevelScreen")
