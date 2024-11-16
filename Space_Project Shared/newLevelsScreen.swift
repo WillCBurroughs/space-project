@@ -197,11 +197,9 @@ class NewLevelsScreen: SKScene {
         UserDefaults.standard.set(levelSelected, forKey: selectedLevelKey)
         
         // Create a semi-transparent background for the popup
-        let popupBackground = SKShapeNode(rectOf: CGSize(width: 300, height: 200), cornerRadius: 20)
-        popupBackground.fillColor = .white
-        popupBackground.alpha = 0.8  // Make it semi-transparent
-        popupBackground.strokeColor = .black
-        popupBackground.lineWidth = 4
+        let popupBackground = SKSpriteNode(imageNamed: "playLevelScreen")
+        popupBackground.size = CGSize(width: self.size.width * 1, height: self.size.height * 1)
+        popupBackground.alpha = 1 // Make it semi-transparent
         popupBackground.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
         popupBackground.zPosition = 100  // Ensure it appears on top of other nodes
         popupBackground.name = "popupBackground"
@@ -216,23 +214,31 @@ class NewLevelsScreen: SKScene {
         popupBackground.addChild(levelLabel)
         
         // Create the play button
-        let playButton = SKShapeNode(rectOf: CGSize(width: 100, height: 50), cornerRadius: 10)
-        playButton.fillColor = .green
-        playButton.strokeColor = .black
+        let playButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.3, height: self.size.width * 0.05), cornerRadius: 10)
+        playButton.fillColor = .clear
+        playButton.strokeColor = .clear
         playButton.lineWidth = 3
-        playButton.position = CGPoint(x: 0, y: -30)  // Position it below the level label
+        playButton.position = CGPoint(x: 0, y: self.size.height * -0.315)  // Position it below the level label
         playButton.name = "playButton"
         playButton.zPosition = 2
         popupBackground.addChild(playButton)
         
+        let quitPopupButton = SKShapeNode(circleOfRadius: self.size.width * 0.04)
+        quitPopupButton.fillColor = UIColor.clear
+        quitPopupButton.strokeColor = UIColor.clear
+        quitPopupButton.position = CGPoint(x: self.size.width * 0.30, y: self.size.height * 0.2)
+        quitPopupButton.zPosition = 6
+        popupBackground.addChild(quitPopupButton)
+        
+        
         // Add "Play" text on the play button
-        let playLabel = SKLabelNode(text: "Play")
-        playLabel.fontName = "Arial-BoldMT"
-        playLabel.fontSize = 20
-        playLabel.fontColor = .black
-        playLabel.verticalAlignmentMode = .center
-        playLabel.name = "playLabel"
-        playButton.addChild(playLabel)
+//        let playLabel = SKLabelNode(text: "Play")
+//        playLabel.fontName = "Arial-BoldMT"
+//        playLabel.fontSize = 20
+//        playLabel.fontColor = .black
+//        playLabel.verticalAlignmentMode = .center
+//        playLabel.name = "playLabel"
+//        playButton.addChild(playLabel)
         
         // Add the popup background (and its children) to the scene
         addChild(popupBackground)
