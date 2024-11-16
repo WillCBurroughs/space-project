@@ -16,7 +16,7 @@ class RewardedViewModel: NSObject, ObservableObject, GADFullScreenContentDelegat
     func loadAd() async {
         do {
             rewardedAd = try await GADRewardedAd.load(
-                withAdUnitID: "ca-app-pub-3940256099942544/1712485313", request: GADRequest())
+                withAdUnitID: "ca-app-pub-3671873468518199/8571588807", request: GADRequest())
             rewardedAd?.fullScreenContentDelegate = self
         } catch {
             print("Failed to load rewarded ad: \(error.localizedDescription)")
