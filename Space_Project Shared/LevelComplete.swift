@@ -53,18 +53,18 @@ class LevelComplete: SKScene {
         
         healthLabel = SKLabelNode(text: "\(formatNumber(livesLeftFromLastLevel))")
         healthLabel.fontName = "Futura-Bold"
-        healthLabel.fontSize = 30
+        healthLabel.fontSize = 26
         healthLabel.fontColor = SKColor.white
         healthLabel.zPosition = 4
-        healthLabel.position = CGPoint(x: size.width * 0.635, y: size.height * 0.34)
+        healthLabel.position = CGPoint(x: size.width * 0.335, y: size.height * 0.33)
         addChild(healthLabel)
         
         coinLabel = SKLabelNode(text: "\(formatNumber(playerCoins))")
         coinLabel.fontName = "Futura-Bold"
-        coinLabel.fontSize = 30
+        coinLabel.fontSize = 26
         coinLabel.fontColor = SKColor.white
         coinLabel.zPosition = 4
-        coinLabel.position = CGPoint(x: size.width * 0.405, y: size.height * 0.34)
+        coinLabel.position = CGPoint(x: size.width * 0.325, y: size.height * 0.44)
         addChild(coinLabel)
         
         backToLevels = SKShapeNode(ellipseOf: CGSize(width: self.size.width * 0.1, height: self.size.width * 0.1))

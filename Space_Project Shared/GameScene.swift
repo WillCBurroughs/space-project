@@ -203,9 +203,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             playerHealth = playerStartingHealth
         }
         
-//      Remove, only for testing levelsLost popup
-        playerHealth = 1
-        
         playerCoins = UserDefaults.standard.integer(forKey: "playerCoins")
         coinLabel.text = "\(playerCoins!)"
         addChild(coinLabel)
