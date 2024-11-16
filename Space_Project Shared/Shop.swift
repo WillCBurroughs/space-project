@@ -131,7 +131,6 @@ class Shop: SKScene {
     }
     
     func setupLabels() {
-        playerCoins = 10000
         coinLabel = SKLabelNode(text: "\(formatNumber(playerCoins))")
         coinLabel.fontName = "Futura-Bold"
         coinLabel.fontSize = 14

@@ -8,10 +8,11 @@
 
 import SpriteKit
 import UIKit
-
-
+import GoogleMobileAds
 
 class LevelComplete: SKScene {
+    
+    var rewardedViewModel = RewardedViewModel()
     
     var background = SKSpriteNode(imageNamed: "spacebackground-small")
     var level_complete = SKSpriteNode(imageNamed: "level_complete")
@@ -29,6 +30,7 @@ class LevelComplete: SKScene {
     var playerScore = UserDefaults.standard.integer(forKey: "playerScore")
     
     var playerUnhit = UserDefaults.standard.bool(forKey: "playerUnhit")
+    var tripleCoinsWatchAd = SKShapeNode()
     
 //   Formula for calculating score = Unhit bonus is 10X * Score Multiplier * Scores for enemies beaten * Speed multiplier
 //   Formula for calculating stars = < 1000 * level^2 = 1 star, < 2000 * level^2 = 2 star, > 2000 * level^2 = 3 star
@@ -37,6 +39,12 @@ class LevelComplete: SKScene {
 //  Add button to return to levels menu (done) or restart level
     
     override func didMove(to view: SKView) {
+        
+        super.didMove(to: view)
+        
+        Task {
+            await rewardedViewModel.loadLevelCompletionAd()
+        }
         
         background.size = CGSize(width: self.size.width, height: self.size.height)
         background.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
@@ -81,6 +89,14 @@ class LevelComplete: SKScene {
         restartLevel.zPosition = 5
         addChild(restartLevel)
         
+        tripleCoinsWatchAd = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.34, height: self.size.height * 0.13))
+        tripleCoinsWatchAd.fillColor = SKColor.clear
+        tripleCoinsWatchAd.strokeColor = SKColor.clear
+        tripleCoinsWatchAd.position = CGPoint(x: self.size.width * 0.60, y: self.size.height * 0.42)
+        tripleCoinsWatchAd.zPosition = 6
+        addChild(tripleCoinsWatchAd)
+        
+        
 //        scoreLabel = SKLabelNode(text: "\(playerUnhit ? formatNumber(playerScore * 10) : formatNumber(playerScore))")
 //        scoreLabel.fontName = "Futura-Bold"
 //        scoreLabel.fontColor = SKColor.white
@@ -102,6 +118,19 @@ class LevelComplete: SKScene {
         view?.presentScene(gameScene, transition: transition)
     }
     
+    func showLevelCompletionAd() {
+        if let viewController = self.view?.window?.rootViewController {
+            rewardedViewModel.showLevelCompletionAd(from: viewController)
+            
+            self.playerCoins *= 3
+            UserDefaults.standard.set(self.playerCoins, forKey: "playerCoins")
+            self.coinLabel.text = "\(formatNumber(playerCoins))"
+            
+        } else {
+            print("Root view controller is not available.")
+        }
+    }
+    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let touch = touches.first {
             let location = touch.location(in: self)
@@ -112,6 +141,10 @@ class LevelComplete: SKScene {
             
             if restartLevel.contains(location){
                 restartCompletedLevel()
+            }
+            
+            if tripleCoinsWatchAd.contains(location){
+                showLevelCompletionAd()
             }
         }
     }
