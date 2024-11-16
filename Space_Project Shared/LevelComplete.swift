@@ -81,12 +81,12 @@ class LevelComplete: SKScene {
         restartLevel.zPosition = 5
         addChild(restartLevel)
         
-        scoreLabel = SKLabelNode(text: "\(playerUnhit ? formatNumber(playerScore * 10) : formatNumber(playerScore))")
-        scoreLabel.fontName = "Futura-Bold"
-        scoreLabel.fontColor = SKColor.white
-        scoreLabel.zPosition = 4
-        scoreLabel.position = CGPoint(x: self.size.width * 0.7, y: self.size.height * 0.34)
-        addChild(scoreLabel)
+//        scoreLabel = SKLabelNode(text: "\(playerUnhit ? formatNumber(playerScore * 10) : formatNumber(playerScore))")
+//        scoreLabel.fontName = "Futura-Bold"
+//        scoreLabel.fontColor = SKColor.white
+//        scoreLabel.zPosition = 4
+//        scoreLabel.position = CGPoint(x: self.size.width * 0.7, y: self.size.height * 0.34)
+//        addChild(scoreLabel)
         
     }
     
