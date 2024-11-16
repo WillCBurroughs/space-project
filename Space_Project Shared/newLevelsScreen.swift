@@ -26,15 +26,14 @@ class NewLevelsScreen: SKScene {
     let resetProgressButton = SKShapeNode(circleOfRadius: 30)  // Used to set all values back to zero
     
     // Adding back button for main menu
-    var backButton = SKShapeNode(rectOf: CGSize(width: 100, height: 50))
+    var backButton = SKSpriteNode(imageNamed: "backButton")
     
     override func didMove(to view: SKView) {
         
-        
-        backButton.fillColor = .black
         backButton.name = "backButton"
+        backButton.size = CGSize(width: self.size.width * 0.12, height: self.size.width * 0.12)
         backButton.zPosition = 50
-        backButton.position = CGPoint(x: 150, y: self.size.height - 50)
+        backButton.position = CGPoint(x: 100, y: self.size.height - 50)
         addChild(backButton)
         
         // Retrieve the highest completed level by the user
