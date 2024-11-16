@@ -114,8 +114,25 @@ class NewLevelsScreen: SKScene {
     func createResetMenu(){
         confirmReset.size = CGSize(width: self.size.width, height: self.size.height)
         confirmReset.zPosition = 10
-        confirmReset.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
+        confirmReset.position = CGPoint(x: self.size.width / 2, y: self.size.height * 0.6)
         addChild(confirmReset)
+        
+        confirmresetButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.3, height: self.size.width * 0.06), cornerRadius: 10)
+        confirmresetButton.fillColor = SKColor.clear
+        confirmresetButton.strokeColor = SKColor.clear
+        confirmresetButton.zPosition = 1001
+        confirmresetButton.position = CGPoint(x: self.size.width / 2, y: self.size.height * 0.44)
+        confirmresetButton.name = "confirmresetButton"
+        addChild(confirmresetButton)
+        
+        quitResetButton = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.3, height: self.size.width * 0.06), cornerRadius: 10)
+        quitResetButton.fillColor = SKColor.cyan
+        quitResetButton.strokeColor = SKColor.clear
+        quitResetButton.zPosition = 1001
+        quitResetButton.position = CGPoint(x: self.size.width / 2, y: self.size.height * 0.28)
+        addChild(quitResetButton)
+        
+        
     }
     
     // Detect touches to interact with planets
@@ -168,8 +185,12 @@ class NewLevelsScreen: SKScene {
             
             if node.name == "resetProgress" {
                 createResetMenu()
-//                resetProgress()
             }
+            
+            if node.name == "confirmresetButton" {
+                resetProgress()
+            }
+            
         }
         
     }
