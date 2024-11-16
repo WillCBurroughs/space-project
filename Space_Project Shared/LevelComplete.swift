@@ -34,6 +34,8 @@ class LevelComplete: SKScene {
     var playerUnhit = UserDefaults.standard.bool(forKey: "playerUnhit")
     var tripleCoinsWatchAd = SKShapeNode()
     
+    var bestStarsEarnedLevel: Int = 0
+    
 //   Formula for calculating score = Unhit bonus is 10X * Score Multiplier * Scores for enemies beaten * Speed multiplier
 //   Formula for calculating stars = < 1000 * level^2 = 1 star, < 2000 * level^2 = 2 star, > 2000 * level^2 = 3 star
     
@@ -47,6 +49,8 @@ class LevelComplete: SKScene {
         Task {
             await rewardedViewModel.loadLevelCompletionAd()
         }
+        
+        bestStarsEarnedLevel = UserDefaults.standard.integer(forKey: "bestStarsEarnedLevel\(level_just_completed)")
         
         background.size = CGSize(width: self.size.width, height: self.size.height)
         background.position = CGPoint(x: self.size.width / 2, y: self.size.height / 2)
@@ -158,21 +162,41 @@ class LevelComplete: SKScene {
     
     //   Formula for calculating stars = < 1000 * level^2 = 1 star, < 2000 * level^2 = 2 star, > 2000 * level^2 = 3 star
     
+//  Will save user's best performance to this value 
+    func saveBestStarsForCurrentLevel(stars: Int) {
+        // Retrieve the currently saved best stars
+        let bestStarsEarnedLevel = UserDefaults.standard.integer(forKey: "bestStarsEarnedLevel\(level_just_completed)")
+        
+        // Update only if the new stars are better
+        if stars > bestStarsEarnedLevel {
+            UserDefaults.standard.set(stars, forKey: "bestStarsEarnedLevel\(level_just_completed)")
+            print("New best stars for level \(level_just_completed): \(stars)")
+        } else {
+            print("No update needed for level \(level_just_completed). Current best: \(bestStarsEarnedLevel)")
+        }
+    }
+    
     func calculateStarsEarned(){
         
         var levelAdjustmentFactor = level_just_completed * level_just_completed
+        var starsEarned: Int = 0
         
 //      1 star performance
         if(playerScore < (levelAdjustmentFactor * 50)){
             create_one_star_visual()
+            starsEarned = 1
         }
         else if(playerScore < (levelAdjustmentFactor * 300)){
             create_two_star_visual()
+            starsEarned = 2
         }
         else {
             create_three_star_visual()
+            starsEarned = 3
         }
+        saveBestStarsForCurrentLevel(stars: starsEarned)
     }
+    
     
     func create_one_star_visual(){
         
