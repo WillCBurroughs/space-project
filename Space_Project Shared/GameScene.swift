@@ -621,6 +621,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let livesRemaining = UserDefaults.standard.set(playerHealth, forKey: "livesRemaining")
         
+        let victory = SKAction.playSoundFileNamed("victory.mp3", waitForCompletion: false)
+        
+        self.run(victory)
+        
         // Check if the current level is higher than the saved `highestCompletedLevel`
         if currentLevel > highestCompletedLevel {
             // Update `highestCompletedLevel` in UserDefaults
