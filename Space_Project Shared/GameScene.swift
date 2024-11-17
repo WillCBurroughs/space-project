@@ -120,9 +120,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var quitButton = SKShapeNode(circleOfRadius: 20)
     var resetButton = SKShapeNode(circleOfRadius: 20)
     
-    // Declaring settings button in menu
-    var menuOptions = SKShapeNode(circleOfRadius: 20)
-    
     var losingScreen = SKSpriteNode()
     
     // Menu buttons upon losing the level
@@ -404,18 +401,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             resetButton.strokeColor = .clear
             resetButton.zPosition = 100
             pauseMenu?.addChild(resetButton)
+        
+            var coinsDisplayPauseMenu = SKLabelNode()
+            var heartsDisplayPauseMenu = SKLabelNode()
             
-            // Options section
-            menuOptions = SKShapeNode(circleOfRadius: resumeButtonRadius * 1.3)
+            coinsDisplayPauseMenu.fontName = "Futura-Bold"
+            coinsDisplayPauseMenu.fontSize = 16
+            coinsDisplayPauseMenu.fontColor = SKColor.white
             
-            let optionsMenuXOffset = self.size.width * 0.24
-            let optionsMenuYOffset = self.size.height * 0.25
+            coinsDisplayPauseMenu.text = "\(playerCoins ?? 0)"
+            coinsDisplayPauseMenu.position = CGPoint(x: -(self.size.width * 0.8) * 0.04, y: -self.size.height * 0.22)
+            coinsDisplayPauseMenu.zPosition = 1005
+            pauseMenu?.addChild(coinsDisplayPauseMenu)
             
-            menuOptions.position = CGPoint(x: 0 + optionsMenuXOffset , y: 0 + optionsMenuYOffset)
-            menuOptions.fillColor = .clear
-            menuOptions.strokeColor = .clear
-            menuOptions.zPosition = 100
-            pauseMenu?.addChild(menuOptions)
+            heartsDisplayPauseMenu.text = "\(playerHealth ?? 0)"
+            heartsDisplayPauseMenu.fontName = "Futura-Bold"
+            heartsDisplayPauseMenu.fontSize = 16
+            heartsDisplayPauseMenu.fontColor = SKColor.white
+            heartsDisplayPauseMenu.zPosition = 1005
+            heartsDisplayPauseMenu.position = CGPoint(x: (self.size.width * 0.8) * 0.13, y: -self.size.height * 0.22)
+            pauseMenu?.addChild(heartsDisplayPauseMenu)
             
             // Add the pause menu to the scene
             addChild(pauseMenu!)
@@ -815,9 +820,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         resetLevel()
                     }
                     
-                    if menuOptions.contains(pauseMenuLocation){
-                        setupOptionsMenu()
-                    }
                 }
                 
             } else {
