@@ -16,6 +16,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let iFrameDuration: TimeInterval = 1.0  // 1 second
     var isInvincible: Bool = false
     
+    //  Keeps player shot sound from being fired too often
+    var timeSincePlayerShotSound: TimeInterval = 0
+    let howOftenPlayerShotSound: TimeInterval = 1
+    var shouldSoundShot: Bool = true
+    
     var joystickHolder: SKShapeNode!
     var movementBall: SKShapeNode!
     var circularSprite: SKSpriteNode!  // The circular sprite that moves (blue ball)
@@ -140,7 +145,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     //  used to show ad
     let rewardedViewModel = RewardedViewModel()
-
     
     // Used to keep track of player_lives > 0 (still alive)
 //    var player_is_alive = true
@@ -157,7 +161,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         // Give player invincibility upon load in
-        
         
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
         
@@ -176,7 +179,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             fireRateMultiplier = 1
         }
         
-        // playerScore must always default to 0 on level load in 
+        
+        
+        // playerScore must always default to 0 on level load in
         playerScore = 0
         
         if(coinMultiplier < 1){
@@ -728,7 +733,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 //        addChild(redBall)
 //    }
     
-    // Function to fire yellow balls from the blue ball
+    // Function to fire lazer from player
     func fireYellowBall() {
         let yellowBall = SKSpriteNode(imageNamed: "playerlaser")
         
@@ -751,6 +756,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // Add yellow ball (laser) to the scene
         addChild(yellowBall)
         
+        
+
+        let currentTime = CACurrentMediaTime()
+
+        // Check if the time elapsed since the last shot is greater than or equal to the specified interval
+        if currentTime - timeSincePlayerShotSound >= howOftenPlayerShotSound {
+            self.run(SKAction.playSoundFileNamed("player_shot.mp3", waitForCompletion: false))
+            timeSincePlayerShotSound = currentTime  // Update the last shot time to the current time
+        }
         // Action to remove yellow ball when it goes off-screen
         let removeAction = SKAction.sequence([SKAction.wait(forDuration: 5.0), SKAction.removeFromParent()])
         yellowBall.run(removeAction)
@@ -957,6 +971,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             isInvincible = false
         }
         
+        // Keeps user from hearing shots too rapidly
+        if timeSincePlayerShotSound > howOftenPlayerShotSound {
+            shouldSoundShot = true
+        } else {
+            shouldSoundShot = false
+        }
+        
         moveShip()
         
         // Check if the first background has moved off-screen, then reposition it
@@ -1035,6 +1056,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             // player has now been hit more recently
             lastHitTime = TimeInterval(CACurrentMediaTime())
+            
+            // Sound of player being hit
+            let playDamageAction = SKAction.playSoundFileNamed("damage_taken", waitForCompletion: false)
+            
+            self.run(playDamageAction)
+            
             
             playerUnhit = false
             UserDefaults.standard.set(playerUnhit, forKey: "playerUnhit")

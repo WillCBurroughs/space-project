@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		4B18A83D8C0966E464AD2CE7 /* Pods_Space_Project_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4D6D4A3EF341607DADF3FC5 /* Pods_Space_Project_iOS.framework */; };
 		5C0FF9432CE6C44D006D4046 /* Untitled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0FF9422CE6C44C006D4046 /* Untitled.swift */; };
+		5C85FC322CEA1AB200C08FE9 /* damage_taken.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5C85FC312CEA1AB200C08FE9 /* damage_taken.mp3 */; };
+		5C85FC342CEA1B1800C08FE9 /* player_shot.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5C85FC332CEA1B1800C08FE9 /* player_shot.mp3 */; };
 		5C879A112CAB66A20047AC9B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C879A102CAB66A20047AC9B /* AppDelegate.swift */; };
 		5C879A132CAB66A20047AC9B /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C879A122CAB66A20047AC9B /* GameViewController.swift */; };
 		5C879A162CAB66A20047AC9B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5C879A142CAB66A20047AC9B /* Main.storyboard */; };
@@ -32,6 +34,8 @@
 /* Begin PBXFileReference section */
 		20A67D171231E870A62713DA /* Pods-Space_Project iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space_Project iOS.release.xcconfig"; path = "Target Support Files/Pods-Space_Project iOS/Pods-Space_Project iOS.release.xcconfig"; sourceTree = "<group>"; };
 		5C0FF9422CE6C44C006D4046 /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
+		5C85FC312CEA1AB200C08FE9 /* damage_taken.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = damage_taken.mp3; sourceTree = "<group>"; };
+		5C85FC332CEA1B1800C08FE9 /* player_shot.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = player_shot.mp3; sourceTree = "<group>"; };
 		5C879A052CAB66A10047AC9B /* Actions.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Actions.sks; sourceTree = "<group>"; };
 		5C879A062CAB66A10047AC9B /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
 		5C879A072CAB66A10047AC9B /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
@@ -95,6 +99,8 @@
 				5C879A072CAB66A10047AC9B /* GameScene.swift */,
 				5C0FF9422CE6C44C006D4046 /* Untitled.swift */,
 				5C9691732CE10C9E00859A54 /* LevelComplete.swift */,
+				5C85FC312CEA1AB200C08FE9 /* damage_taken.mp3 */,
+				5C85FC332CEA1B1800C08FE9 /* player_shot.mp3 */,
 				5CB56B022CBB372500888E7A /* gradient.swift */,
 				5CB56AFE2CB4977400888E7A /* Enemies.swift */,
 				5CB56B002CB5D37300888E7A /* newLevelsScreen.swift */,
@@ -201,8 +207,10 @@
 				5C879A1B2CAB66A20047AC9B /* GameScene.sks in Resources */,
 				5C879A162CAB66A20047AC9B /* Main.storyboard in Resources */,
 				5C879A1A2CAB66A20047AC9B /* Actions.sks in Resources */,
+				5C85FC322CEA1AB200C08FE9 /* damage_taken.mp3 in Resources */,
 				5C879A192CAB66A20047AC9B /* LaunchScreen.storyboard in Resources */,
 				5C879A1D2CAB66A20047AC9B /* Assets.xcassets in Resources */,
+				5C85FC342CEA1B1800C08FE9 /* player_shot.mp3 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
