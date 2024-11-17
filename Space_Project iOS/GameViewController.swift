@@ -15,9 +15,9 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         
         // Create the SplashScene programmatically
-        let splashScene = SplashScene(size: view.bounds.size)
+//        let splashScene = SplashScene(size: view.bounds.size)
         
-//        let splashScene = NewLevelsScreen(size: view.bounds.size)
+        let splashScene = NewLevelsScreen(size: view.bounds.size)
         
 //        let splashScene = GameScene(size: view.bounds.size)
 //        let splashScene = Shop(size: view.bounds.size)
