@@ -386,9 +386,10 @@ class NewLevelsScreen: SKScene {
         
         // Add a label to show the selected level
         let levelLabel = SKLabelNode(text: "Level \(levelSelected)")
-        levelLabel.fontName = "Arial-BoldMT"
-        levelLabel.fontSize = 30
-        levelLabel.fontColor = .black
+        levelLabel.fontName = "Optima-ExtraBlack"
+        levelLabel.fontSize = 50
+        levelLabel.zPosition = 1002
+        levelLabel.fontColor = SKColor(red: 222.0/255.0, green: 230.0/255.0, blue: 254.0/255.0, alpha: 1.0)
         levelLabel.name = "levelLabel"
         levelLabel.position = CGPoint(x: 0, y: 40)  // Position it near the top of the popup
         popupBackground.addChild(levelLabel)

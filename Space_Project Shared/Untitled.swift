@@ -40,7 +40,7 @@ class RewardedViewModel: NSObject, ObservableObject, GADFullScreenContentDelegat
     func loadLevelCompletionAd() async {
         do {
             levelCompletionAd = try await GADRewardedAd.load(
-                withAdUnitID: "ca-app-pub-3940256099942544/1712485313", request: GADRequest())
+                withAdUnitID: "ca-app-pub-3671873468518199/4349342572", request: GADRequest())
             levelCompletionAd?.fullScreenContentDelegate = self
         } catch {
             print("Failed to load level completion ad: \(error.localizedDescription)")

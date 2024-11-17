@@ -221,18 +221,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         speedBar.size = CGSize(width: 922 / 5, height: 243 / 5)
         speedBar.position = CGPoint(x: size.width - 150, y: 60)
+        speedBar.zPosition = 100
         addChild(speedBar)
         
         //      Adding cold icon to speedBar
         cold.size = CGSize(width: 42, height: 42)
         cold.position = CGPoint(x: size.width - 218.4, y: 60)
-        cold.zPosition = 5
+        cold.zPosition = 50
         addChild(cold)
         
         //      Adding hot icon to speedBar
         hot.size = CGSize(width: 42, height: 42)
         hot.position = CGPoint(x: size.width - 82, y: 60)
-        hot.zPosition = 5
+        hot.zPosition = 50
         addChild(hot)
         
         // Setup speedShipBar
@@ -240,12 +241,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         speedShipBar.position = CGPoint(x: size.width - 240, y: 60)
         speedShipBar.anchorPoint = CGPoint(x: 0, y: 0.5)  // Anchor on the left
         applyRoundedGradientToSpeedShipBar(speedShipBar: speedShipBar, width: 922 / 10 + 25, height: 243 / 5, cornerRadius: 25)
+        speedShipBar.zPosition = 50
         addChild(speedShipBar)
         
         // Add the speedKnob on top of the bar
         speedKnob.position = CGPoint(x: size.width - 150, y: 60)
         speedKnob.fillColor = UIColor(red: 128 / 255, green: 116 / 255, blue: 128 / 255, alpha: 0.56)
-        speedKnob.zPosition = 4
+        speedKnob.zPosition = 40
         addChild(speedKnob)
         
         //      Sets our custom font color
@@ -614,12 +616,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         movementBar = SKSpriteNode(imageNamed: "MovementController")
         movementBar.size = CGSize(width: 313 / 5, height: 1190 / 5)
         movementBar.position = CGPoint(x: 70, y: size.height / 2 - 30)
+        movementBar.zPosition = 100
         addChild(movementBar)
 
         // Add movement knob on top of the movement bar
         movementKnob = SKSpriteNode(imageNamed: "MovementKnob")
         movementKnob.size = CGSize(width: 405 / 5 , height: 405 / 5)
         movementKnob.position = movementBar.position
+        movementKnob.zPosition = 100
         addChild(movementKnob)
     }
     
@@ -832,6 +836,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // Clamp the knob's X position within the bounds of the speedBar
                 let newXPosition = max(min(location.x, maxX), minX)
                 speedKnob.position.x = newXPosition
+                speedBar.zPosition = 50
 
                 // Calculate the width of the speedShipBar based on the knob's position
                 var barWidth = newXPosition - minX  // Calculate width relative to the leftmost part
@@ -856,8 +861,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 // Adjust the position to keep it anchored to the left, but offset by 20 units to the left
                 speedShipBar.position.x = minX - 23  // Shift left by 20 units
                 speedShipBar.position.y = speedBar.position.y  // Keep it aligned vertically
-                speedShipBar.zPosition = 3
-                
+                speedShipBar.zPosition = 30
+
                 // Calculate the position ratio (0.0 on the left, 1.0 on the right)
                 let positionRatio = (newXPosition - minX) / (maxX - minX)
                 
@@ -885,7 +890,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
                 // Update the knob's color with the interpolated values
                 speedKnob.fillColor = UIColor(red: r / 255, green: g / 255, blue: b / 255, alpha: a)
-                
+                speedKnob.zPosition = 1000
             }
         }
     }
