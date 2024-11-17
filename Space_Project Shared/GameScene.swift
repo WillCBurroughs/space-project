@@ -1060,7 +1060,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             lastHitTime = TimeInterval(CACurrentMediaTime())
             
             // Sound of player being hit
-            let playDamageAction = SKAction.playSoundFileNamed("damage_taken", waitForCompletion: false)
+            let playDamageAction = SKAction.playSoundFileNamed("Take-Damage-player.mp3", waitForCompletion: false)
             
             self.run(playDamageAction)
             

@@ -14,6 +14,9 @@ class HomeScreen: SKScene {
     let menuDisplay = SKSpriteNode(imageNamed: "menu")
     let background = SKSpriteNode(imageNamed: "spacebackground-small")
     
+//  Used to choose planet to show
+    let highestCompletedLevel = UserDefaults.standard.integer(forKey: "highestCompletedLevel")
+    
     override func didMove(to view: SKView) {
         
         // Add the menu display
@@ -26,6 +29,26 @@ class HomeScreen: SKScene {
         background.zPosition = -1
         background.size = CGSize(width: self.size.width, height: self.size.height)
         self.addChild(background)
+        
+        var planetToShow = SKSpriteNode(imageNamed: "planet\(highestCompletedLevel + 1)")
+        if (highestCompletedLevel == 14){
+            planetToShow = SKSpriteNode(imageNamed: "planet\(1)")
+        }
+        
+        // Create a sound action that plays once
+        let playSong = SKAction.playSoundFileNamed("space-music.mp3", waitForCompletion: true)
+
+        // Create an action that repeats the sound action forever
+        let repeatSong = SKAction.repeatForever(playSong)
+
+        // Run the repeating action on the scene or node
+        self.run(repeatSong)
+        
+        planetToShow.zPosition = 10
+        planetToShow.position = CGPoint(x: self.size.width * 0.792, y: self.size.height * 0.805)
+        planetToShow.size = CGSize(width: self.size.width * 0.09, height: self.size.width * 0.09)
+        addChild(planetToShow)
+        
     
         // Create invisible buttons for "Levels" and "Shop"
         createButtonNodes()
