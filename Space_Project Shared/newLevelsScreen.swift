@@ -124,7 +124,7 @@ class NewLevelsScreen: SKScene {
     
     func createResetMenu(){
         confirmReset.size = CGSize(width: self.size.width, height: self.size.height)
-        confirmReset.zPosition = 10
+        confirmReset.zPosition = 105
         confirmReset.position = CGPoint(x: self.size.width / 2, y: self.size.height * 0.6)
         addChild(confirmReset)
         
