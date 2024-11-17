@@ -35,6 +35,15 @@ class HomeScreen: SKScene {
             planetToShow = SKSpriteNode(imageNamed: "planet\(1)")
         }
         
+        // Create a sound action that plays once
+        let playSong = SKAction.playSoundFileNamed("space-music.mp3", waitForCompletion: true)
+
+        // Create an action that repeats the sound action forever
+        let repeatSong = SKAction.repeatForever(playSong)
+
+        // Run the repeating action on the scene or node
+        self.run(repeatSong)
+        
         planetToShow.zPosition = 10
         planetToShow.position = CGPoint(x: self.size.width * 0.792, y: self.size.height * 0.805)
         planetToShow.size = CGSize(width: self.size.width * 0.09, height: self.size.width * 0.09)
