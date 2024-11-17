@@ -443,6 +443,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func resumeGame() {
         // Remove losing screen and resume game
         pauseOverlay?.removeFromParent()
+        pauseOverlay = nil
         loseScreenWatchAdButton.removeFromParent()
         loseScreenQuitButton.removeFromParent()
         loseScreenRetryButton.removeFromParent()
@@ -460,13 +461,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             scene?.isPaused = false
             physicsWorld.speed = 1.0
             
-            pauseOverlay?.removeFromParent()
-            pauseMenu?.removeFromParent()
+            pauseOverlay?.isHidden = true
+            pauseMenu?.isHidden = true
             pauseOverlay = nil
             pauseMenu = nil
         } else {
             // Pause the game
             setupPauseScreen()
+            pauseOverlay?.isHidden = false
+            pauseMenu?.isHidden = false
             scene?.isPaused = true
             physicsWorld.speed = 0
         }
