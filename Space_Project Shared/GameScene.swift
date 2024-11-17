@@ -12,6 +12,10 @@ import GoogleMobileAds
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    var lastHitTime: TimeInterval = 0
+    let iFrameDuration: TimeInterval = 1.0  // 1 second
+    var isInvincible: Bool = false
+    
     var joystickHolder: SKShapeNode!
     var movementBall: SKShapeNode!
     var circularSprite: SKSpriteNode!  // The circular sprite that moves (blue ball)
@@ -151,6 +155,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         Task {
             await rewardedViewModel.loadAd()
         }
+        
+        // Give player invincibility upon load in
+        
         
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)  // Set screen boundaries
         
@@ -431,6 +438,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 self.playerHealth += 1
                 UserDefaults.standard.set(self.playerHealth, forKey: "playerHealth")
                 self.displayHealthLabel.text = "\(self.playerHealth!)"
+                
+                self.lastHitTime = TimeInterval(CACurrentMediaTime())
+                self.isInvincible = true
                 
                 // Resume the game or restart the level
                 self.resumeGame()
@@ -940,6 +950,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         background1.position.x -= 2 * speedMultiplier  // Adjust this speed as needed
         background2.position.x -= 2 * speedMultiplier
         
+        // Allows for iFrames
+        if currentTime - lastHitTime < iFrameDuration {
+            isInvincible = true
+        } else {
+            isInvincible = false
+        }
+        
         moveShip()
         
         // Check if the first background has moved off-screen, then reposition it
@@ -1010,11 +1027,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let bodyB = contact.bodyB.node
 
         // Detect collisions between player (blueBall) and enemy objects (e.g., asteroids)
-        if (bodyA?.physicsBody?.categoryBitMask == playerObjectCategory && bodyB?.physicsBody?.categoryBitMask == enemyObjectCategory) ||
-           (bodyA?.physicsBody?.categoryBitMask == enemyObjectCategory && bodyB?.physicsBody?.categoryBitMask == playerObjectCategory) {
+        if (bodyA?.physicsBody?.categoryBitMask == playerObjectCategory && bodyB?.physicsBody?.categoryBitMask == enemyObjectCategory) && isInvincible == false ||
+            (bodyA?.physicsBody?.categoryBitMask == enemyObjectCategory && bodyB?.physicsBody?.categoryBitMask == playerObjectCategory && isInvincible == false) {
 
             playerHealth -= 1
             UserDefaults.standard.set(playerHealth, forKey: "playerHealth")
+            
+            // player has now been hit more recently
+            lastHitTime = TimeInterval(CACurrentMediaTime())
             
             playerUnhit = false
             UserDefaults.standard.set(playerUnhit, forKey: "playerUnhit")
