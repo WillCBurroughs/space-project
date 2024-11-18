@@ -176,8 +176,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             fireRateMultiplier = 1
         }
         
-        
-        
         // playerScore must always default to 0 on level load in
         playerScore = 0
         
@@ -296,6 +294,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //      Used to spawn enemies
         startSpawningEnemies()
+        
+        //      Will create new enemies
+        startCreatingPersistentEnemies()
+        
+        //       Spawn satellites
+        startCreatingSatellites()
         
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
         startFiringBullets()
@@ -523,7 +527,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Create a new spawn action with the updated speedMultiplier
         let spawnAsteroidsAction = SKAction.repeatForever(SKAction.sequence([
-            SKAction.wait(forDuration: 1.0 / Double(speedMultiplier)),  // Adjust spawn frequency
+            SKAction.wait(forDuration: (1.0 / Double(speedMultiplier)) / (0.1154 * Double(currentLevel) + 0.3846)),  // Adjust spawn frequency
             SKAction.run {
                 createAsteroid(scene: self, screenSize: self.size, speedMultiplier: self.speedMultiplier, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBullet: self.yellowBallCategory, coinValue: 1, pointValue: 1)
             }
@@ -533,6 +537,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         run(spawnAsteroidsAction, withKey: "spawningAsteroids")
     }
     
+//  Used to spawn enemies that go up and down randomly
+func startCreatingPersistentEnemies() {
+    removeAction(forKey: "spawningPersistentEnemies")
+    let spawnPersistentAction = SKAction.repeatForever(SKAction.sequence([
+        SKAction.wait(forDuration: (5.0 / Double(speedMultiplier)) / (0.1154 * Double(currentLevel) + 0.3846)),
+        SKAction.run {
+            createPersistentEnemy(scene: self, screenSize: self.size, playerNode: self.circularSprite, speedMultiplier: self.speedMultiplier, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBulletCategory: self.yellowBallCategory, coinValue: 3, pointValue: 3)
+        }]))
+    
+    run(spawnPersistentAction, withKey: "spawningPersistentEnemies")
+    
+}
+    
+func startCreatingSatellites(){
+    removeAction(forKey: "spawningSatellites")
+    let spawnSatellitesAction = SKAction.repeatForever(SKAction.sequence([
+        SKAction.wait(forDuration: (5.0 / Double(speedMultiplier)) / (0.1154 * Double(currentLevel) + 0.3846)),
+        SKAction.run {
+            createSatelliteWithLaser(scene: self, screenSize: self.size, speedMultiplier: self.speedMultiplier, enemyCategory: self.enemyObjectCategory, playerCategory: self.playerObjectCategory, playerBullet: self.yellowBallCategory, coinValue: 4, pointValue: 4)
+        }]))
+                                                                         
+    run(spawnSatellitesAction, withKey: "spawningSatellites")
+}
+
+    
 //  Used to spawn new enemies
     
     func startSpawningEnemies() {
@@ -541,7 +570,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
         // Create a new spawn action with the updated speedMultiplier
         let spawnEnemiesAction = SKAction.repeatForever(SKAction.sequence([
-            SKAction.wait(forDuration: 2.0 / Double(speedMultiplier)),  // Adjust spawn frequency based on speedMultiplier
+            SKAction.wait(forDuration: (2.0 / Double(speedMultiplier)) / (0.1154 * Double(currentLevel) + 0.3846)),  // Adjust spawn frequency based on speedMultiplier
             SKAction.run {
                 createFollowingEnemy(
                     scene: self,
@@ -911,6 +940,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 startSpawningAsteroids()
                 startSpawningEnemies()
                 
+                startCreatingPersistentEnemies()
+                startCreatingSatellites()
+                
                 // Define the two RGBA colors
                 let startColor = (r: CGFloat(0), g: CGFloat(171), b: CGFloat(255), a: CGFloat(0.56))
                 let endColor = (r: CGFloat(255), g: CGFloat(61), b: CGFloat(0), a: CGFloat(0.56))
@@ -951,6 +983,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         startFiringBullets()
         startSpawningAsteroids()
         startSpawningEnemies()
+        
+        startCreatingPersistentEnemies()
+        startCreatingSatellites()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -962,6 +997,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         startFiringBullets()
         startSpawningAsteroids()
         startSpawningEnemies()
+        
+        startCreatingPersistentEnemies()
+        startCreatingSatellites()
     }
     
     // MARK: - Update Cycle
