@@ -260,7 +260,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //      Sets our custom font color
         
         levelDisplay.fontColor = SKColor(red: 84/255, green: 93/255, blue: 175/255, alpha: 1.0)
-        levelDisplay.position = CGPoint(x: size.width / 2 + 300, y: size.height - 38 - adjustmentFactor)
+        levelDisplay.position = CGPoint(x: self.size.width * 0.8, y: size.height - 38 - adjustmentFactor)
         levelDisplay.name = "levelDisplay"
         
         //      Sets the current level for display
@@ -598,12 +598,12 @@ func startCreatingSatellites(){
 //      Progress bar holder 
         holderProgress = SKSpriteNode(imageNamed: "holderProgress")
         holderProgress.position = CGPoint(x: size.width / 2, y: size.height - 30 - adjustmentFactor)
-        holderProgress.size = CGSize(width: 400, height: 8)
+        holderProgress.size = CGSize(width: self.size.width * 0.3, height: 8)
         addChild(holderProgress)
         
 //      Ship that will move to demonstrate progress
         shipForProgress = SKSpriteNode(imageNamed: "shipForProgress")
-        shipForProgress.position = CGPoint(x: size.width / 2 - 186, y: size.height - 30 - adjustmentFactor)
+        shipForProgress.position = CGPoint(x: self.size.width * 0.35, y: size.height - 30 - adjustmentFactor)
         shipForProgress.size = CGSize(width: 32, height: 18)
         addChild(shipForProgress)
         
@@ -617,7 +617,7 @@ func startCreatingSatellites(){
         
 //      Determines next planet user will go to
         endLevelIcon = SKSpriteNode(imageNamed: currentLevel <= 13 ? "planet\(currentLevel + 1)" : "planet1")
-        endLevelIcon.position = CGPoint(x: size.width / 2 + 200, y: size.height - 30 - adjustmentFactor)
+        endLevelIcon.position = CGPoint(x: self.size.width * 0.65, y: size.height - 30 - adjustmentFactor)
         endLevelIcon.zPosition = 3
         endLevelIcon.size = CGSize(width: 30, height: 30)
         addChild(endLevelIcon)
@@ -627,7 +627,7 @@ func startCreatingSatellites(){
     //  Function that moves the ship to the right
     func moveShip() {
         // Move the ship to the right by `shipSpeed`
-        shipForProgress.position.x += (shipSpeed * speedMultiplier)
+        shipForProgress.position.x += (shipSpeed * speedMultiplier / (1500 / self.size.width))
         
         // Ensure the ship doesn't move beyond the progress bar's bounds
         let maxXPosition = holderProgress.position.x + holderProgress.size.width / 2 - shipForProgress.size.width / 2

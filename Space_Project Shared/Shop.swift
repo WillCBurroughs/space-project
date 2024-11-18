@@ -229,6 +229,7 @@ class Shop: SKScene {
                 UserDefaults.standard.set(fireRateCost, forKey: "fireRateCost")
                 fireRateLabel.text = "\(fireRateCost ?? 200)"
                 coinLabel.text = "\(playerCoins ?? 0)"
+                self.run(SKAction.playSoundFileNamed("purchase.mp3", waitForCompletion: false))
             }
             
         case "durability":
@@ -243,6 +244,7 @@ class Shop: SKScene {
                 durability = UserDefaults.standard.integer(forKey: "playerStartingHealth")
                 healthLabel.text = "\(durability ?? 3)"
                 coinLabel.text = "\(playerCoins ?? 0)"
+                self.run(SKAction.playSoundFileNamed("purchase.mp3", waitForCompletion: false))
             }
             
         case "score":
@@ -256,6 +258,7 @@ class Shop: SKScene {
                 UserDefaults.standard.set(scoreCost, forKey: "scoreCost")
                 scoreLabel.text = "\(scoreCost ?? 200)"
                 coinLabel.text = "\(playerCoins ?? 0)"
+                self.run(SKAction.playSoundFileNamed("purchase.mp3", waitForCompletion: false))
             }
             
         case "coinMultiplier":
@@ -268,6 +271,7 @@ class Shop: SKScene {
                 UserDefaults.standard.set(coinUpgradeCost, forKey: "coinUpgradeCost")
                 coinUpgradeLabel.text = "\(coinUpgradeCost ?? 200)"
                 coinLabel.text = "\(playerCoins ?? 0)"
+                self.run(SKAction.playSoundFileNamed("purchase.mp3", waitForCompletion: false))
             }
             
         default:
