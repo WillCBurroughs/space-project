@@ -480,7 +480,7 @@ class NewLevelsScreen: SKScene {
         popupBackground.name = "popupBackground"
         
         // Add a label to show the selected level
-        let levelLabel = SKLabelNode(text: "Level \(levelSelected)")
+        let levelLabel = SKLabelNode(text: "LEVEL \(levelSelected)")
         levelLabel.fontName = "Optima-ExtraBlack"
         levelLabel.fontSize = 50
         levelLabel.zPosition = 1002

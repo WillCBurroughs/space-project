@@ -169,7 +169,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         displayHealthLabel.fontName = "Futura-Bold"
         displayHealthLabel.fontSize = 14
         displayHealthLabel.fontColor = SKColor.white
-        displayHealthLabel.position = CGPoint(x: 165, y: size.height - 45)  // Adjust position as needed
+        displayHealthLabel.position = CGPoint(x: 165, y: size.height - 47)  // Adjust position as needed
         displayHealthLabel.zPosition = 10  // Ensure it's in front of other elements
         
         if(fireRateMultiplier < 1){
@@ -191,7 +191,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         coinLabel.fontName = "Futura-Bold"
         coinLabel.fontSize = 14
         coinLabel.fontColor = SKColor.white
-        coinLabel.position = CGPoint(x: 85, y: size.height - 45)
+        coinLabel.position = CGPoint(x: 85, y: size.height - 47)
         coinLabel.zPosition = 10
         
         // Addition of pauseButton to screen
@@ -211,7 +211,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         playerCoins = UserDefaults.standard.integer(forKey: "playerCoins")
-        coinLabel.text = "\(playerCoins!)"
+        coinLabel.text = "\(formatNumber(playerCoins!))"
         addChild(coinLabel)
         
         
@@ -415,7 +415,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             coinsDisplayPauseMenu.fontSize = 16
             coinsDisplayPauseMenu.fontColor = SKColor.white
             
-            coinsDisplayPauseMenu.text = "\(playerCoins ?? 0)"
+            coinsDisplayPauseMenu.text = "\(formatNumber(playerCoins!))"
             coinsDisplayPauseMenu.position = CGPoint(x: -(self.size.width * 0.8) * 0.04, y: -self.size.height * 0.22)
             coinsDisplayPauseMenu.zPosition = 1005
             pauseMenu?.addChild(coinsDisplayPauseMenu)
@@ -796,13 +796,11 @@ func startCreatingSatellites(){
         // Add yellow ball (laser) to the scene
         addChild(yellowBall)
         
-        
-
         let currentTime = CACurrentMediaTime()
 
         // Check if the time elapsed since the last shot is greater than or equal to the specified interval
         if currentTime - timeSincePlayerShotSound >= howOftenPlayerShotSound {
-            self.run(SKAction.playSoundFileNamed("player_shot.mp3", waitForCompletion: false))
+            self.run(SKAction.playSoundFileNamed("lazer_noise.mp3", waitForCompletion: false))
             timeSincePlayerShotSound = currentTime  // Update the last shot time to the current time
         }
         // Action to remove yellow ball when it goes off-screen
@@ -1159,7 +1157,7 @@ func startCreatingSatellites(){
                 UserDefaults.standard.set(playerScore, forKey: "playerScore")
             }
             
-            coinLabel.text = "\(playerCoins!)"
+            coinLabel.text = "\(formatNumber(playerCoins!))"
             
             print("Yellow ball collided with an asteroid!")
         }
@@ -1178,5 +1176,18 @@ func startCreatingSatellites(){
         let fadeOutAction = SKAction.fadeOut(withDuration: 2.0)
         let removeAction = SKAction.removeFromParent()
         collisionLabel.run(SKAction.sequence([fadeOutAction, removeAction]))
+    }
+    
+    func formatNumber(_ number: Int) -> String {
+        switch number {
+        case 1_000_000_000...:
+            return "\(number / 1_000_000_000)b"  // Billion
+        case 1_000_000...:
+            return "\(number / 1_000_000)m"  // Million
+        case 1_000...:
+            return "\(number / 1_000)k"  // Thousand
+        default:
+            return "\(number)"  // Default
+        }
     }
 }

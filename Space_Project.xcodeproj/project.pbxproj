@@ -10,6 +10,7 @@
 		4B18A83D8C0966E464AD2CE7 /* Pods_Space_Project_iOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4D6D4A3EF341607DADF3FC5 /* Pods_Space_Project_iOS.framework */; };
 		5C0156BA2CEB6C66002E91E2 /* purchase.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5C0156B92CEB6C66002E91E2 /* purchase.mp3 */; };
 		5C0FF9432CE6C44D006D4046 /* Untitled.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C0FF9422CE6C44C006D4046 /* Untitled.swift */; };
+		5C735D9E2CEC0243000CBC32 /* lazer_noise.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5C735D9D2CEC0243000CBC32 /* lazer_noise.mp3 */; };
 		5C85FC342CEA1B1800C08FE9 /* player_shot.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5C85FC332CEA1B1800C08FE9 /* player_shot.mp3 */; };
 		5C85FC3C2CEAB09F00C08FE9 /* Take-Damage-player.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5C85FC3B2CEAB09F00C08FE9 /* Take-Damage-player.mp3 */; };
 		5C85FC3E2CEAB1DC00C08FE9 /* space-music.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 5C85FC3D2CEAB1DC00C08FE9 /* space-music.mp3 */; };
@@ -38,6 +39,7 @@
 		20A67D171231E870A62713DA /* Pods-Space_Project iOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Space_Project iOS.release.xcconfig"; path = "Target Support Files/Pods-Space_Project iOS/Pods-Space_Project iOS.release.xcconfig"; sourceTree = "<group>"; };
 		5C0156B92CEB6C66002E91E2 /* purchase.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = purchase.mp3; sourceTree = "<group>"; };
 		5C0FF9422CE6C44C006D4046 /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
+		5C735D9D2CEC0243000CBC32 /* lazer_noise.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = lazer_noise.mp3; sourceTree = "<group>"; };
 		5C85FC332CEA1B1800C08FE9 /* player_shot.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = player_shot.mp3; sourceTree = "<group>"; };
 		5C85FC3B2CEAB09F00C08FE9 /* Take-Damage-player.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "Take-Damage-player.mp3"; sourceTree = "<group>"; };
 		5C85FC3D2CEAB1DC00C08FE9 /* space-music.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "space-music.mp3"; sourceTree = "<group>"; };
@@ -109,6 +111,7 @@
 				5CB56B022CBB372500888E7A /* gradient.swift */,
 				5CB56AFE2CB4977400888E7A /* Enemies.swift */,
 				5CB56B002CB5D37300888E7A /* newLevelsScreen.swift */,
+				5C735D9D2CEC0243000CBC32 /* lazer_noise.mp3 */,
 				5C0156B92CEB6C66002E91E2 /* purchase.mp3 */,
 				5C85FC3B2CEAB09F00C08FE9 /* Take-Damage-player.mp3 */,
 				5C85FC3F2CEAB44500C08FE9 /* victory.mp3 */,
@@ -214,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5C85FC3E2CEAB1DC00C08FE9 /* space-music.mp3 in Resources */,
+				5C735D9E2CEC0243000CBC32 /* lazer_noise.mp3 in Resources */,
 				5C879A1B2CAB66A20047AC9B /* GameScene.sks in Resources */,
 				5C879A162CAB66A20047AC9B /* Main.storyboard in Resources */,
 				5C879A1A2CAB66A20047AC9B /* Actions.sks in Resources */,

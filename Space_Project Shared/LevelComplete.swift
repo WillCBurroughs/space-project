@@ -36,11 +36,18 @@ class LevelComplete: SKScene {
     
     var bestStarsEarnedLevel: Int = 0
     
+//  Will delay triple coin effect
+    var lastTripleCoinsPressTime: TimeInterval = 0
+    let tripleCoinsDelay: TimeInterval = 5
+    
 //   Formula for calculating score = Unhit bonus is 10X * Score Multiplier * Scores for enemies beaten * Speed multiplier
 //   Formula for calculating stars = < 1000 * level^2 = 1 star, < 2000 * level^2 = 2 star, > 2000 * level^2 = 3 star
     
 //  TODO - Add coins and hearts (Done), add function for score
 //  Add button to return to levels menu (done) or restart level
+    
+    var lastAdTime: TimeInterval = 0  // Stores the time when the last ad was shown
+    let adCooldown: TimeInterval = 5
     
     override func didMove(to view: SKView) {
         
@@ -69,38 +76,38 @@ class LevelComplete: SKScene {
         
         healthLabel = SKLabelNode(text: "\(formatNumber(livesLeftFromLastLevel))")
         healthLabel.fontName = "Futura-Bold"
-        healthLabel.fontSize = 26
+        healthLabel.fontSize = 22
         healthLabel.fontColor = SKColor.white
         healthLabel.zPosition = 4
-        healthLabel.position = CGPoint(x: size.width * 0.335, y: size.height * 0.33)
+        healthLabel.position = CGPoint(x: size.width * 0.325, y: size.height * 0.375)
         addChild(healthLabel)
         
         coinLabel = SKLabelNode(text: "\(formatNumber(playerCoins))")
         coinLabel.fontName = "Futura-Bold"
-        coinLabel.fontSize = 26
+        coinLabel.fontSize = 22
         coinLabel.fontColor = SKColor.white
         coinLabel.zPosition = 4
-        coinLabel.position = CGPoint(x: size.width * 0.325, y: size.height * 0.44)
+        coinLabel.position = CGPoint(x: size.width * 0.31, y: size.height * 0.483)
         addChild(coinLabel)
         
         backToLevels = SKShapeNode(ellipseOf: CGSize(width: self.size.width * 0.1, height: self.size.width * 0.1))
         backToLevels.fillColor = SKColor.clear
         backToLevels.strokeColor = SKColor.clear
-        backToLevels.position = CGPoint(x: self.size.width * 0.57, y: self.size.height * 0.2)
+        backToLevels.position = CGPoint(x: self.size.width * 0.56, y: self.size.height * 0.19)
         backToLevels.zPosition = 5
         addChild(backToLevels)
         
         restartLevel = SKShapeNode(ellipseOf: CGSize(width: self.size.width * 0.1, height: self.size.width * 0.1))
         restartLevel.fillColor = SKColor.clear
         restartLevel.strokeColor = SKColor.clear
-        restartLevel.position = CGPoint(x: self.size.width * 0.42, y: self.size.height * 0.2)
+        restartLevel.position = CGPoint(x: self.size.width * 0.44, y: self.size.height * 0.19)
         restartLevel.zPosition = 5
         addChild(restartLevel)
         
         tripleCoinsWatchAd = SKShapeNode(rectOf: CGSize(width: self.size.width * 0.34, height: self.size.height * 0.13))
         tripleCoinsWatchAd.fillColor = SKColor.clear
         tripleCoinsWatchAd.strokeColor = SKColor.clear
-        tripleCoinsWatchAd.position = CGPoint(x: self.size.width * 0.60, y: self.size.height * 0.42)
+        tripleCoinsWatchAd.position = CGPoint(x: self.size.width * 0.585, y: self.size.height * 0.455)
         tripleCoinsWatchAd.zPosition = 6
         addChild(tripleCoinsWatchAd)
         
@@ -118,6 +125,7 @@ class LevelComplete: SKScene {
         
         calculateStarsEarned()
         
+        lastAdTime = CACurrentMediaTime() - adCooldown
     }
     
     func transitionToLevelsScene() {
@@ -157,8 +165,14 @@ class LevelComplete: SKScene {
                 restartCompletedLevel()
             }
             
-            if tripleCoinsWatchAd.contains(location){
-                showLevelCompletionAd()
+            if tripleCoinsWatchAd.contains(location) {
+                let currentTime = CACurrentMediaTime()
+                if currentTime - lastTripleCoinsPressTime > tripleCoinsDelay {
+                    lastTripleCoinsPressTime = currentTime  // Update the last press time
+                    showLevelCompletionAd()
+                } else {
+                    print("Please wait for \(tripleCoinsDelay) seconds between ads.")
+                }
             }
         }
     }
