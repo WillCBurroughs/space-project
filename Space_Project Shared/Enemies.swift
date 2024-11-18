@@ -132,3 +132,108 @@ func createFollowingEnemy(scene: SKScene, screenSize: CGSize, playerNode: SKSpri
     // Run the move sequence
     enemy.run(sequence)
 }
+
+// Enemy that follows the user up and down the screen
+func createPersistentEnemy(scene: SKScene, screenSize: CGSize, playerNode: SKSpriteNode, speedMultiplier: CGFloat, enemyCategory: UInt32, playerCategory: UInt32, playerBulletCategory: UInt32, coinValue: Int, pointValue: Int) {
+    // Create the enemy node
+    let enemy = SKSpriteNode(imageNamed: "upDownEnemy")
+    enemy.size = CGSize(width: 100, height: 80)
+    enemy.zPosition = 10
+
+    // Position at the edge of the screen
+    let startX = screenSize.width - enemy.size.width / 2
+    let startY = CGFloat.random(in: enemy.size.height...screenSize.height - enemy.size.height)
+    enemy.position = CGPoint(x: startX, y: startY)
+
+    // Physics body configuration
+    enemy.physicsBody = SKPhysicsBody(rectangleOf: enemy.size)
+    enemy.physicsBody?.isDynamic = true
+    enemy.physicsBody?.affectedByGravity = false
+    enemy.physicsBody?.allowsRotation = false
+    enemy.physicsBody?.categoryBitMask = enemyCategory
+    enemy.physicsBody?.contactTestBitMask = playerCategory | playerBulletCategory
+    enemy.physicsBody?.collisionBitMask = 0
+
+    // Add to the scene
+    scene.addChild(enemy)
+
+    // Store coins and points value
+    enemy.userData = ["coinValue": coinValue, "pointValue": pointValue]
+
+    // Action to vertically oscillate within the screen bounds
+    let moveUp = SKAction.moveTo(y: screenSize.height - enemy.size.height / 2, duration: 2.0 / Double(speedMultiplier))
+    let moveDown = SKAction.moveTo(y: enemy.size.height / 2, duration: 2.0 / Double(speedMultiplier))
+    let upDownSequence = SKAction.sequence([moveUp, moveDown])
+    let repeatUpDown = SKAction.repeatForever(upDownSequence)
+
+    // Run the vertical movement sequence
+    enemy.run(repeatUpDown)
+
+    // Enemy fires periodically
+    let fireAction = SKAction.run {
+        let bullet = SKSpriteNode(imageNamed: "enemyBullet")
+        bullet.size = CGSize(width: 20, height: 20)
+        bullet.position = CGPoint(x: enemy.position.x - bullet.size.width, y: enemy.position.y)
+        bullet.zPosition = 10
+
+        bullet.physicsBody = SKPhysicsBody(circleOfRadius: bullet.size.width / 2)
+        bullet.physicsBody?.isDynamic = true
+        bullet.physicsBody?.affectedByGravity = false
+        bullet.physicsBody?.categoryBitMask = enemyCategory
+        bullet.physicsBody?.contactTestBitMask = playerCategory
+        bullet.physicsBody?.collisionBitMask = 0
+
+        scene.addChild(bullet)
+
+        // Move the bullet towards the left of the screen
+        let bulletMoveDuration = 2.0 / Double(speedMultiplier)
+        let moveBulletAction = SKAction.moveBy(x: -screenSize.width, y: 0, duration: bulletMoveDuration)
+        let removeBulletAction = SKAction.removeFromParent()
+        bullet.run(SKAction.sequence([moveBulletAction, removeBulletAction]))
+    }
+
+    let fireInterval = SKAction.wait(forDuration: 3.0)  // Adjust to change how often the enemy fires
+    let repeatFire = SKAction.repeatForever(SKAction.sequence([fireAction, fireInterval]))
+
+    // Run the firing sequence
+    enemy.run(repeatFire)
+}
+
+// Shooting satellite with laser 
+func createSatelliteWithLaser(scene: SKScene, screenSize: CGSize, speedMultiplier: CGFloat, enemyCategory: UInt32, playerCategory: UInt32, playerBullet: UInt32, coinValue: Int, pointValue: Int) {
+    let satellite = SKSpriteNode(imageNamed: "satellite")
+    satellite.size = CGSize(width: 90, height: 90)
+    satellite.zPosition = 10
+    let startX = screenSize.width + satellite.size.width / 2
+    satellite.position = CGPoint(x: startX, y: screenSize.height / 2)
+
+    satellite.physicsBody = SKPhysicsBody(rectangleOf: satellite.size)
+    satellite.physicsBody?.isDynamic = true
+    satellite.physicsBody?.affectedByGravity = false
+    satellite.physicsBody?.allowsRotation = false
+    satellite.physicsBody?.categoryBitMask = enemyCategory
+    satellite.physicsBody?.contactTestBitMask = playerBullet
+    satellite.physicsBody?.collisionBitMask = 0
+
+    let laserBeam = SKSpriteNode(color: .red, size: CGSize(width: 5, height: screenSize.height))
+    laserBeam.anchorPoint = CGPoint(x: 0.5, y: 1)  // Adjust this as needed
+    laserBeam.position = CGPoint(x: 0, y: -satellite.size.height / 2)
+    laserBeam.zPosition = 9
+
+    laserBeam.physicsBody = SKPhysicsBody(rectangleOf: laserBeam.size)
+    laserBeam.physicsBody?.isDynamic = false
+    laserBeam.physicsBody?.categoryBitMask = enemyCategory
+    laserBeam.physicsBody?.contactTestBitMask = playerCategory
+    laserBeam.physicsBody?.collisionBitMask = 0
+
+    satellite.addChild(laserBeam)
+    scene.addChild(satellite)
+
+    satellite.userData = ["coinValue": coinValue, "pointValue": pointValue]
+
+    let moveDistance = screenSize.width + satellite.size.width
+    let moveDuration = 8.0 / Double(speedMultiplier)
+    let moveAction = SKAction.moveBy(x: -moveDistance, y: 0, duration: moveDuration)
+    let removeAction = SKAction.removeFromParent()
+    satellite.run(SKAction.sequence([moveAction, removeAction]))
+}
