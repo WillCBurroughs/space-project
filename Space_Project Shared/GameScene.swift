@@ -138,7 +138,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerUnhit = UserDefaults.standard.bool(forKey: "playerUnhit")
     var playerScore = UserDefaults.standard.integer(forKey: "playerScore")
     
-    let maxSpeedValue = 20.0
+    let maxSpeedValue = 2.0
     
     //  used to show ad
     let rewardedViewModel = RewardedViewModel()
