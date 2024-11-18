@@ -65,6 +65,8 @@ class LevelComplete: SKScene {
             livesLeftFromLastLevel = 3
         }
         
+        showLevelCompletionAd()
+        
         healthLabel = SKLabelNode(text: "\(formatNumber(livesLeftFromLastLevel))")
         healthLabel.fontName = "Futura-Bold"
         healthLabel.fontSize = 26
@@ -107,12 +109,12 @@ class LevelComplete: SKScene {
             playerScore *= 10
         }
         
-        scoreLabel = SKLabelNode(text: "\(playerUnhit ? formatNumber(playerScore * 10) : formatNumber(playerScore))")
-        scoreLabel.fontName = "Futura-Bold"
-        scoreLabel.fontColor = SKColor.white
-        scoreLabel.zPosition = 4
-        scoreLabel.position = CGPoint(x: self.size.width * 0.7, y: self.size.height * 0.34)
-        addChild(scoreLabel)
+//        scoreLabel = SKLabelNode(text: "\(playerUnhit ? formatNumber(playerScore * 10) : formatNumber(playerScore))")
+//        scoreLabel.fontName = "Futura-Bold"
+//        scoreLabel.fontColor = SKColor.white
+//        scoreLabel.zPosition = 4
+//        scoreLabel.position = CGPoint(x: self.size.width * 0.7, y: self.size.height * 0.34)
+//        addChild(scoreLabel)
         
         calculateStarsEarned()
         
