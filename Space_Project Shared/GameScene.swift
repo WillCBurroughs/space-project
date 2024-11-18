@@ -295,11 +295,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //      Used to spawn enemies
         startSpawningEnemies()
         
-        //      Will create new enemies
-        startCreatingPersistentEnemies()
+        if currentLevel >= 3 {
+            startCreatingPersistentEnemies()
+        }
         
-        //       Spawn satellites
-        startCreatingSatellites()
+        if currentLevel >= 9 {
+            startCreatingSatellites()
+        }
         
         // Schedule the firing of yellow balls from the blue ball every 0.5 seconds
         startFiringBullets()
@@ -940,8 +942,13 @@ func startCreatingSatellites(){
                 startSpawningAsteroids()
                 startSpawningEnemies()
                 
-                startCreatingPersistentEnemies()
-                startCreatingSatellites()
+                if currentLevel >= 3 {
+                    startCreatingPersistentEnemies()
+                }
+                
+                if currentLevel >= 9 {
+                    startCreatingSatellites()
+                }
                 
                 // Define the two RGBA colors
                 let startColor = (r: CGFloat(0), g: CGFloat(171), b: CGFloat(255), a: CGFloat(0.56))
@@ -984,8 +991,14 @@ func startCreatingSatellites(){
         startSpawningAsteroids()
         startSpawningEnemies()
         
-        startCreatingPersistentEnemies()
-        startCreatingSatellites()
+        if currentLevel >= 3 {
+            startCreatingPersistentEnemies()
+        }
+        
+        if currentLevel >= 9 {
+            startCreatingSatellites()
+        }
+        
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -998,8 +1011,13 @@ func startCreatingSatellites(){
         startSpawningAsteroids()
         startSpawningEnemies()
         
-        startCreatingPersistentEnemies()
-        startCreatingSatellites()
+        if currentLevel >= 3 {
+            startCreatingPersistentEnemies()
+        }
+        
+        if currentLevel >= 9 {
+            startCreatingSatellites()
+        }
     }
     
     // MARK: - Update Cycle
